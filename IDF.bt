@@ -1,0 +1,28 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+
+struct {
+  UINT A;
+  UINT B;
+  UINT Count;
+  UINT CD; 
+} HEADER;
+
+struct {
+  UINT M;
+  struct {
+    char Name[64];
+    char Property[68];
+  } MN[HEADER.Count];
+} MA[HEADER.B];

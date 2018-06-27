@@ -1,0 +1,70 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+local uint i, height, width = 0;
+
+struct {
+  UINT A;
+  UBYTE A;
+  UBYTE B;
+  UBYTE MipMapCount;
+  UBYTE MaskCount;  
+  UINT Width;
+  UINT Height;
+} HEADER;
+
+BitfieldDisablePadding();
+
+typedef struct {
+  ubyte Red   : 5 <name="Red">; 
+  ubyte Green : 6 <name="Green">;
+  ubyte Blue  : 5 <name="Blue">; 
+} PIXEL16 <size = 2, name="Pixel">;
+
+PIXEL16 Pixels[HEADER.Width*HEADER.Height] <name="Pixels">; 
+
+typedef struct (uint count) {
+  height = HEADER.Height, width = HEADER.Width;
+  for (i = 0; i < count; ++i) {
+     height = height/2; 
+     width = width/2;
+     struct {
+       PIXEL16 MipMaps[height*width] <name="Map">;
+     } PIXELS;      
+  };
+} MAPS;
+
+MAPS Maps(HEADER.MipMapCount - 1) <name="MipMaps">;
+
+typedef struct {
+  UBYTE Red   <name="Red">; 
+  UBYTE Green <name="Green">;
+  UBYTE Blue  <name="Blue">; 
+  UBYTE Alpha  <name="Alpha">;  
+} PALETTE <size = 4, name="Pixel">;
+
+typedef struct {
+  UBYTE Index;
+} COLOR_TABLE;
+
+struct {
+  PALETTE P[256] <name="Palette">; 
+  height = HEADER.Height, width = HEADER.Width; 
+  for (i = 0; i < HEADER.MaskCount; ++i) {
+     struct {
+       COLOR_TABLE Pixels[height*width] <name="Mask">;;
+     } PIXELS; 
+     height = height/2; 
+     width = width/2;     
+  }; 
+} MASKS;

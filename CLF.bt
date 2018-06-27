@@ -1,0 +1,77 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+struct {
+  UINT A;
+  UINT A;
+  UINT A;
+  UINT A;
+  UINT A;
+  UINT FileCount;
+  UINT A;
+  UINT CountF;;
+  UINT A;
+  UINT A;
+  UINT A;
+  UINT A;
+} HEADER;
+
+typedef struct {
+  char FileName[256] <name=fileName>;
+} FILENAME <>;
+
+//string fileName(FILENAME &fn) {
+//  return fn.FileName;
+//};
+
+FILENAME FileNames[HEADER.FileCount] <name="FileNames">;
+
+struct { 
+  char Name[32];
+  UINT CountC;
+  UINT CountD;
+  UINT CountA;
+  UINT CountB;
+  UBYTE G[96];
+  struct {
+    FLOAT MN;
+    FLOAT MN;
+    FLOAT MN;
+    FLOAT MN;
+    FLOAT MN;
+    FLOAT MN;
+    FLOAT MN;
+  } AA[CountA]; 
+
+  struct {
+    UINT16 CountC;
+    UINT16 CountC;
+    UINT CountD;
+    FLOAT MN;
+    FLOAT MN;
+    FLOAT MN;
+    FLOAT MN;
+    FLOAT MN;
+    FLOAT MN;
+  } AB[CountB];
+
+  struct {
+    FLOAT MN;
+    FLOAT MN;
+    FLOAT MN;
+    FLOAT MN;
+    FLOAT MN;
+    FLOAT MN;
+    FLOAT MN;
+  } AV[CountC];
+} MN[HEADER.CountF] <optimize=false>;

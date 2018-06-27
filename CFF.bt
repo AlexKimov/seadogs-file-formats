@@ -1,0 +1,114 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+struct {
+  FLOAT A;
+  FLOAT B;
+  FLOAT C;
+  FLOAT D;
+  FLOAT A;
+  FLOAT B;
+  UINT TextureCount;
+  UINT Count;
+  UINT C;
+  UINT D;
+  FLOAT S;
+} HEADER;
+
+typedef struct {
+  UBYTE Length;
+  char FileName[Length];
+} FILE <name="FileName">;
+
+typedef struct (uint size) {
+  FILE array[size] <optimize=false>;
+} FILE_NAME_ARRAY;
+
+FILE_NAME_ARRAY Textures(HEADER.TextureCount) <name="Textures">;
+
+typedef struct {
+  UINT C;
+  UINT C;
+  UINT D;
+  UINT C;
+  UINT C;
+  UINT C;
+  UINT D;
+  FLOAT C;
+  UINT D;
+  UINT C;
+  UINT D;
+  FLOAT C;
+  UINT D;
+  UINT C;
+  UINT D;
+} Dd <>;
+
+Dd d[HEADER.Count];
+
+  UINT ObjCount;
+  UINT Count;
+
+typedef struct {
+  struct {
+    FLOAT A;
+    FLOAT B;
+    FLOAT C;
+    FLOAT D;
+    FLOAT A;
+    UINT Count;
+    UINT CountA;
+    UINT CountB;
+    UINT CountC;
+    UINT CountD;
+  } HEADER;
+  char ChPartName[4];
+  struct {
+     BYTE A[13];
+  } MN1[HEADER.CountA];
+  if (HEADER.CountA <= 256) {
+      struct {
+        BYTE I1;
+        BYTE I2;
+        BYTE I3;
+      } MN[HEADER.CountB];
+    }
+  else
+    struct {
+      BYTE A;
+      BYTE I1;
+      BYTE B;
+      BYTE I2;
+      BYTE C;
+      BYTE I3;
+    } MN[HEADER.CountB];
+  struct {
+    FLOAT A;
+    FLOAT B;
+    FLOAT C;
+    FLOAT D;
+    FLOAT A;
+    FLOAT B;
+    FLOAT Index;
+  } MN2[HEADER.CountD];
+} OBJECT <optimize=false>;
+
+typedef struct (uint size) {
+  OBJECT array[size];
+} OBJECT_ARRAY;
+
+OBJECT_ARRAY Objects(ObjCount) <name="Objects">;
+
+struct {
+  UINT A;
+} MN[HEADER.D];
