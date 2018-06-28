@@ -1,0 +1,102 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+local uint i, count1, coun2 = 0;
+
+uint checkFolder() {
+  struct {
+    BYTE type; // 1 - file, 0 - folder start, 2 - end 
+  } CHECK <hidden = true>;
+  FSeek(FTell() - 1);
+  return CHECK.type;
+};
+
+struct {
+  char ENPAK[6] <name="Signature">;
+  BYTE A;
+  BYTE B;
+  BYTE C;
+  BYTE empty[17];
+} HEADER <name="File Header">;
+
+  typedef struct {
+    BYTE type; // 1 - file, 0 - folder start, 2 - folder end
+
+    if (type == 0)
+       UINT FileCount;
+    else
+        UINT DataSize;      
+    UINT Offset;
+    UINT a; // 1 - ??
+    UINT Empty; // 0  
+    string Name; 
+  } FILE_HEADER <name=fileName>;
+   
+  typedef struct (uint size) {
+    FILE_HEADER array[size] <optimize=false>;
+  } FILE_TABLE;
+
+ string fileName(FILE_HEADER &fn) {
+   switch (fn.type) {
+     case 1: return "FILE: " + fn.Name; break; 
+     case 0: return "Folder Start: " + fn.Name; break;  
+     case 2: return "Folder End"; break;      
+   }          
+ };
+
+  // Folders starts first
+
+  FILE_TABLE ResourceFolder(1) <name="Folder Start">;
+
+  if (checkFolder() == 2)
+    FILE_TABLE Folder0(1) <name="Folder End">; 
+  
+  FILE_TABLE Folder1(1) <name="Folder Start">; 
+
+  if (checkFolder() == 0) 
+    FILE_TABLE Folder2(1) <name="Folder Start">; 
+
+  // Files
+
+  if (exists(Folder2)) {
+    FILE_TABLE Files1(Folder2.array.FileCount) <name="Files">; 
+    FILE_TABLE End(1) <name="Folder End">;      
+    FILE_TABLE Files2(Folder1.array.FileCount) <name="Files">;    
+  }
+  else
+    FILE_TABLE Files1(Folder1.array.FileCount) <name="Files">;  
+
+  // folders end
+  FILE_TABLE End(1) <name="Folder End">;  
+  if (!exists(Folder0))
+    FILE_TABLE End(1) <name="Folder End">;  
+
+typedef struct (uint pos, string name) {
+  local string n = name;
+  FSeek(FTell() + pos);
+} FILE <name = getName>;
+
+string getName(FILE &File) {
+  return File.n;
+};
+
+struct {
+  if (exists(Folder2)) 
+    for (i = 0; i < Folder2.array.FileCount; ++i) {
+      FILE File(Files1.array[i].DataSize, Files1.array[i].Name);
+    };
+
+  for (i = 0; i < Folder1.array.FileCount; ++i) {
+      FILE File(Files1.array[i].DataSize, Files1.array[i].Name);
+    };   
+} FILES;
