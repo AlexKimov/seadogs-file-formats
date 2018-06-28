@@ -1,10 +1,10 @@
 # Описание
 
-Форматы файлов игр Корсары Проклятье дальних морей и Век парусников 2. 
+Форматы файлов игр **Корсары Проклятье дальних морей** (2000) и **Век парусников 2** (2001). 
 
 # About
 
-Sea dogs (2000) and Age of Sale 2 games file formats.
+**Sea dogs** (2000) and **Age of Sale 2** (2001) games file formats.
 
 | №   | Format/Ext | Progress | Template (010 Editor) | 
 | :-- | :-------- | :------ | :------- |
