@@ -1,0 +1,64 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+local uint i, k, pos, FolderCount, FileCount;
+
+struct {
+  char ENPAK[6] <name="Signature">;
+  BYTE Empty1[2]; // 0
+  UINT16 MN; // 2
+  UINT FileTableOffset;
+  BYTE Empty2[16];
+} HEADER <name="File Header">;
+
+// jump to file table
+FSeek(HEADER.FileTableOffset);
+
+struct {
+  UINT FolderCount;
+  struct {
+    UINT FileCount; 
+    string Name;
+  } FOLDERS[FolderCount] <optimize=false>;
+
+  for (i = 0; i < FolderCount; ++i) {
+    struct {
+      UINT FileSize;
+      UINT Offset;
+      UINT type; // 0
+      string FileName;
+    } FILE_ENTRY[FOLDERS[i].FileCount] <optimize=false>;
+  };
+} FILE_TABLE;
+
+// return to first file
+
+FSeek(FILE_TABLE.FILE_ENTRY[0].Offset);
+
+pos = 0;
+i = 0;
+
+struct {
+  FolderCount = FILE_TABLE.FolderCount;
+  for (k = 0; k < FolderCount; ++k)  { 
+    FileCount = FILE_TABLE.FOLDERS[k].FileCount;
+    if (FileCount > 0) {
+      pos = pos + i;
+      for (i = 0; i < FileCount; ++i)  { 
+        struct {   
+          FSkip(FILE_TABLE.FILE_ENTRY[pos + i].FileSize);
+        } FILE; 
+      };
+    };
+  };
+} FILES;
