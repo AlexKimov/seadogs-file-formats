@@ -14,15 +14,25 @@
 
 struct {
   UINT A;
-  UINT B;
   UINT Count;
-  UINT CD; 
+  UINT CountB;
 } HEADER;
 
-struct {
-  UINT M;
-  struct {
+typedef struct {
+
+  UINT PropCount;
+  UINT Unknown;
+
+  typedef struct {
     char Name[64];
-    char Property[68];
-  } MN[HEADER.Count];
-} MA[HEADER.B];
+    if (Name == "weapon_type")
+      char Property[64];
+    else
+      char Property[68];
+  } NameValue <optimize=false>;
+
+  NameValue NMArray[PropCount] <name="Name/Value">;
+
+} PROPERTIES_TABLE <name="Element", optimize=false>;
+
+PROPERTIES_TABLE Elements[HEADER.Count] <name="Elements">;
