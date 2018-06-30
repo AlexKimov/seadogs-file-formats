@@ -11,104 +11,149 @@
 //   History: 
 //------------------------------------------------
 
+local uint v = true; // ??
+
 struct {
-  FLOAT A;
-  FLOAT B;
-  FLOAT C;
-  FLOAT D;
-  FLOAT A;
-  FLOAT B;
+  struct {
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+  } OBJECT_ORIGIN;
+  struct {
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+  } OBJECT_SCALE;
   UINT TextureCount;
-  UINT Count;
-  UINT C;
-  UINT D;
-  FLOAT S;
-} HEADER;
+  UINT TPCount;
+  UINT Unknown;
+  UINT SectionOffset;
+  FLOAT radius;
+} FILE_HEADER <name="File Header">;
 
 typedef struct {
   UBYTE Length;
   char FileName[Length];
-} FILE <name="FileName">;
+} TEXTURE_FILE <name=texFileName>;
+
+string texFileName(TEXTURE_FILE &file) {
+  return file.FileName;
+}
 
 typedef struct (uint size) {
-  FILE array[size] <optimize=false>;
-} FILE_NAME_ARRAY;
+  TEXTURE_FILE array[size] <optimize=false>;
+} FILE_LIST;
 
-FILE_NAME_ARRAY Textures(HEADER.TextureCount) <name="Textures">;
+FILE_LIST Textures(FILE_HEADER.TextureCount) <name="Textures List">;
 
 typedef struct {
-  UINT C;
-  UINT C;
-  UINT D;
-  UINT C;
-  UINT C;
-  UINT C;
-  UINT D;
-  FLOAT C;
-  UINT D;
-  UINT C;
-  UINT D;
-  FLOAT C;
-  UINT D;
-  UINT C;
-  UINT D;
-} Dd <>;
+  UINT Unknown;
+  UINT Unknown;
+  UINT Unknown;
+  UINT Unknown;
+  UINT Unknown;
+  UINT Unknown;
+  UINT Unknown;
+  FLOAT Unknown;
+  UINT Unknown;
+  UINT Unknown;
+  UINT Unknown;
+  FLOAT Unknown;
+  UINT Unknown;
+  UINT Unknown;
+  UINT Unknown;
+} TEXTURE_PROPERTIES <>;
 
-Dd d[HEADER.Count];
+TEXTURE_PROPERTIES TexProperties[FILE_HEADER.TPCount];
 
-  UINT ObjCount;
-  UINT Count;
+UINT MeshCount;
+UINT Count;
+
+
 
 typedef struct {
   struct {
-    FLOAT A;
-    FLOAT B;
-    FLOAT C;
-    FLOAT D;
-    FLOAT A;
-    UINT Count;
-    UINT CountA;
-    UINT CountB;
-    UINT CountC;
-    UINT CountD;
-  } HEADER;
-  char ChPartName[4];
-  struct {
-     BYTE A[13];
-  } MN1[HEADER.CountA];
-  if (HEADER.CountA <= 256) {
-      struct {
-        BYTE I1;
-        BYTE I2;
-        BYTE I3;
-      } MN[HEADER.CountB];
-    }
-  else
     struct {
-      BYTE A;
-      BYTE I1;
-      BYTE B;
-      BYTE I2;
-      BYTE C;
-      BYTE I3;
-    } MN[HEADER.CountB];
-  struct {
-    FLOAT A;
-    FLOAT B;
-    FLOAT C;
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+    } MESH_ORIGIN;
     FLOAT D;
-    FLOAT A;
-    FLOAT B;
-    FLOAT Index;
-  } MN2[HEADER.CountD];
-} OBJECT <optimize=false>;
+    FLOAT Radius;
+    UINT TextureIndex;
+    UINT VertexCount <name="Number of vertexes">;
+    UINT FaceCount <name="Number of faces">;
+    UINT Unknown;
+    UINT AnimationKeyCount;
+    char MeshName[4];
+  } HEADER;
+
+  struct {
+     HFLOAT X;     
+     HFLOAT Y;     
+     HFLOAT Z;
+     UINT16 U;     
+     UINT16 V;
+     if (v) 
+       UBYTE Color[3];
+     else
+       UINT16 G;     
+  } VERTEX[HEADER.VertexCount];
+
+  struct {
+    if (HEADER.VertexCount <= 256) {
+      UBYTE I1;
+      UBYTE I2;
+      UBYTE I3;
+    } else {
+      BYTE A;
+      UBYTE I1;
+      BYTE B;
+      UBYTE I2;
+      BYTE C;
+      UBYTE I3;
+    };
+  } FACE_INDEXES[HEADER.FaceCount] <name="Face Indexes">;
+
+  struct {
+    struct {
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+    } POSITION;
+    struct {
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+    } ROTATION;
+    FLOAT Time; //
+  } ANIMATIONS[HEADER.AnimationKeyCount];
+
+} MESH <optimize=false, name=meshName>;
+
+string meshName(MESH &mesh) {
+  return mesh.HEADER.MeshName;
+}
 
 typedef struct (uint size) {
-  OBJECT array[size];
-} OBJECT_ARRAY;
+  MESH array[size];
+} MESH_ARRAY;
 
-OBJECT_ARRAY Objects(ObjCount) <name="Objects">;
+MESH_ARRAY Objects(MeshCount) <name="Meshes">;
+
+if (FILE_HEADER.SectionOffset > 0) {
 
 struct {
   UINT A;
-} MN[HEADER.D];
+  UINT B;
+  UINT C;
+  UINT D;
+  UINT Size;
+  UINT Count;
+  UINT16 T1;
+  UINT16 T2;
+  
+} HEADER;
+
+};
+
