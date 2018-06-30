@@ -1,0 +1,46 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+struct {
+  UINT SectionOffset;
+  UINT ObjectCount;
+  UINT SectionoOffset;
+  UINT AniKeyCount;
+} FILE_HEADER;
+
+typedef struct {
+  UINT type;
+  UINT B;  
+  UINT Length;
+  char FileName[Length];
+} OBJECT <optimize = false>;
+
+typedef struct (uint size) {
+  OBJECT array[size] <optimize=false>;
+} OBJECT_ARRAY;
+
+OBJECT_ARRAY Array(FILE_HEADER.ObjectCount) <name="OBJECTS">;
+
+struct {
+  struct {
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+  } POSITION;
+  struct { 
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+  } ROTATION;
+  FLOAT Time;
+} KEY[FILE_HEADER.AniKeyCount];
