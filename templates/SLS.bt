@@ -1,0 +1,71 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+while (!FEof()) {
+  struct {
+    UINT Index;
+    UINT SomeA;
+    struct {
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+    } MATRIX;
+    FLOAT Y;
+    UINT Count;
+    struct {
+      string FileName;
+      UINT16 Some;
+      if (Some == 2) UBYTE A;
+      if (Some != 0) UINT D;
+      UINT D;
+      if (D == 1) UINT D;
+      UINT Unknown;
+      UINT Unknown;
+      UINT CountA;
+      UINT CountB;
+      struct {
+        FLOAT Unknown;
+        FLOAT Unknown; 
+        FLOAT Unknown;  
+        UINT Unknown;
+        FLOAT Unknown;
+        UINT Unknown;
+        UINT Unknown;
+      } MN1[CountA];
+
+      struct {
+        FLOAT Unknown;
+        FLOAT Unknown; 
+        FLOAT Unknown;  
+        UINT Unknown;
+        FLOAT Unknown;
+        FLOAT Unknown; 
+        FLOAT Unknown;  
+        UINT Unknown;
+      } MN2[CountB];
+    } Array[Count] <optimize=false>;
+  } Arr;
+};
+
