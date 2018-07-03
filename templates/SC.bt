@@ -1,0 +1,243 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+typedef enum <uint> {
+  Elite,
+  Veteran,
+  SeaDog,
+  Sailor,
+  Novice,
+  Rookie,
+  Lady
+} CLASS;
+
+typedef enum <uint> {
+  Calm = 0,
+  Light_air = 1,
+  Light_breeze = 2,
+  Gentle_breeze = 3,
+  Moderate_breeze = 4,
+  Fresh_breeze = 5,
+  Strong_breeze = 6,
+  High_wind = 7,
+  Gail = 8,
+  Strong_gail = 9,
+  Storm = 10,
+  Violent_storm = 11,
+  Hurricane = 12
+} BEAUFORT;
+
+typedef enum <uint> {
+  Britain = 0,
+  France = 1,
+  Spain = 2,
+  USA = 4,
+  RUSSIA = 5,
+  Turkey = 6,
+  Holland = 7,
+  Sweden = 8,
+  Portugal = 9,
+  Naples = 10,
+  Danmark = 11,
+  Privateer1 = 12,
+  Privateer2 = 13,
+  Privateer3 = 14,
+  Slave_trader = 15,
+  Smuggler1 = 16,
+  Smuggler2 = 17,
+  Smuggler3 = 18,
+  Swargard = 19,
+  Heritage = 20
+} COUNTRY;
+
+struct {
+  char AOSS[6];
+  UINT16 A; // 0
+  UINT ShipCount1;
+  UINT ShipCount2;
+  UINT B;
+} HEADER;
+
+char EnvironmentName[101];
+char MapFileName[263];
+
+struct {
+  BEAUFORT BeaufortWind;
+  FLOAT WindDirection;
+  UINT WindForceChangeProbability;
+  UINT WindDirectionChangeProbability;
+  UINT WindForceAmplitude;
+  UINT WindDirectionAmplitude;
+} WIND;
+struct { 
+  UINT Hour;
+  UINT Minute;
+} TIME;
+UINT Weather; // snow, rain, fog, lightning
+UINT Unknown;
+UINT TimeLimit;
+struct {
+  COUNTRY Country;
+  UINT Victory;
+  UINT Points;
+} CountryA; 
+struct {
+  COUNTRY Country;
+  UINT Victory;
+  UINT Points;
+} CountryB;
+
+UINT Unknown;
+
+struct {  
+  struct {
+    FLOAT X;
+    FLOAT Z;
+    FLOAT Y;
+  } POSITION;
+  struct {
+  FLOAT A;
+  FLOAT A;
+  } ROTATION;
+  FLOAT Unknown;
+} CAMERA1_POSITION; 
+
+struct {
+  struct {
+    FLOAT X;
+    FLOAT Z;
+    FLOAT Y;
+  } POSITION;
+  struct {
+    FLOAT X;
+    FLOAT Z;
+  } ROTATION;
+  FLOAT Unknown;
+} CAMERA2_POSITION;
+ 
+UINT A;
+struct {
+  FLOAT X1;
+  FLOAT X2;
+  FLOAT Y1;
+  FLOAT Y2;
+} MAP_AREA;
+
+FLOAT Unknown;
+FLOAT Unknown;
+FLOAT Unknown;
+UINT Unknown;
+UINT Unknown;
+UINT Unknown;
+UINT Year;
+UINT Unknown;
+UINT Unknown;
+UINT Unknown;
+UINT Unknown;
+
+BYTE Empty[40];
+
+string Title;
+string Briefing;
+if (Briefing == "")
+  UBYTE Empty3[61];
+
+typedef struct {
+  char ShipName[101];
+  char ShName[31];
+  char ShFileName[32];
+  string Name;
+  struct {
+    UINT A;
+    UINT Class;
+    UINT DisplacementTonnage;
+    UINT SoldierCount;
+    UINT Year;
+    UINT SailorCount; 
+    UINT Mizenmast;
+    UINT Mainmast;
+    UINT Foremast;
+    UINT mast;
+    UINT Quarterdeck;
+    UINT Upperdeck;
+    UINT Forecastle;
+    UINT GunCalibre;
+    UINT Calibre;
+    UINT CarronadeCalibre;
+    UINT UpperdeckGunCalibre;
+    UINT MiddleDeck;
+    UINT MiddleDeckGunCalibre;
+    UINT LowerDeck;
+    UINT LowerDeckGunCalibre;
+    UINT ForecastleGunCalibre;
+    UINT ForecastleCarronadeCount;
+    UINT ForecastleCarronadeCalibre;
+    UINT Speed;
+    UINT Manoeuvrability;
+    UINT Height;
+    UINT Draft;
+  } PARAMETERS;
+  UINT A;
+  UINT A;
+  UINT A;
+  UINT A;
+  UINT A;
+  UINT A;
+  UINT A;
+  UINT A;
+  UINT A;
+  UINT A;
+  FLOAT A;
+  FLOAT A;
+  FLOAT A;
+  FLOAT A;
+  FLOAT A;
+  FLOAT A;
+  FLOAT A;
+  FLOAT A;
+  FLOAT A;
+  FLOAT A;
+  FLOAT GunsCharge1;
+  FLOAT GunsCharge2;
+  FLOAT GunsCharge3;
+  FLOAT GunsCharge4;
+  FLOAT Rotation;
+  FLOAT PositionX;
+  FLOAT A;
+  FLOAT PositionY;
+  FLOAT A;
+  UINT A;
+  UINT A;
+  UINT A;
+  UINT A;
+  UINT A;
+  UINT A;
+  UINT A;
+  UINT A;
+  UINT Owner; // 1 - B side
+  CLASS Class; //
+  UINT Team;
+  UINT Hull;
+  UINT Sail;
+  UINT Guns;
+  UINT A;
+  UINT A;
+  UINT A;
+  UINT A;
+  UINT A;
+} SHIP;
+
+SHIP Ships1[HEADER.ShipCount1] <optimize=false>;
+
+SHIP Ships2[HEADER.ShipCount2] <optimize=false>;
+
