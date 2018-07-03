@@ -1,0 +1,65 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+struct {
+  char AOSCP[6];
+  UINT16 ScenBrfCount;
+  UINT16 ConnCount;
+  UINT16 Unknown; // 0
+  UINT16 Unknown; // 1
+  UINT16 Unknown; // 1
+  UINT Unknown; // 0
+  UINT16 Unknown;
+  UINT16 Unknown;
+  UINT16 Unknown;
+  UINT16 Unknown;
+  UINT16 Unknown;
+  UINT16 Unknown;
+  UINT16 Unknown;
+  UINT16 Unknown;
+} HEADER;
+
+struct {
+  UINT16 NodeIndex <name="Index">;
+  UINT16 Type <name="Type">; // 2 - scenario, 3 - briefing
+  UINT16 NextNodeIndex1;
+  UINT16 NextNodeIndex2;
+  UINT Unknown; //0
+  UINT PosX;
+  UINT PosY;
+  char ScenarioFileName[260];
+  char Name[64];
+} CAMPAIGN_NODES[HEADER.ScenBrfCount];
+
+struct {
+  UINT16 NodeIndex1;
+  UINT16 NodeIndex2;
+  UINT16 Connection1Type; // 102, 101, 103
+  UINT16 Connection2Type; // 102, 101, 103
+  UINT Unknown; // 3, 4
+  struct {
+    UINT X;
+    UINT Y;
+    UINT Z;
+  } P1;
+  struct {
+    UINT X;
+    UINT Y;
+    UINT Z;
+  } P2;
+} CONNECTIONS[HEADER.ConnCount];
+ 
+string CompaignTitle;
+string CompaignDescription;
+
+string ScriptFileName;
