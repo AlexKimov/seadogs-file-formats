@@ -11,7 +11,7 @@
 | 1   | ANI/.ani  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/7)   |  [ANI.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/ANI.bt)  |    | 
 | 2   | CFF/.ccf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/4)   |  [CFF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CFF.bt)  | 3D Models   | 
 | 3   | CLF/.clf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/5)   |  [CLF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CLF.bt) |   | 
-| 4   | CMP/.cmp  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/5)   |  [CMP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CMP.bt) |   | 
+| 4   | CMP/.cmp  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/5)   |  [CMP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CMP.bt) |  Privateer’s Bounty campaign file | 
 | 5  | DEF/.def  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/8)   |  [DEF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/DEF.bt) |   | 
 | 6   | IDF/.idf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/3)  |  [IDF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/IDF.bt)  |   |  
 | 7  | PAK/.pak  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/2)   |  [PAK.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/PAK.bt)  | Age of Sail 2Game archive: 3d models, textures, executables, fonts   | 
