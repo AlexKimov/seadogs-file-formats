@@ -10,11 +10,13 @@
 | 4   | CMP/.cmp  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/5)   |  [CMP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CMP.bt) |  | Файл компании игры Рыцари морей  | 
 | 5  | DEF/.def  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/8)   |  [DEF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/DEF.bt) |   | |
 | 6   | IDF/.idf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/3)  |  [IDF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/IDF.bt)  | [Формат файла IDF](https://github.com/AlexKimov/seadogs-file-formats/wiki/IDF-File-Format-Rus) | Таблица объектов и их свойств | 
-| 7  | PAK/.pak  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/2)   |  [PAK.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/PAK.bt)  | Файл архива игры Век парусников 2: 3d модели, текстуры, программы(!), шрифты  | |
+| 7  | PAK/.pak  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/2)   |  [PAK.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/PAK.bt)  | | Файл архива игры Век парусников 2: 3d модели, текстуры, программы(!), шрифты  | 
 | 8  | PAK/.pak  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/6)   |  [PAK(PB).bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/PAK(PB).bt)|  | Файл архива игры Рыцари морей: 3d модели, текстуры, программы(!), шрифты | 
 | 9  | SC/.sc  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/9)   |  [SC.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/SC.bt)  |  | |
 | 10  | SLS/.sls    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [SLS.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/SLS.bt)   |   ||
 | 11   | TF/.tf    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [TF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/TF.bt)   | | Файл текстур  |
+
+***
 
 # About
 
