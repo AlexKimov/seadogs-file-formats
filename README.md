@@ -1,7 +1,7 @@
 # Описание
 
 Форматы файлов игр **Корсары Проклятье дальних морей** (2000) , **Век парусников 2** (2001) и **Рыцари Морей** (2002). 
-
+Описание форматов [WIKI](https://github.com/AlexKimov/seadogs-file-formats/wiki)
 | №   | Формат | Прогресс | Шаблон (010 Editor) | WIKI | Краткое описание |
 | :-- | :-------- | :------ | :------- | :--   | :--   |
 | 1   | ANI/.ani  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/7)   |  [ANI.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/ANI.bt)  |    | |
