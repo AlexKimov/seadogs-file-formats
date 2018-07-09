@@ -16,6 +16,8 @@
 | 10  | SLS/.sls    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [SLS.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/SLS.bt)   |   ||
 | 11   | TF/.tf    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [TF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/TF.bt)   | | Файл текстур  |
 
+***
+
 # About
 
 **Sea dogs** (2000), **Age of Sale 2** (2001), **Privateer’s Bounty: Age of Sail 2** (2002) games file formats.
