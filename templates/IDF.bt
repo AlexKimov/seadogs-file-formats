@@ -1,38 +1,42 @@
 //------------------------------------------------
 //--- 010 Editor v8.0.1 Binary Template
 //
-//      File: 
-//   Authors: 
-//   Version: 
-//   Purpose: 
-//  Category: 
-// File Mask: 
-//  ID Bytes: 
+//      File: IDF.bt
+//   Authors: Alexander Evdokimov
+//   Version: 0.1
+//   Purpose: Sea Dogs IDF files
+// File Mask: *.idf
+//
 //   History: 
+//
+// 2018.05 v0.1 Initial release
 //------------------------------------------------
 
 
 struct {
-  UINT A;
+  UINT MN <name="Signature?">;
   UINT Count;
-  UINT CountB;
-} HEADER;
+  UINT PropertyCount;
+} HEADER <name="File Header">;
 
 typedef struct {
-
-  UINT PropCount;
-  UINT Unknown;
-
+  UINT PropertyCount;
   typedef struct {
+    UINT Unknown;
     char Name[64];
-    if (Name == "weapon_type")
-      char Property[64];
-    else
-      char Property[68];
-  } NameValue <optimize=false>;
+    char Property[64];
+  } PROPERTIES <optimize=false>;
 
-  NameValue NMArray[PropCount] <name="Name/Value">;
+  PROPERTIES Properties[PropertyCount] <name="Name/Property">;
 
-} PROPERTIES_TABLE <name="Element", optimize=false>;
+} OBJECT <name=getName>;
 
-PROPERTIES_TABLE Elements[HEADER.Count] <name="Elements">;
+string getName(OBJECT &Obj) {
+  return Obj.Properties[0].Property;
+}
+
+typedef struct (uint size) {
+ OBJECT array[size] <optimize=false>;
+} OBJECT_TABLE;
+
+OBJECT_TABLE Object(HEADER.Count) <name="Table">;
