@@ -1,29 +1,48 @@
 //------------------------------------------------
 //--- 010 Editor v8.0.1 Binary Template
 //
-//      File: 
-//   Authors: 
-//   Version: 
-//   Purpose: 
-//  Category: 
-// File Mask: 
-//  ID Bytes: 
+//      File: ANI.bt
+//   Authors: Alexander Evdokimov
+//   Version: 0.1
+//   Purpose: Sea Dogs game ANI files
+// File Mask: *.ani
+//
 //   History: 
+//
+// 2018.06 v0.1 Initial release
+// 
 //------------------------------------------------
 
 struct {
-  UINT SectionOffset;
+  UINT SectionOffset <name="First section offset">;
   UINT ObjectCount;
-  UINT SectionoOffset;
+  UINT SectionoOffset <name="Second section offset">;
   UINT AniKeyCount;
 } FILE_HEADER;
 
 typedef struct {
   UINT type;
-  UINT B;  
+  UINT Unknown <name="Key?">;  
   UINT Length;
-  char FileName[Length];
-} OBJECT <optimize = false>;
+  switch (type)
+  {
+    case 7: UINT Unknown; break;
+    case 29: 
+    { 
+      UINT Unknown;
+      UINT Unknown; 
+    } break;
+    default: char ObjectName[Length];
+  };
+} OBJECT <name=getName>;
+
+string getName(OBJECT &obj) 
+{ 
+  if (exists(obj.ObjectName)) 
+    return obj.ObjectName;
+  else
+    return "Object";    
+};
 
 typedef struct (uint size) {
   OBJECT array[size] <optimize=false>;
