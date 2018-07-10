@@ -1,77 +1,98 @@
 //------------------------------------------------
 //--- 010 Editor v8.0.1 Binary Template
 //
-//      File: 
-//   Authors: 
-//   Version: 
-//   Purpose: 
-//  Category: 
-// File Mask: 
-//  ID Bytes: 
+//      File: CLF.bt
+//   Authors: Alexander Evdokimov
+//   Version: 0.1
+//   Purpose: Sea Dogs game CLF files
+// File Mask: *.clf
+//
 //   History: 
+//
+// 2018.06 v0.1 Initial release
+//
 //------------------------------------------------
 
 struct {
-  UINT A;
-  UINT A;
-  UINT A;
-  UINT A;
-  UINT A;
+  UINT Unknown <name="Signature?">;
+  UINT Unknown;
+  UINT Unknown; // 0
+  UINT Unknown; // 0
+  UINT Unknown; // 1
   UINT FileCount;
-  UINT A;
-  UINT CountF;;
-  UINT A;
-  UINT A;
-  UINT A;
-  UINT A;
+  UINT Unknown;
+  UINT MeshCount;;
+  UINT Unknown; // 0
+  UINT Unknown; // 886
+  UINT Unknown; // 0
+  UINT Unknown; // 0
 } HEADER;
 
 typedef struct {
-  char FileName[256] <name=fileName>;
-} FILENAME <>;
+  char FileName[256];
+} FILENAME <name=getfileName>;
 
-//string fileName(FILENAME &fn) {
-//  return fn.FileName;
-//};
+typedef struct (uint size) {
+  FILENAME array[size];
+} TEXTURES;
 
-FILENAME FileNames[HEADER.FileCount] <name="FileNames">;
+string getfileName(FILENAME &fn) {
+  return fn.FileName;
+};
 
-struct { 
+TEXTURES FileNames(HEADER.FileCount) <name="Textures">;
+
+typedef struct { 
+  struct {
   char Name[32];
-  UINT CountC;
-  UINT CountD;
-  UINT CountA;
-  UINT CountB;
-  UBYTE G[96];
+    UINT KeyCount;
+    UINT Unknown;
+    UINT VertexCount;
+    UINT FaceCount;
+    UBYTE Empty[96];
+  } HEADER <name="Header">;
   struct {
-    FLOAT MN;
-    FLOAT MN;
-    FLOAT MN;
-    FLOAT MN;
-    FLOAT MN;
-    FLOAT MN;
-    FLOAT MN;
-  } AA[CountA]; 
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+    FLOAT Unknown;
+    FLOAT Unknown;
+    FLOAT Unknown;
+    FLOAT Unknown;
+  } VERTEXES[HEADER.VertexCount]; 
+  struct {
+    UINT16 I1;
+    UINT16 I2;
+    UINT16 I3;
+    UINT16 Zero;
+    FLOAT U1;
+    FLOAT V1;
+    FLOAT U2;
+    FLOAT V2;
+    FLOAT U3;
+    FLOAT V3;
+  } FACES[HEADER.FaceCount];
+  struct {
+    struct {
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+    } POSITION;
+    struct {
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+    } ROTATION;
+    FLOAT Time; //
+  } ANIMATIONS[HEADER.KeyCount];
+} MESH <name=getName>;
 
-  struct {
-    UINT16 CountC;
-    UINT16 CountC;
-    UINT CountD;
-    FLOAT MN;
-    FLOAT MN;
-    FLOAT MN;
-    FLOAT MN;
-    FLOAT MN;
-    FLOAT MN;
-  } AB[CountB];
+typedef struct (uint size) {
+  MESH array[size] <optimize=false>;
+} MESHES;
 
-  struct {
-    FLOAT MN;
-    FLOAT MN;
-    FLOAT MN;
-    FLOAT MN;
-    FLOAT MN;
-    FLOAT MN;
-    FLOAT MN;
-  } AV[CountC];
-} MN[HEADER.CountF] <optimize=false>;
+string getName(MESH &ms) {
+  return ms.HEADER.Name;
+};
+
+MESHES Meshes(HEADER.MeshCount) <name="Meshes">;
