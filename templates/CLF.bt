@@ -46,7 +46,7 @@ typedef struct {
   struct {
   char Name[32];
     UINT KeyCount;
-    UINT Unknown;
+    UINT TextureIndex;
     UINT VertexCount;
     UINT FaceCount;
     UBYTE Empty[96];
