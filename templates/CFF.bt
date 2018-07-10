@@ -1,14 +1,16 @@
 //------------------------------------------------
 //--- 010 Editor v8.0.1 Binary Template
 //
-//      File: 
-//   Authors: 
-//   Version: 
-//   Purpose: 
-//  Category: 
-// File Mask: 
-//  ID Bytes: 
+//      File: CFF.bt
+//   Authors: Alexander Evdokimov
+//   Version: 0.1
+//   Purpose: Sea Dogs game CFF files
+// File Mask: *.cff
+//
 //   History: 
+//
+// 2018.06 v0.1 Initial release
+//
 //------------------------------------------------
 
 local uint v = true; // ??
@@ -18,17 +20,17 @@ struct {
     FLOAT X;
     FLOAT Y;
     FLOAT Z;
-  } OBJECT_ORIGIN;
+  } OBJECT_ORIGIN <name="Origin">;
   struct {
     FLOAT X;
     FLOAT Y;
     FLOAT Z;
-  } OBJECT_SCALE;
-  UINT TextureCount;
-  UINT TPCount;
-  UINT Unknown;
-  UINT SectionOffset;
-  FLOAT radius;
+  } OBJECT_SCALE <name="Scale">;
+  UINT TextureCount <name="Number of textures">;
+  UINT TPCount <name="Number of texture properties">;
+  UINT Unknown; // some kind of flag
+  UINT SectionOffset <name="Offset">; 
+  FLOAT radius <name="Object culling radius?">;
 } FILE_HEADER <name="File Header">;
 
 typedef struct {
@@ -64,12 +66,10 @@ typedef struct {
   UINT Unknown;
 } TEXTURE_PROPERTIES <>;
 
-TEXTURE_PROPERTIES TexProperties[FILE_HEADER.TPCount];
+TEXTURE_PROPERTIES TexProperties[FILE_HEADER.TPCount] <name="Properties of textures">;
 
 UINT MeshCount;
-UINT Count;
-
-
+UINT Unknown;
 
 typedef struct {
   struct {
@@ -78,15 +78,15 @@ typedef struct {
       FLOAT Y;
       FLOAT Z;
     } MESH_ORIGIN;
-    FLOAT D;
+    FLOAT Unknown;
     FLOAT Radius;
     UINT TextureIndex;
     UINT VertexCount <name="Number of vertexes">;
     UINT FaceCount <name="Number of faces">;
-    UINT Unknown;
+    UINT Unknown; // flag?
     UINT AnimationKeyCount;
     char MeshName[4];
-  } HEADER;
+  } HEADER <name="Header">;
 
   struct {
      HFLOAT X;     
@@ -142,18 +142,36 @@ typedef struct (uint size) {
 MESH_ARRAY Objects(MeshCount) <name="Meshes">;
 
 if (FILE_HEADER.SectionOffset > 0) {
+  struct {
+    struct {
+      UINT A; // flag
+      UINT B;
+      UINT C;
+      UINT D;
+      UINT Size;
+      UINT Count;
+      UINT16 T1;
+      UINT16 T2;
+    } HEADER;
 
-struct {
-  UINT A;
-  UINT B;
-  UINT C;
-  UINT D;
-  UINT Size;
-  UINT Count;
-  UINT16 T1;
-  UINT16 T2;
-  
-} HEADER;
+    struct { 
+      UINT16 B;
+      UINT16 B;
+      UINT16 B;
+      UINT16 B;
+    } B[HEADER.B];
+    struct { 
+      UINT16 B;
+      UINT16 B;
 
+    } C[HEADER.C];
+    struct { 
+      UINT16 B;
+      UINT16 B;
+      UINT16 B;
+      UINT16 B;
+    } D[HEADER.D];
+
+  } Section;
 };
 
