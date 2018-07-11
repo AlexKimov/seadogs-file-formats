@@ -1,27 +1,29 @@
 //------------------------------------------------
 //--- 010 Editor v8.0.1 Binary Template
 //
-//      File: 
-//   Authors: 
-//   Version: 
-//   Purpose: 
-//  Category: 
-// File Mask: 
-//  ID Bytes: 
+//      File: TF.bt
+//   Authors: Alexander Evdokimov
+//   Version: 0.1
+//   Purpose: Sea Dogs game TF files
+// File Mask: *.tf
+//
 //   History: 
+//
+// 2018.06 v0.1 Initial release
+// 
 //------------------------------------------------
 
 local uint i, height, width = 0;
 
 struct {
-  UINT A;
-  UBYTE A;
-  UBYTE B;
+  UINT Unknown;
+  UBYTE Unknown;
+  UBYTE Unknown;
   UBYTE MipMapCount;
   UBYTE MaskCount;  
   UINT Width;
   UINT Height;
-} HEADER;
+} HEADER <name="Header">;
 
 BitfieldDisablePadding();
 
@@ -31,7 +33,7 @@ typedef struct {
   ubyte Blue  : 5 <name="Blue">; 
 } PIXEL16 <size = 2, name="Pixel">;
 
-PIXEL16 Pixels[HEADER.Width*HEADER.Height] <name="Pixels">; 
+PIXEL16 Pixels[HEADER.Width*HEADER.Height] <name="Texture pixels">; 
 
 typedef struct (uint count) {
   height = HEADER.Height, width = HEADER.Width;
@@ -62,7 +64,7 @@ struct {
   height = HEADER.Height, width = HEADER.Width; 
   for (i = 0; i < HEADER.MaskCount; ++i) {
      struct {
-       COLOR_TABLE Pixels[height*width] <name="Mask">;;
+       COLOR_TABLE Pixels[height*width] <name="Mask">;
      } PIXELS; 
      height = height/2; 
      width = width/2;     
