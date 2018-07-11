@@ -12,9 +12,9 @@
 //------------------------------------------------
 
 struct {
-  char AOSCP[6];
+  char AOSCP[6] <name="Signature">;
   UINT16 ScenBrfCount;
-  UINT16 ConnCount;
+  UINT16 ConnCount <name="Number of connections">;
   UINT16 Unknown; // 0
   UINT16 Unknown; // 1
   UINT16 Unknown; // 1
@@ -27,7 +27,7 @@ struct {
   UINT16 Unknown;
   UINT16 Unknown;
   UINT16 Unknown;
-} HEADER;
+} HEADER <name="Header">;
 
 struct {
   UINT16 NodeIndex <name="Index">;
@@ -39,7 +39,7 @@ struct {
   UINT PosY;
   char ScenarioFileName[260];
   char Name[64];
-} CAMPAIGN_NODES[HEADER.ScenBrfCount];
+} CAMPAIGN_NODES[HEADER.ScenBrfCount] <name="Nodes">;
 
 struct {
   UINT16 NodeIndex1;
@@ -57,9 +57,9 @@ struct {
     UINT Y;
     UINT Z;
   } P2;
-} CONNECTIONS[HEADER.ConnCount];
+} CONNECTIONS[HEADER.ConnCount] <name="Connection lines">;
  
-string CompaignTitle;
-string CompaignDescription;
+string CompaignTitle <name="Title">;
+string CompaignDescription <name="Description">;
 
-string ScriptFileName;
+string ScriptFileName <name="ScriptFile">;
