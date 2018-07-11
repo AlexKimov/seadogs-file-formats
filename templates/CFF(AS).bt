@@ -1,0 +1,164 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: CFF(AS).bt
+//   Authors: Alexander Evdokimov
+//   Version: 0.1
+//   Purpose: Age of Sale 2/Privateer’s Bounty games CFF files
+// File Mask: *.cff
+//
+//   History: 
+//
+// 2018.07 v0.1 Initial release
+//
+//------------------------------------------------
+
+local uint v = true; // ??
+
+struct {
+  struct {
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+  } OBJECT_ORIGIN <name="Origin">;
+  struct {
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+  } OBJECT_SCALE <name="Scale">;
+  UINT TextureCount <name="Number of textures">;
+  UINT TPCount <name="Number of texture properties">;
+  UINT Unknown; // some kind of flag
+  UINT SectionOffset <name="Offset">; 
+  FLOAT radius <name="Object culling radius?">;
+} FILE_HEADER <name="File Header">;
+
+typedef struct {
+  UBYTE Length;
+  char FileName[Length];
+} TEXTURE_FILE <name=texFileName>;
+
+string texFileName(TEXTURE_FILE &file) {
+  return file.FileName;
+}
+
+typedef struct (uint size) {
+  TEXTURE_FILE array[size] <optimize=false>;
+} FILE_LIST;
+
+FILE_LIST Textures(FILE_HEADER.TextureCount) <name="Textures List">;
+
+typedef struct {
+  UINT Index;
+  FLOAT Unknown;
+  FLOAT Unknown;
+  FLOAT Unknown;
+  FLOAT Unknown;
+  FLOAT Unknown;
+  FLOAT Unknown;
+  FLOAT Unknown;
+  UINT Unknown;
+  UINT Unknown;
+  UINT Unknown;
+  FLOAT Unknown;
+  UINT Unknown;
+  FLOAT Unknown;
+  UINT Unknown;
+  UINT Unknown;
+  FLOAT Unknown;
+  UINT Unknown;
+  UINT Unknown;
+  UINT Unknown;
+} TEXTURE_PROPERTIES <>;
+
+TEXTURE_PROPERTIES TexProperties[FILE_HEADER.TPCount] <name="Properties of textures">;
+
+UINT MeshCount;
+UINT Unknown;
+
+typedef struct {
+  struct {
+    struct {
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+    } MESH_ORIGIN;
+    FLOAT Unknown;
+    FLOAT Radius;
+    UINT TextureIndex;
+    UINT VertexCount <name="Number of vertexes">;
+    UINT FaceCount <name="Number of faces">;
+    UINT Unknown; // flag?
+    UINT AnimationKeyCount;
+    char MeshName[4];
+  } HEADER <name="Header">;
+
+  struct {
+     HFLOAT X;     
+     HFLOAT Y;     
+     HFLOAT Z;
+     UINT16 U;     
+     UINT16 V;
+     if (v) 
+       UBYTE Color[3];
+     else
+       UINT16 G;     
+  } VERTEX[HEADER.VertexCount];
+
+  struct {
+    if (HEADER.VertexCount <= 256) {
+      UBYTE I1;
+      UBYTE I2;
+      UBYTE I3;
+    } else {
+      BYTE A;
+      UBYTE I1;
+      BYTE B;
+      UBYTE I2;
+      BYTE C;
+      UBYTE I3;
+    };
+  } FACE_INDEXES[HEADER.FaceCount] <name="Face Indexes">;
+
+  struct {
+    struct {
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+    } POSITION;
+    struct {
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+    } ROTATION;
+    FLOAT Time; //
+  } ANIMATIONS[HEADER.AnimationKeyCount];
+
+} MESH <optimize=false, name=meshName>;
+
+string meshName(MESH &mesh) {
+  return mesh.HEADER.MeshName;
+}
+
+typedef struct (uint size) {
+  MESH array[size];
+} MESH_ARRAY;
+
+MESH_ARRAY Objects(MeshCount) <name="Meshes">;
+
+if (FILE_HEADER.SectionOffset > 0) {
+  struct {
+    struct {
+      UINT A; // flag
+      UINT B;
+      UINT C;
+      UINT D;
+      UINT Size;
+      UINT Count;
+      UINT16 T1;
+      UINT16 T2;
+    } HEADER;
+
+  } Section;
+};
+
