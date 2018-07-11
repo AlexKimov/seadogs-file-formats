@@ -1,14 +1,16 @@
 //------------------------------------------------
 //--- 010 Editor v8.0.1 Binary Template
 //
-//      File: 
-//   Authors: 
-//   Version: 
-//   Purpose: 
-//  Category: 
-// File Mask: 
-//  ID Bytes: 
+//      File: PAK.bt
+//   Authors: Alexander Evdokimov
+//   Version: 0.1
+//   Purpose: Age of Sale 2 (2001) game PAK files
+// File Mask: *.pak
+//
 //   History: 
+//
+// 2018.07 v0.1 Initial release
+//
 //------------------------------------------------
 
 local uint i, count1, coun2 = 0;
@@ -23,9 +25,9 @@ uint checkFolder() {
 
 struct {
   char ENPAK[6] <name="Signature">;
-  BYTE A;
-  BYTE B;
-  BYTE C;
+  BYTE Unknown;
+  BYTE Unknown;
+  BYTE Unknown;
   BYTE empty[17];
 } HEADER <name="File Header">;
 
@@ -37,7 +39,7 @@ struct {
     else
         UINT DataSize;      
     UINT Offset;
-    UINT a; // 1 - ??
+    UINT Unknown; // 1 - ??
     UINT Empty; // 0  
     string Name; 
   } FILE_HEADER <name=fileName>;
