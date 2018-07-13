@@ -3,51 +3,29 @@
 //
 //      File: CFF.bt
 //   Authors: Alexander Evdokimov
-//   Version: 0.1
+//   Version: 0.2
 //   Purpose: Sea Dogs game CFF files
 // File Mask: *.cff
 //
 //   History: 
 //
+// 2018.07 v0.2 add computing vertex and texture coordinates, update texture properties section
 // 2018.06 v0.1 Initial release
 //
 //------------------------------------------------
 
-local uint v = true; // ??
-
-struct {
-  struct {
-    FLOAT X;
-    FLOAT Y;
-    FLOAT Z;
-  } OBJECT_ORIGIN <name="Origin">;
-  struct {
-    FLOAT X;
-    FLOAT Y;
-    FLOAT Z;
-  } OBJECT_SCALE <name="Scale">;
-  UINT TextureCount <name="Number of textures">;
-  UINT TPCount <name="Number of texture properties">;
-  UINT Unknown; // some kind of flag
-  UINT SectionOffset <name="Offset">; 
-  FLOAT radius <name="Object culling radius?">;
-} FILE_HEADER <name="File Header">;
+local float P_X,P_Y, P_Z, S_X, S_Y, S_Z, UVDel;
+local uint i, k, n = 0;
 
 typedef struct {
   UBYTE Length;
   char FileName[Length];
 } TEXTURE_FILE <name=texFileName>;
-
-string texFileName(TEXTURE_FILE &file) {
-  return file.FileName;
-}
-
+   
 typedef struct (uint size) {
   TEXTURE_FILE array[size] <optimize=false>;
 } FILE_LIST;
 
-FILE_LIST Textures(FILE_HEADER.TextureCount) <name="Textures List">;
-
 typedef struct {
   UINT Unknown;
   UINT Unknown;
@@ -58,47 +36,60 @@ typedef struct {
   UINT Unknown;
   FLOAT Unknown;
   UINT Unknown;
-  UINT Unknown;
-  UINT Unknown;
-  FLOAT Unknown;
-  UINT Unknown;
-  UINT Unknown;
-  UINT Unknown;
-} TEXTURE_PROPERTIES <>;
-
-TEXTURE_PROPERTIES TexProperties[FILE_HEADER.TPCount] <name="Properties of textures">;
-
-UINT MeshCount;
-UINT Unknown;
+  UINT Count;
+  struct {
+    UINT Unknown;
+    FLOAT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+  } A[Count];
+} TEXTURE_PROPERTIES;
 
 typedef struct {
+   INT16 X;     
+   INT16 Y;     
+   INT16 Z;
+   INT16 U;     
+   INT16 V;
+   struct {
+     UBYTE R; 
+     UBYTE G;   
+     UBYTE B;
+   } COLOR;  
+
+   // Computing coordinates
+   // local float pos_x, pos_y, pos_z, coor_u, coor_v, R, G, B;
+   // pos_x = P_X + X*S_X/32767.0; 
+   // pos_y = P_Y + Y*S_Y/32767.0;  
+   // pos_z = P_Z + Z*S_Z/32767.0;
+   // coor_u = U/UVDel;
+   // coor_v = V/UVDel;
+   // R = COLOR.R/127;
+   // G = COLOR.G/127;
+   // B = COLOR.B/127;
+} VERTEX;
+
+typedef struct {
+
   struct {
     struct {
       FLOAT X;
       FLOAT Y;
       FLOAT Z;
     } MESH_ORIGIN;
-    FLOAT Unknown;
+    FLOAT UVDelim;
+    UVDel = UVDelim;
     FLOAT Radius;
     UINT TextureIndex;
     UINT VertexCount <name="Number of vertexes">;
     UINT FaceCount <name="Number of faces">;
-    UINT Unknown; // flag?
+    UINT Unknown; // always 1 
     UINT AnimationKeyCount;
     char MeshName[4];
   } HEADER <name="Header">;
 
-  struct {
-     HFLOAT X;     
-     HFLOAT Y;     
-     HFLOAT Z;
-     UINT16 U;     
-     UINT16 V;
-     if (v) 
-       UBYTE Color[3];
-     else
-       UINT16 G;     
-  } VERTEX[HEADER.VertexCount];
+  VERTEX VERTEXES[HEADER.VertexCount];
 
   struct {
     if (HEADER.VertexCount <= 256) {
@@ -131,47 +122,80 @@ typedef struct {
 
 } MESH <optimize=false, name=meshName>;
 
-string meshName(MESH &mesh) {
-  return mesh.HEADER.MeshName;
-}
 
 typedef struct (uint size) {
   MESH array[size];
 } MESH_ARRAY;
 
-MESH_ARRAY Objects(MeshCount) <name="Meshes">;
-
-if (FILE_HEADER.SectionOffset > 0) {
-  struct {
+typedef struct {
     struct {
-      UINT A; // flag
-      UINT B;
-      UINT C;
-      UINT D;
-      UINT Size;
-      UINT Count;
-      UINT16 T1;
-      UINT16 T2;
-    } HEADER;
+      struct {
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
+      } OBJECT_ORIGIN <name="Origin">;
+      struct {
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
+      } OBJECT_SCALE <name="Scale">;
+      UINT TextureCount <name="Number of textures">;
+      UINT TPCount <name="Number of texture properties">;
+      UINT ObjectCount; // some kind of flag
+      UINT SectionOffset <name="Offset">; 
+      FLOAT radius <name="Object culling radius?">;
+      P_X = OBJECT_ORIGIN.X;
+      P_Y = OBJECT_ORIGIN.Y;
+      P_Z = OBJECT_ORIGIN.Z; 
+      S_X = OBJECT_SCALE.X;  
+      S_Y = OBJECT_SCALE.Y;  
+      S_Z = OBJECT_SCALE.Z; 
+    } FILE_HEADER <name="File Header">;
+    
+    FILE_LIST Textures(FILE_HEADER.TextureCount) <name="Textures List">;
+      
+    TEXTURE_PROPERTIES TexProperties[FILE_HEADER.TPCount] <name="Properties of textures">;
 
-    struct { 
-      UINT16 B;
-      UINT16 B;
-      UINT16 B;
-      UINT16 B;
-    } B[HEADER.B];
-    struct { 
-      UINT16 B;
-      UINT16 B;
+    struct {    
+      for ( i = 0; i < FILE_HEADER.ObjectCount; ++i ) {
+        UINT MeshCount;
+        UINT Zero; // not used
+        struct { 
+          for (k = 0; k < MeshCount; ++k) {
+            MESH Mesh <name="Meshes">;    
+          };
+        } MESHES;
+      };  
+    } OBJECTS;
 
-    } C[HEADER.C];
-    struct { 
-      UINT16 B;
-      UINT16 B;
-      UINT16 B;
-      UINT16 B;
-    } D[HEADER.D];
+    if (FILE_HEADER.SectionOffset > 0) {
+      struct {
+        UINT A; // flag 
+        struct {
+           UINT A;
+           UINT Size1;
+           UINT Size2;
+           UINT Size3;
+           UINT Size4;
+        } HEADER; 
+        if (HEADER.A == 1) 
+        { 
+          BYTE Data[HEADER.Size4];
+        } else 
+        {
 
-  } Section;
-};
+        };  
+      } Section;
+    };
+} CFF_FILE;
+
+string texFileName(TEXTURE_FILE &file) {
+  return file.FileName;
+}
+
+string meshName(MESH &mesh) {
+  return mesh.HEADER.MeshName;
+}
+
+CFF_FILE CFFFile;
 
