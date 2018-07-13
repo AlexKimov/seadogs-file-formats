@@ -13,7 +13,10 @@
 // 
 //------------------------------------------------
 
+//#include "CFF.bt"
+
 local uint i, k, pos, FolderCount, FileCount;
+local string ext;
 
 struct {
   char ENPAK[6] <name="Signature">;
@@ -56,10 +59,14 @@ struct {
     FileCount = FILE_TABLE.FOLDERS[k].FileCount;
     if (FileCount > 0) {
       pos = pos + i;
-      for (i = 0; i < FileCount; ++i)  { 
-        struct {   
-          FSkip(FILE_TABLE.FILE_ENTRY[pos + i].FileSize);
-        } FILE; 
+      for (i = 0; i < FileCount; ++i)  {
+        //ext = FileNameGetExtension(FILE_TABLE.FILE_ENTRY[i + i*k].FileName);
+        //if (ext == ".cff" || ext == ".cFf" | ext == ".cFF")
+        //  CFF_FILE CFFFile;
+        //else    
+          struct {   
+            FSkip(FILE_TABLE.FILE_ENTRY[pos + i].FileSize);
+          } FILE; 
       };
     };
   };
