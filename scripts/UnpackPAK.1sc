@@ -1,0 +1,82 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Script File
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+//   History: 
+//------------------------------------------------
+
+local string rootdir = "test";
+local uint type, datasize, length, count, i = 0;
+local int offset = 0;
+local string Name;
+local string Path;
+local int FileIndex;
+local uchar Buffer[5242880];
+local uchar FolderEnd = false;
+
+FileIndex = GetFileNum();
+Name = GetFileName();
+Path = FileNameGetPath(Name) + rootdir;
+MakeDir(Path); // current dir
+SetWorkingDirectory(Path);
+
+FSkip(26); // skip Header
+
+void fileTree(uint filecount, string folder) {
+  local string fp = folder;
+  for ( i = 0; i < filecount; ++i ) {
+    type = ReadByte();
+    FSkip(1);
+    if (type == 1) 
+    {
+      datasize = ReadInt();
+      FSkip(4);
+      offset = ReadInt();
+      FSkip(12);
+      Name = ReadString(FTell());
+      length = ReadStringLength(FTell()); 
+      FSkip(length);
+      // create and save file to directory
+      ReadBytes(Buffer, offset, datasize);
+      FileNew();
+      WriteBytes(Buffer, 0, datasize);  
+      FileSave(fp + "/" + Name);
+      FileClose();
+      // back to pak file
+      FileSelect(FileIndex); 
+    } 
+    else if (type == 0)  
+    {
+      count = ReadInt();
+      FSkip(16);
+      Name = ReadString(FTell());
+      length = ReadStringLength(FTell());
+      if (folder == "")
+          Path = GetWorkingDirectory() + Name; 
+      else
+          Path = folder + "/" + Name;            
+      MakeDir(Path);      
+      FSkip(length);
+      FolderEnd = false;
+      if (count) 
+        fileTree(count, Path);
+      else
+        fileTree(1, "");                 
+    }
+    else if (type == 2)  
+    {
+      FSkip(8);
+      if (ReadInt() == 1) {
+        FSkip(9); 
+        fileTree(1, "");
+      };
+      FSkip(9); // skip "folder end" structure;     
+    }
+  }; 
+};
+
+fileTree(1, "");

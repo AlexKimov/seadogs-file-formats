@@ -1,0 +1,20 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Script File
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+//   History: 
+//------------------------------------------------
+
+local ubyte b, i = 0;
+
+while (i < 1000) {
+  b = ReadByte();
+  b = b ^ 110 ^ i;
+  WriteByte(FTell(), b);
+  FSkip(1);
+  ++i;
+};
