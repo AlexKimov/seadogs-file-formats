@@ -7,8 +7,8 @@
 ### Инструменты
 | №   | Название | Описание | 
 | :-- | :-------- | :------ |
-| 1 | [UnpackDAT.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/UnpackDAT.1sc)  | Скрипт для расшифровки .dat файлов игры Век Парсуников 2 |
-| 2 | [UnpackPAK.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/UnpackPAK.1sc) | Скрипт (010 Editor) для распаковки архивов игры Век Парсуников 2 |
+| 1 | [UnpackDAT.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/UnpackDAT.1sc)  | Скрипт для расшифровки **.dat** файлов игры Век Парсуников 2 |
+| 2 | [UnpackPAK.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/UnpackPAK.1sc) | Скрипт (010 Editor) для распаковки архивов **.pak** игры Век Парсуников 2 |
 
 ### Форматы файлов
 | №   | Формат | Прогресс | Шаблон (010 Editor) | WIKI | Краткое описание |
