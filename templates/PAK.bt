@@ -25,9 +25,9 @@ uint checkFolder() {
 
 struct {
   char ENPAK[6] <name="Signature">;
-  BYTE Unknown;
-  BYTE Unknown;
-  BYTE Unknown;
+  BYTE Level; // ?
+  BYTE Unknown;  // 0
+  BYTE Unknown;  // 1
   BYTE empty[17];
 } HEADER <name="File Header">;
 
@@ -101,4 +101,4 @@ struct {
   for (i = 0; i < Folder1.array.FileCount; ++i) {
       FILE File(Files1.array[i].DataSize, Files1.array[i].Name);
     };   
-} FILES;
+} FILES <name="Files data">;
