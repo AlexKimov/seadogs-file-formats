@@ -1,0 +1,73 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Script File
+//
+//      File: UnpackPAK(PB).1sc
+//   Authors: Alexander Evdokimov
+//   Version: 0.1
+//   Purpose: Unpack Privateer’s Bounty .pak files
+// File Mask: *.1sc
+//
+//------------------------------------------------
+
+local uint pos, prevpos, i, k, datasize, length, FolderCount, FileCount, FileIndex = 0;
+local string FileName, Path, FolderName;
+local string rootdir = "test";
+local uchar Buffer[10485760]; 
+local int offset = 0;
+
+// set working directory
+FileIndex = GetFileNum();
+FileName = GetFileName();
+Path = FileNameGetPath(FileName) + rootdir;
+MakeDir(Path);
+SetWorkingDirectory(Path);
+
+FSkip(10);
+FSeek(ReadInt()); // jump to File Table
+FolderCount = ReadInt();
+FSkip(4);
+
+// get file section position
+prevpos = FTell();
+for ( i = 0; i < FolderCount ; ++i ) 
+{
+  FSkip(4);
+  length = ReadStringLength(FTell());
+  FSkip(length);    
+};
+pos = FTell();
+FSeek(prevpos);
+
+// reading file table
+local uint Folders[FolderCount];
+for ( k = 0; k < FolderCount ; ++k ) 
+{
+  FileCount = ReadInt();
+  FSkip(4);
+  length = ReadStringLength(FTell());
+  FolderName = ReadString(FTell());
+  FSkip(length);
+  MakeDir(GetWorkingDirectory() + FolderName);
+  prevpos = FTell();
+  FSeek(pos);
+  // unpacking to current folder
+  for ( i = 0; i < FileCount; ++i ) 
+  {
+    datasize = ReadInt();
+    FSkip(4);
+    offset = ReadInt();
+    FSkip(8);
+    length = ReadStringLength(FTell());
+    FileName = ReadString(FTell());
+    FSkip(length);
+    // create and save file to directory
+    ReadBytes(Buffer, offset, datasize);
+    FileNew();
+    WriteBytes(Buffer, 0, datasize);  
+    FileSave(GetWorkingDirectory() + FolderName + "/" + FileName);
+    FileClose();
+    FileSelect(FileIndex);
+  };
+  pos = FTell();
+  FSeek(prevpos);
+};
