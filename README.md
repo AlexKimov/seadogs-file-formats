@@ -9,6 +9,7 @@
 | :-- | :-------- | :------ |
 | 1 | [UnpackDAT.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/UnpackDAT.1sc)  | Скрипт для расшифровки **.dat** файлов игры Век Парсуников 2 |
 | 2 | [UnpackPAK.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/UnpackPAK.1sc) | Скрипт (010 Editor) для распаковки архивов **.pak** игры Век Парсуников 2 |
+| 3 | [UnpackPAK(PB).1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/UnpackPAK(PB).1sc) | Скрипт (010 Editor) для распаковки архивов **.pak** игры Рыцари морей |
 
 ### Форматы файлов
 | №   | Формат | Прогресс | Шаблон (010 Editor) | WIKI | Краткое описание |
@@ -39,7 +40,7 @@
 | 4   | CMP/.cmp  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/5)   |  [CMP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CMP.bt) |  | Privateer’s Bounty campaign file |
 | 5  | DEF/.def  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/8)   |  [DEF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/DEF.bt) |   | |
 | 6   | IDF/.idf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/3)  |  [IDF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/IDF.bt)  |  | Game object properties table |
-| 7  | PAK/.pak  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/2)   |  [PAK.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/PAK.bt)  | | Age of Sail 2Game archive: 3d models, textures, executables, fonts   | 
+| 7  | PAK/.pak  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/2)   |  [PAK.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/PAK.bt)  | | Age of Sail 2 Game archive: 3d models, textures, executables, fonts   | 
 | 8  | PAK/.pak  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/6)   |  [PAK(PB).bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/PAK(PB).bt) | | Privateer’s Bounty Game archive: 3d models,  textures, executables, fonts   | 
 | 9  | SC/.sc  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/9)   |  [SC.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/SC.bt)  | | Age of Sail 2/Privateer’s Bounty Scenario file | 
 | 10  | SLS/.sls    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [SLS.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/SLS.bt)   |   ||
@@ -49,6 +50,7 @@
 | №   | File | Decription | 
 | :-- | :-------- | :------ |
 | 1 | [UnpackDAT.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/UnpackDAT.1sc)  | Age of Sail 2 **.dat** file decode script for 010 editor |
-| 2 | [UnpackPAK.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/UnpackPAK.1sc) | Age of Sail 2**.pak** file  unpack script for 010 editor |
+| 2 | [UnpackPAK.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/UnpackPAK.1sc) | Age of Sail 2 **.pak** file  unpack script for 010 editor |
+| 3 | [UnpackPAK(PB).1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/UnpackPAK(PB).1sc) | Privateer’s Bounty **.pak** file unpack script for 010 editor |
 
 
