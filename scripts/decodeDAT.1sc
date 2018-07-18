@@ -1,0 +1,25 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Script File
+//
+//      File: decodeDAT.1sc
+//   Authors: Alexander Evdokimov
+//   Version: 0.1
+//   Purpose: decode .dat files
+//
+//   History: 
+//
+//   2018.07 v0.1
+//
+//------------------------------------------------
+
+local ubyte b, i, size = 0;
+
+size = FileSize();
+
+while (size > 0) {
+  b = ReadByte();
+  b = b ^ 110 ^ i; // double xor enc
+  WriteByte(FTell(), b);
+  FSkip(1);
+  --size;
+};
