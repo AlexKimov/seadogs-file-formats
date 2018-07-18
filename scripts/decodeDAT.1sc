@@ -12,14 +12,15 @@
 //
 //------------------------------------------------
 
-local ubyte b, i, size = 0;
+local ubyte b, i = 0;
+local uint size;
 
 size = FileSize();
 
-while (size > 0) {
+while (i < size) {
   b = ReadByte();
   b = b ^ 110 ^ i; // double xor enc
   WriteByte(FTell(), b);
   FSkip(1);
-  --size;
+  ++i;
 };

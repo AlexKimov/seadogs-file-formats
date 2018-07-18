@@ -12,7 +12,8 @@
 //
 //------------------------------------------------
 
-local ubyte b, bs, i, size = 0;
+local ubyte b, bs, i = 0;
+local uint size = 0;
 
 size = FileSize();
 
