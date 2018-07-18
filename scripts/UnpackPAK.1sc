@@ -9,13 +9,13 @@
 //   History: 
 //------------------------------------------------
 
-local string rootdir = "test";
-local uint type, datasize, length, count, i = 0;
+local uchar Buffer[10485760];
+local string rootdir = FileNameGetBase(GetFileName()) + "_unpacked";
+local uint type, datasize, length, count, i, level = 0;
 local int offset = 0;
 local string Name;
 local string Path;
 local int FileIndex;
-local uchar Buffer[5242880];
 local uchar FolderEnd = false;
 
 FileIndex = GetFileNum();
@@ -24,14 +24,16 @@ Path = FileNameGetPath(Name) + rootdir;
 MakeDir(Path); // current dir
 SetWorkingDirectory(Path);
 
-FSkip(26); // skip Header
+FSkip(6); // skip Header
+level = ReadShort(FTell());
+FSkip(20);
 
 void fileTree(uint filecount, string folder) {
   local string fp = folder;
   for ( i = 0; i < filecount; ++i ) {
     type = ReadByte();
     FSkip(1);
-    if (type == 1) 
+    if (type == 1) // file
     {
       datasize = ReadInt();
       FSkip(4);
@@ -44,39 +46,44 @@ void fileTree(uint filecount, string folder) {
       ReadBytes(Buffer, offset, datasize);
       FileNew();
       WriteBytes(Buffer, 0, datasize);  
-      FileSave(fp + "/" + Name);
+      FileSave(fp + "\\" + Name);
       FileClose();
       // back to pak file
       FileSelect(FileIndex); 
     } 
-    else if (type == 0)  
+    else if (type == 0) // folder
     {
       count = ReadInt();
       FSkip(16);
       Name = ReadString(FTell());
       length = ReadStringLength(FTell());
-      if (folder == "")
-          Path = GetWorkingDirectory() + Name; 
-      else
-          Path = folder + "/" + Name;            
+      //if (folder == "")
+      //    Path = GetWorkingDirectory() + Name; 
+      //else
+      Path = fp + "\\" + Name;            
       MakeDir(Path);      
       FSkip(length);
       FolderEnd = false;
       if (count) 
         fileTree(count, Path);
       else
-        fileTree(1, "");                 
+        fileTree(1, Path);                 
     }
     else if (type == 2)  
-    {
+    { 
       FSkip(8);
-      if (ReadInt() == 1) {
+      if (ReadInt() == 1) 
+      {
+        if (level == 2) 
+        {
+          fp = GetWorkingDirectory();
+        };
         FSkip(9); 
-        fileTree(1, "");
+        fileTree(1, fp);
       };
-      FSkip(9); // skip "folder end" structure;     
+      FSkip(9); // skip "folder end"     
     }
   }; 
 };
 
-fileTree(1, "");
+fileTree(1, Path);

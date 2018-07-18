@@ -184,7 +184,7 @@ typedef struct {
         {
 
         };  
-      } Section;
+      } BSP_Tree;
     };
 } CFF_FILE;
 

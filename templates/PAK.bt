@@ -37,9 +37,9 @@ struct {
     if (type == 0)
        UINT FileCount;
     else
-        UINT DataSize;      
+       UINT DataSize;      
     UINT Offset;
-    UINT Unknown; // 1 - ??
+    UINT File_TableUnknown; // 1 - ??
     UINT Empty; // 0  
     string Name; 
   } FILE_HEADER <name=fileName>;
@@ -99,6 +99,6 @@ struct {
     };
 
   for (i = 0; i < Folder1.array.FileCount; ++i) {
-      FILE File(Files1.array[i].DataSize, Files1.array[i].Name);
+     FILE File(Files1.array[i].DataSize, Files1.array[i].Name);
     };   
 } FILES <name="Files data">;

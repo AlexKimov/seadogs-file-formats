@@ -11,14 +11,15 @@
 
 local uint pos, prevpos, i, k, datasize, length, FolderCount, FileCount, FileIndex = 0;
 local string FileName, Path, FolderName;
-local string rootdir = "test";
 local uchar Buffer[10485760]; 
 local int offset = 0;
 
 // set working directory
 FileIndex = GetFileNum();
 FileName = GetFileName();
-Path = FileNameGetPath(FileName) + rootdir;
+local string rootdirname = FileNameGetBase(FileName) + "_unpacked";
+Path = FileNameGetPath(FileName) + rootdirname;
+
 MakeDir(Path);
 SetWorkingDirectory(Path);
 
@@ -64,7 +65,7 @@ for ( k = 0; k < FolderCount ; ++k )
     ReadBytes(Buffer, offset, datasize);
     FileNew();
     WriteBytes(Buffer, 0, datasize);  
-    FileSave(GetWorkingDirectory() + FolderName + "/" + FileName);
+    FileSave(GetWorkingDirectory() + FolderName + "\\" + FileName);
     FileClose();
     FileSelect(FileIndex);
   };
