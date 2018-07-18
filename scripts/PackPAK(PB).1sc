@@ -1,0 +1,246 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Script File
+//
+//      File: PackPAK(PB).1sc
+//   Authors: Alexander Evdokimov
+//   Version: 0.1
+//   Purpose: Pack files to Privateer’s Bounty .pak archive
+//
+//   History: 
+//
+//   2018.07 v0.1
+//
+//------------------------------------------------
+
+local uchar Buffer[10485760]; 
+local string filetypes = "*.cff;*.clf;*.tf;*.tga;*.tff;*.exe;*.map;*.cffold;*.LOG;*.fls;*.lay;*.psd;*.avi";
+local string signature = "ENPAK";
+local string PAKDirectory, Name, ArchiveName; 
+local uint FileIndex, Files, Folders = 0; 
+local uint foldercount, FilesPos, index, i, k, z, size, length, count, pos, offset, datasize = 0;
+
+uint getFileCount(string dir) 
+{
+  TFileList fl = FindFiles( dir, filetypes  );
+  return fl.filecount;
+};
+
+uint getFileSize(string Filename, uint index) 
+{
+  local uint size = 0;
+  FileOpen(Filename);
+  size = FileSize();
+  FileClose(); 
+  FileSelect(index); 
+  return size;
+};
+
+void getFolderData(string Directory) 
+{
+    local string dir = Directory;
+    local uint i = 0;
+    TFileList fl = FindFiles( dir, filetypes ); 
+    
+    if (fl.filecount) // files 
+    {   
+      FileSelect(Files); 
+      WriteInt(FTell(), fl.filecount); 
+      FSkip(4);        
+      for ( i = 0; i < fl.filecount; ++i )
+      {     
+         // File name length          
+         length = Strlen(dir + fl.file[i].filename);    
+         WriteInt(FTell(), length); 
+         FSkip(4);           
+         // File name 
+         pos += 23 + Strlen(fl.file[i].filename);       
+         WriteString(FTell(), dir + fl.file[i].filename);
+         FSkip(length);           
+         WriteByte(FTell(), 0);  
+         FSkip(1);             
+         // File size 
+         size =  getFileSize(dir + fl.file[i].filename, Files);
+         WriteInt(FTell(), size); 
+         FSkip(4);              
+      };
+    };
+    for ( i = 0; i < fl.dircount; ++i )
+    {
+       FileSelect(Folders);
+       // dir name length 
+       length = Strlen(dir + fl.dir[i].dirname);
+       WriteInt(FTell(), length);  
+       FSkip(4);   
+       // dir name
+       WriteString(FTell(), dir + fl.dir[i].dirname);
+       FSkip(length);
+       WriteByte(FTell(), 0);  
+       FSkip(1);  
+
+       // file count in directory
+       count = getFileCount(dir + fl.dir[i].dirname + "\\");
+       WriteInt(FTell(), count); 
+       FSkip(4);
+       ++foldercount;
+       getFolderData(dir + fl.dir[i].dirname + "\\");
+    };     
+};
+
+void WriteDirRecord(string DirName) 
+{
+  length = Strlen(DirName);
+  WriteInt(FTell(), length);  
+  FSkip(4);   
+  // dir name
+  WriteString(FTell(), DirName);
+  FSkip(length);
+  WriteByte(FTell(), 0);  
+  FSkip(1);  
+  // file count in directory
+  WriteInt(FTell(), 0); 
+  FSkip(4);
+};
+
+
+  PAKDirectory = InputDirectory("Choose directory");
+  if (PAKDirectory != "") 
+  {
+    SetWorkingDirectory(PAKDirectory);
+    Strncpy(Name, PAKDirectory, Strlen(PAKDirectory) - 1);
+    StrDel(ArchiveName, 0, Strlen(Name) - 8);
+    StrDel(ArchiveName, 0, Strchr(ArchiveName, "\\") + 1);
+
+    Files = FileNew("Hex");
+    Folders = FileNew("Hex");  
+
+    // dir name length 
+    WriteDirRecord("Resource");
+    WriteDirRecord(Name);
+
+    foldercount = 2;
+    getFolderData(PAKDirectory);
+
+    FileIndex = FileNew("Hex"); 
+    // File Header section
+    WriteString(0, signature); // ENPAK   
+    WriteByte(5, 0);    
+    WriteShort(6, 0);    
+    WriteShort(8, 2); 
+    WriteInt(10, 0); // offset
+    local uchar buffer[16] = 0;
+    WriteBytes(buffer, 14, 16);
+    FSkip(30); 
+    // Files section
+    FilesPos = FTell();
+    FileSelect(Files);
+    FSeek(0);
+    while (true) 
+    {
+      FileSelect(Files);
+      if (FEof()) break;  
+      count = ReadInt(FTell());
+      FSkip(4); 
+      for ( i = 0; i < count; ++i )
+      {
+        FileSelect(Files);
+        length = ReadInt(FTell()); 
+        FSkip(4);
+        Name = ReadString(FTell());
+        FSkip(length + 1); 
+        datasize = ReadInt(FTell()); 
+        FSkip(4);
+        FileSelect(FileIndex);
+        // open file and copy to archive 
+        FileOpen(Name); 
+        ReadBytes(Buffer, 0, datasize);  
+        FileClose();   
+        FileSelect(FileIndex);  
+        WriteBytes(Buffer, FTell(), datasize);
+        FSkip(datasize);
+      };
+    };  
+   
+    // save file table offset to file header
+    FileSelect(FileIndex);
+    pos = FTell(); 
+    FSeek(10);
+    WriteInt(FTell(), pos); // offset
+    FSeek(pos); 
+     
+    // File Table
+    FileSelect(FileIndex);
+    WriteInt(FTell(), foldercount); // number of folders
+    FSkip(4);
+    // Folders
+    FileSelect(Folders); 
+    FSeek(0); 
+    
+    while (true) 
+    {
+      // read
+      FileSelect(Folders); 
+      if (FEof()) break; 
+      length = ReadInt(FTell()); 
+      FSkip(4);
+      Name = ReadString(FTell());
+      FSkip(length + 1);  
+      count = ReadInt(FTell()); 
+      FSkip(4);  
+      // write    
+      FileSelect(FileIndex);
+      WriteInt(FTell(), count); // offset
+      FSkip(4);  
+    
+      Name = StrDel(Name, 0, Strlen(PAKDirectory) - 9); // relative path   
+      WriteString(FTell(), Name);
+      length = Strlen(Name);
+      FSkip(length);  
+      WriteByte(FTell(), 0);
+      FSkip(1);
+    };  
+
+    // Files  
+    FileSelect(Files); 
+    FSeek(0);  
+    while (true) 
+    {
+      // read
+      FileSelect(Files); 
+      if (FEof()) break; 
+      count = ReadInt(FTell());
+      FSkip(4);  
+      for ( i = 0; i < count; ++i )
+      {     
+        FileSelect(Files); 
+        length = ReadInt(FTell()); 
+        FSkip(4);
+        Name = ReadString(FTell());
+        FSkip(length + 1); 
+        datasize = ReadInt(FTell()); 
+        FSkip(4);
+        // write    
+        FileSelect(FileIndex);
+        WriteInt(FTell(), datasize); // size
+        FSkip(4);  
+        WriteInt(FTell(), FilesPos); // offset
+        FSkip(4); 
+        WriteInt(FTell(), 0); // 0
+        FSkip(4); 
+        Name = FileNameGetBase(Name);
+        WriteString(FTell(), Name);
+        length = Strlen(Name);
+        FSkip(length); 
+        WriteByte(FTell(), 0);
+        FSkip(1); 
+        FilesPos += datasize;
+      };
+    };
+    FileSelect(Files);
+    FileClose();
+    FileSelect(Folders);
+    FileClose();
+
+    FileSelect(FileIndex);
+    FileSave(GetWorkingDirectory() + ArchiveName);
+  };
+

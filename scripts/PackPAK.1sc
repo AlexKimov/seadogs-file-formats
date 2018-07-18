@@ -1,0 +1,310 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Script File
+//
+//      File: PackPAK.1sc
+//   Authors: AE
+//   Version: 0.1
+//   Purpose: Pack files to .pak archive
+//
+//   History: 
+//
+//   2018.07 v0.1
+//------------------------------------------------
+
+local uchar Buffer[10485760]; 
+local string filetypes = "*.cff;*.clf;*.tf;*.tga;*.tff;*.exe;*.map;*.cffold;*.LOG;*.fls;*.lay;*.psd";
+local string signature = "ENPAK";
+local string PAKDirectory, Name; 
+local uint index, i, k, z, t, level, size, FileIndex, length, count, pos, fpcount, offset, datasize, fi = 0;
+local uint Fpos[10];
+
+void WriteFileRecord(uint type, uint count, uint offset, uint size, string name, uint typen) 
+{
+  WriteByte(FTell(), type);
+  FSkip(1);
+  if (type == 1) // files
+  {
+    WriteInt(FTell(), size); // filecount
+    FSkip(4);    
+  }
+  else 
+  {
+    WriteInt(FTell(), count); // filecount
+    FSkip(4);
+  };
+  WriteInt(FTell(), offset); // offset
+  FSkip(4);
+
+  WriteInt(FTell(), typen);
+  FSkip(4);
+  WriteInt(FTell(), 0);
+  FSkip(4);
+  if (name == "") 
+  {
+    WriteByte(FTell(), 0);
+  }
+  else
+  {
+    if (type == 1)
+      name = FileNameGetBase(name);
+    WriteString(FTell(), name);    
+    FSkip(sizeof(name));
+    WriteByte(FTell(), 0);
+  };
+  FSkip(1);
+};
+
+uint getFileCount(string dir) 
+{
+  TFileList fl = FindFiles( dir, filetypes  );
+  return fl.filecount;
+};
+
+uint getFileSize(string Filename, uint index) 
+{
+  local uint size = 0;
+  FileOpen(Filename);
+  size = FileSize();
+  FileClose(); 
+  FileSelect(index); 
+  return size;
+};
+
+int FolderisEnded() 
+{
+  FileSelect(fi);  
+  local int endid = ReadInt(FTell()); 
+  if (endid < 0) 
+    FSkip(4);
+  return endid;
+};
+
+uint checkifFolder(string Name) {
+  return Strchr(Name, ".");
+}
+
+string intToStr(int Number) {
+  local string s;
+  SPrintf( s, "%d", (int)Number );
+  return s;
+}
+
+uint strToInt(char str[]) {
+  int number, n;
+  n = SScanf( str, "%d", number );
+  Printf("%d  ", n);
+  return number;
+};
+
+void getFolderData(string Directory) 
+{
+    local string dir = Directory;
+    TFileList fl = FindFiles( dir, filetypes ); 
+    
+    if (fl.filecount) // files 
+    {   
+      for ( i = 0; i < fl.filecount; ++i )
+      {     
+         // File name length
+         length = Strlen(dir + fl.file[i].filename);    
+         WriteInt(FTell(), length); 
+         FSkip(4);           
+         // File name 
+         pos += 23 + Strlen(fl.file[i].filename);       
+         WriteString(FTell(), dir + fl.file[i].filename);
+         FSkip(length);           
+         WriteByte(FTell(), 0);  
+         FSkip(1);             
+         // File size 
+         size =  getFileSize(dir + fl.file[i].filename, fi);
+         WriteInt(FTell(), size); 
+         FSkip(4);              
+      };
+    };
+    for ( i = 0; i < fl.dircount; ++i )
+    {
+       // dir name length
+       length = Strlen(fl.dir[i].dirname);
+       WriteInt(FTell(), length);  
+       FSkip(4);   
+
+       pos += 23 + length;
+       // dir name
+       WriteString(FTell(), fl.dir[i].dirname);
+       FSkip(length);
+       WriteByte(FTell(), 0);  
+       FSkip(1);  
+
+       // file count in directory
+       count = geFileCount(dir + fl.dir[i].dirname + "\\");
+       WriteInt(FTell(), count); 
+       FSkip(4);
+
+       getFolderData(dir + fl.dir[i].dirname + "\\");
+    };     
+    WriteInt(FTell(), -1);  
+    FSkip(4);
+};
+
+index = InputRadioButtonBox("Archive name", "Choose .pak file name form list:", 0, "geometry.pak", "images.pak", "imagesl.pak", "texture.pak", "texturel.pak" );
+if (index >= 0)
+{
+  PAKDirectory = InputDirectory("Choose directory with \"Resource\" folder");
+  if (PAKDirectory != "") 
+  {
+
+    SetWorkingDirectory(PAKDirectory);
+
+    fi = FileNew("Hex"); 
+    pos = 0;   
+ 
+    length = Strlen("Resource");
+    WriteInt(FTell(), length);  
+    FSkip(4);   
+
+    pos += 23 + length;
+    // dir name
+    WriteString(FTell(), "Resource");
+    FSkip(length);
+    WriteByte(FTell(), 0);  
+    FSkip(1);  
+
+    // file count 
+    WriteInt(FTell(), 0); 
+    FSkip(4);
+    getFolderData(PAKDirectory);
+
+    break;
+    FileIndex = FileNew("Hex");
+         
+    // write header
+    WriteString(0, signature);   
+    if (index == 2 || index == 4)
+      WriteByte(6, 2);
+    else
+      WriteByte(6, 1);       
+    WriteByte(7, 0); 
+    WriteByte(8, 1);
+    local uchar buffer[17] = 0;
+    WriteBytes(buffer, 9, 17);
+    FSkip(26); 
+    
+
+    k = 0; 
+    datasize = 0;
+    i = 0; 
+    offset = pos;
+    z = 0;
+    t = 0;
+    FileSelect(fi);
+    FSeek(0);
+
+    // write File Table
+    while ( true )
+    {
+      FileSelect(fi);
+      if (FEof()) break;
+
+      if (FolderisEnded() < 0)  
+      {
+        WriteFileRecord(2, 0, offset, 0, "", 0); 
+        continue;
+      };
+
+      // name length
+      length = ReadInt(FTell()); 
+      FSkip(4);
+      // Name
+      Name = ReadString(FTell());
+      FSkip(length + 1);
+      // count
+      count = ReadInt(FTell());
+      FSkip(4);
+
+      if ((index == 2 || index == 4) && (FTell() == 16))
+      { 
+        FileSelect(FileIndex);
+        WriteFileRecord(0, 0, offset, 0, Name, 1);
+        WriteFileRecord(2, 0, offset, 0, "", 1);
+        continue;
+      }; 
+
+      FileSelect(FileIndex);
+      WriteFileRecord(0, count, offset, 0, Name, 0);
+             
+      if (count > 0) 
+      {
+        FileSelect(fi);
+        Fpos[t] = FTell();
+        ++t;
+      };  
+      for ( k = 0; k < count; ++k ) 
+      {
+        FileSelect(fi);
+        // 
+        length = ReadInt(FTell()); 
+        FSkip(4); 
+        // Name
+        Name = ReadString(FTell());
+        FSkip(length + 1);
+        //  
+        datasize = ReadInt(FTell()); 
+        FSkip(4); 
+ 
+        offset += datasize;        
+
+        FileSelect(FileIndex);        
+          WriteFileRecord(1, 0, offset, datasize, FileNameGetBase(Name), 0);
+      
+        z += count;        
+      };
+    };
+    FSeek(0);
+    fpcount = t;
+
+    // write File Data
+    for ( k = 0; k < fpcount; ++k ) 
+    {
+      FileSelect(fi);      
+      FSeek(Fpos[k] - 4);
+      count = ReadInt(FTell());
+      FSkip(4);
+      for ( i = 0; i < count; ++i ) 
+      {
+        FileSelect(fi);  
+        // 
+        length = ReadInt(FTell()); 
+        FSkip(4); 
+        // Name
+        Name = ReadString(FTell());
+        FSkip(length + 1);
+        // FileSize 
+        datasize = ReadInt(FTell()); 
+        FSkip(4);       
+        
+        FileOpen(Name); 
+        ReadBytes(Buffer, 0, datasize);  
+        FileClose();   
+        FileSelect(FileIndex);  
+        WriteBytes(Buffer, FTell(), datasize);
+        FSkip(datasize);         
+     };
+    };
+
+    FileSelect(fi); 
+    //FileClose();
+    FileSelect(FileIndex);
+    switch (index)
+    {
+      case (0): Name = "geometry.pak";  break;
+      case (1): Name = "images.pak"; break;
+      case (2): Name = "imagesl.pak"; break;
+      case (3): Name = "texture.pak"; break;
+      case (4): Name = "texturel.pak"; break;
+    };
+
+    FileSave(GetWorkingDirectory() + Name);
+
+    //FileClose();
+  };
+};
