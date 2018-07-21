@@ -2,7 +2,7 @@
 
 Форматы файлов игр **Корсары Проклятье дальних морей** (2000) , **Век парусников 2** (2001) и **Рыцари Морей** (2002). 
 
-Описание форматов [см. WIKI](https://github.com/AlexKimov/seadogs-file-formats/wiki)
+Описание форматов [см. WIKI](https://github.com/AlexKimov/seadogs-file-formats/wiki). Текущий прогресс (Issues)[https://github.com/AlexKimov/seadogs-file-formats/issues]
 
 ### Инструменты
 | №   | Название | Описание | 
