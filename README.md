@@ -2,12 +2,12 @@
 
 Форматы файлов игр **Корсары Проклятье дальних морей** (2000) , **Век парусников 2** (2001) и **Рыцари Морей** (2002). 
 
-Описание форматов [см. WIKI](https://github.com/AlexKimov/seadogs-file-formats/wiki). Текущий прогресс [Issues](https://github.com/AlexKimov/seadogs-file-formats/issues)
+Описание форматов [см. WIKI](https://github.com/AlexKimov/seadogs-file-formats/wiki). Текущий прогресс см. [Issues](https://github.com/AlexKimov/seadogs-file-formats/issues).
 
 ### Инструменты
 | №   | Название | Описание | 
 | :-- | :-------- | :------ |
-| 1 | [DecodeDAT.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/DecodeDAT.1sc)  | Скрипт для шифрования/расшифровки **.dat** файлов игры Век Парсуников 2 |
+| 1 | [DecodeDAT.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/decodeDAT.1sc)  | Скрипт для шифрования/расшифровки **.dat** файлов игры Век Парсуников 2 |
 | 2 | [UnpackPAK.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/UnpackPAK.1sc) | Скрипт (010 Editor) для распаковки архивов **.pak** игры Век Парсуников 2 |
 | 3 | [UnpackPAK(PB).1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/UnpackPAK(PB).1sc) | Скрипт (010 Editor) для распаковки архивов **.pak** игры Рыцари морей |
 | 4 | [DecodeActionFile.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/decodeActionFile.1sc) | Скрипт (010 Editor) для расшифровки **.a** файлов игры Корсары ПДМ |
@@ -54,7 +54,7 @@
 ### Scripts
 | №   | File | Decription | 
 | :-- | :-------- | :------ |
-| 1 | [UnpackDAT.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/UnpackDAT.1sc)  | Age of Sail 2 **.dat** file decode/encode script for 010 editor |
+| 1 | [DecodeDAT.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/decodeDAT.1sc)  | Age of Sail 2 **.dat** file decode/encode script for 010 editor |
 | 2 | [UnpackPAK.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/UnpackPAK.1sc) | Age of Sail 2 **.pak** file  unpack script for 010 editor |
 | 3 | [UnpackPAK(PB).1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/UnpackPAK(PB).1sc) | Privateer’s Bounty **.pak** file unpack script for 010 editor |
 | 4 | [EncodeActionFile.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/encodeActionFile.1sc) | Encode action file .a (Sea Dogs) |
