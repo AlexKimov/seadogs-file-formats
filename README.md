@@ -10,7 +10,7 @@
 
 2. Доработка шаблонов и документации на форматы.
 
-### Инструменты
+### Скрипты
 | №   | Название | Описание | 
 | :-- | :-------- | :------ |
 | 1 | [DecodeDAT.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/decodeDAT.1sc)  | Скрипт для шифрования/расшифровки **.dat** файлов игры Век Парсуников 2 |
@@ -20,6 +20,7 @@
 | 5 | [EncodeActionFile.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/encodeActionFile.1sc)  | Скрипт для шифрования **.a** файлов игры Корсары ПДМ |
 | 6 | [PackPAK.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/PackPAK.1sc) | Скрипт (010 Editor) для запаковки файлов в архив **.pak** игры Век Парсуников 2 |
 | 7 | [PackPAK(PB).1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/PackPAK(PB).1sc) | Скрипт (010 Editor) для запаковки файлов в архив **.pak** игры Рыцари морей |
+| 7 | [TFtoTGA](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/TFtoTGA.1sc) | конвертирование файлов .tf в .bmp |
 
 
 ### Форматы файлов
