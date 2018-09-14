@@ -71,7 +71,7 @@
 ### Formats and templates
 | №   | Format/Ext | Progress | Template (010 Editor) | WIKI | Description |
 | :-- | :-------- | :------ | :------- | :--   | :--   |
-| 1   | AN/.an  |  |  [AN.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/AN.bt)  |   | Анимация персонажа |
+| 1   | AN/.an  |  |  [AN.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/AN.bt)  |   | Animation |
 | 2   | ANI/.ani  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/6)   |  [ANI.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/ANI.bt)  |    | |
 | 3   | CFF/.ccf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/4)   |  [CFF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CFF.bt)  | | 3D Models   | 
 | 4   | CLF/.clf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/5)   |  [CLF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CLF.bt) |   | |
