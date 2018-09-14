@@ -1,0 +1,24 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+UINT A;
+UINT D;
+FLOAT K;
+INT Q[D];
+FLOAT C[D*3];
+FLOAT B[A*3];
+
+struct {
+  FLOAT S[A*4];
+} Array[D];
+

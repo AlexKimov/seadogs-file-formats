@@ -1,0 +1,41 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+struct {
+  uchar Magic[8];
+  UINT A;
+  UINT B;
+  UINT C;
+  UINT D;
+} Header;
+
+uchar Name[128];
+
+typedef struct {
+  UINT Length;
+  uchar Name[Length];
+} NAME;
+
+NAME Name;
+
+UINT A[4];
+
+NAME Name;
+
+UINT B[2];
+
+NAME Name;
+
+UINT C[2];
+
+NAME Name;

@@ -1,0 +1,30 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+struct {
+  UINT S;
+  UINT BlockInRowCount; // 128
+  UINT BlockSize; // 8
+  UINT A3; // 3
+  UINT A4; // 7
+  UINT BlockCount;
+} HEADER;
+
+struct {
+  UINT16 BlockNumber;
+} TABLE[HEADER.S*HEADER.BlockInRowCount/HEADER.BlockSize] <bgcolor=0x000000>;
+
+struct {
+  UBYTE Block8x8[HEADER.BlockSize*HEADER.BlockSize];
+} BLOCKS[HEADER.BlockCount];
+

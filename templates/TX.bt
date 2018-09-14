@@ -1,0 +1,159 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+struct {
+  local int height, width;
+  local int DXT = 0;
+  local int i; 
+} locals <hidden=true>;
+
+typedef enum <char> {
+  DXT1,
+  DXT3, 
+  DXT5
+} DXT_TYPE <name="DXT version">;
+
+typedef enum <uint> {
+  D3DFMT_A8R8G8B8 = 21,
+  D3DFMT_X8R8G8B8 = 22,
+  D3DFMT_R5G6B5   = 23,
+  D3DFMT_X1R5G5B5 = 24,
+  D3DFMT_A1R5G5B5 = 25,
+  D3DFMT_A4R4G4B4 = 26
+} D3DFORMAT;
+
+struct {
+  UINT Version;
+  UINT Width;
+  UINT Height;
+  UINT MapsCount;
+  union {
+     DXT_TYPE DXT[4];
+     D3DFORMAT D3DFormat;
+  } IMAGE_TYPE;
+  
+  UINT Size <name="Image size">;
+} HEADER <name="File header">;
+
+BitfieldDisablePadding(); 
+
+typedef struct {  
+  switch (HEADER.IMAGE_TYPE.D3DFormat)
+  { 
+    case 21: // A8R8G8B8
+      ubyte Red   <name="Red">;
+      ubyte Green <name="Green">;
+      ubyte Blue  <name="Blue">; 
+      ubyte Alpha <name="Alpha">; 
+    break;
+    case 22: // X8R8G8B8
+      ubyte Red   <name="Red">;
+      ubyte Green <name="Green">;
+      ubyte Blue  <name="Blue">; 
+      ubyte X <name="X">; 
+    break;
+    case 23: // R5G6B5
+      ubyte Red   : 5 <name="Red">;
+      ubyte Green : 6 <name="Green">;
+      ubyte Blue  : 5 <name="Blue">; 
+    break;
+    case 26:
+      ubyte Red   : 4 <name="Red">;
+      ubyte Green : 4 <name="Green">;
+      ubyte Blue  : 4 <name="Blue">;
+      ubyte Alpha : 4 <name="Alpha">; 
+  }
+} PIXEL <name="Pixel", size=sizePixel>;
+
+typedef struct {  
+    if (HEADER.IMAGE_TYPE.DXT != "DXT1") 
+    {
+      struct {
+        if (HEADER.IMAGE_TYPE.DXT != "DXT5") {
+          for (i = 0; i < 16; ++i) {
+            ubyte AlphaIndex : 4 <name="Alpha Index">; 
+          }
+        }
+        else {
+           ubyte Alpha1;
+           ubyte Alpha2; 
+           for (i = 0; i < 16; ++i) {
+            ubyte AlphaIndex : 3 <name="Alpha Index">; 
+          } 
+        }            
+      } AlphaChannel <name="Alpha Channel Data">;
+    };
+    
+    struct {
+      struct {
+        ubyte Red : 5 <name="Red">; 
+        ubyte Green   : 6 <name="Green">;
+        ubyte Blue : 5 <name="Blue">; 
+      } Color1;     
+      struct {
+        ubyte Red : 5 <name="Red">; 
+        ubyte Green   : 6 <name="Green">;
+        ubyte Blue : 5 <name="Blue">; 
+      } Color2;  
+      struct {
+        for (i = 0; i < 16; ++i)
+          ubyte PixelIndex : 2 <name="Pixel Index">; 
+      } INDEX_TABLE;
+    } COLOR_DATA <name="Color Data">;
+} TEXEL <name="Pixel", size=sizeTEXEL>;
+
+int sizeTEXEL( TEXEL &texel )
+{
+  if (HEADER.IMAGE_TYPE.DXT != "DXT1")
+    return 16;
+  else
+    return 8;
+};
+
+int sizePixel( PIXEL &pixel )
+{
+  if (HEADER.IMAGE_TYPE.D3DFormat == 21 || HEADER.IMAGE_TYPE.D3DFormat == 22)
+    return 4;
+  else
+    return 2;
+};
+
+typedef struct (int arraySize) {
+  PIXEL array[arraySize] <optimize=false>;
+} PIXEL_ARRAY;
+
+typedef struct (int arraySize) {
+  TEXEL array[arraySize] <optimize=false>;
+} TEXEL_ARRAY;
+
+if (HEADER.IMAGE_TYPE.D3DFormat <= 26)
+  PIXEL_ARRAY Pixels(HEADER.Width*HEADER.Height) <name="Pixel Array">;
+else
+  TEXEL_ARRAY Pixels(HEADER.Width*HEADER.Height/16) <name="Pixel Array (DXT compression)">;
+
+typedef struct {
+  locals.height = HEADER.Height, locals.width = HEADER.Width;
+  while (1)
+  {
+    locals.height = locals.height/2; 
+    locals.width = locals.width/2;
+    if (HEADER.IMAGE_TYPE.D3DFormat == 21)
+      PIXEL_ARRAY MipMaps(locals.height*locals.width) <name="MipMap">; 
+    else
+      TEXEL_ARRAY MipMaps(locals.height*locals.width) <name="MipMap">; 
+    if (locals.height == 1) break;
+  };
+} MIP_MAPS <name="MipMaps">;
+
+if (HEADER.MapsCount > 1)
+  MIP_MAPS MipMaps;
