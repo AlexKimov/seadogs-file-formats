@@ -57,6 +57,16 @@
 **Sea dogs** (2000), **Age of Sale 2** (2001), **Privateer’s Bounty: Age of Sail 2** (2002), 
 **Pirates of the Caribbean** (2003), **Age of Pirates: Caribbean Tales** (2006) games file formats.
 
+### Games
+
+| №   | Title | Year |Formats | 
+| :-- | :-------- | :------ | :------ |
+| 1 |  Sea Dogs  | 2000   | .ani, .cff, .clf, .sc, .tf, .def, .idf, .sls |
+| 2 | Age of Sale 2  | 2001  | .cmp, .tf, .pak, .cff, .clf |
+| 3 | Privateer’s Bounty: Age of Sail 2  | 2002  | .cmp, .tf, .pak, .cff, .clf |
+| 4 | Pirates of the Caribbean  | 2003  | .gm, .an, .zap, .tx  |
+| 5 | Age of Pirates: Caribbean Tales | 2006  | .gm, .an, .zap, .tx   |
+
 ### Formats and templates
 | №   | Format/Ext | Progress | Template (010 Editor) | WIKI | Description |
 | :-- | :-------- | :------ | :------- | :--   | :--   |
