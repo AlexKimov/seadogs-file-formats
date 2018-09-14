@@ -57,6 +57,7 @@
 **Sea dogs** (2000), **Age of Sale 2** (2001), **Privateer’s Bounty: Age of Sail 2** (2002), 
 **Pirates of the Caribbean** (2003), **Age of Pirates: Caribbean Tales** (2006) games file formats.
 
+### Formats and templates
 | №   | Format/Ext | Progress | Template (010 Editor) | WIKI | Description |
 | :-- | :-------- | :------ | :------- | :--   | :--   |
 | 1   | ANI/.ani  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/6)   |  [ANI.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/ANI.bt)  |    | |
