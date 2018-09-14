@@ -1,0 +1,161 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+local uint i, k;
+local byte bt;
+
+typedef struct {
+  string FileName;
+} TEXTURE_FILE <name=texFileName>;
+   
+typedef struct (uint size) {
+  TEXTURE_FILE array[size] <optimize=false>;
+} NAMES_LIST;
+
+string texFileName(TEXTURE_FILE &file) {
+  return file.FileName;
+}
+
+struct {
+  UINT Magic;
+  UINT Version;
+  UINT TexturesSectionSize;
+  UINT NameCount <name="Number of Names">;
+  UINT TextureCount <name="Number of textures">;
+  UINT MaterialCount <name="Number of materials">;
+  UINT Zero;
+  UINT LocatorCount <name="Number of locators">;
+  UINT MeshCount <name="Number of meshes">;
+  UINT FaceCount <name="Number of faces">;
+  UINT fOne; 
+
+  struct {
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+  } OBJECT_ORIGIN <name="Origin">;
+  struct {
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+    FLOAT W;
+  } OBJECT_SCALE <name="Scale">;
+} HEADER <name="File Header">;
+
+NAMES_LIST Names(HEADER.NameCount) <name="Names">;
+
+UINT Offsets[HEADER.NameCount];
+UINT TextureNameOffsets[HEADER.TextureCount];
+UINT MaterialGroupOffset;
+
+for ( k = 0; k < HEADER.MaterialCount; ++k )  
+  struct {
+    local uint TexNumber;
+    UINT MaterialNameOffset;
+    struct {
+      struct { 
+        BYTE R;
+        BYTE G;
+        BYTE B;
+        BYTE A;
+      } RGBA;
+      INT ZERO;
+      FLOAT vSingle;
+      INT v3Zero;
+    
+      for ( i = 0; i < 4; ++i )
+      {
+        INT Texture;
+        if (Texture > 0) ++TexNumber;  
+      };
+
+      for ( i = 0; i < TexNumber; ++i )
+        INT TextureNumber;      
+ 
+      INT kMinusOne[4 - TexNumber];
+ 
+      if (k < HEADER.MaterialCount - 1)
+        UINT Unknown;
+    } PROPERTIES;
+  } MATERIAL;
+
+for ( k = 0; k < HEADER.LocatorCount; ++k ) 
+  struct {
+    UINT LocatorGroupOffset;
+    UINT LocatorNameOffset;
+    struct {
+      // 
+      INT Zero;   
+      FLOAT X;   
+      FLOAT Y; 
+      FLOAT Z; 
+      INT Zero;
+      FLOAT X; 
+      FLOAT Y; 
+      FLOAT Z; 
+      INT Zero;
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+      INT Zero;
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;   
+      // 
+      FLOAT A; 
+      FLOAT B; 
+      INT A;       
+      INT B;     
+    } PROPERTIES;
+  } LOCATOR;
+
+for ( k = 0; k < HEADER.MeshCount; ++k ) 
+  struct {
+    UINT NameOffset;
+    UINT Offset;
+    INT Unknown; // 3103
+    //
+    FLOAT G;
+    FLOAT G;
+    FLOAT G;
+    FLOAT G;  
+    //
+    INT Zero;
+    UINT FaceCount;
+    UINT startTriangles;
+    UINT nPartPoints;
+    UINT startPoints;
+    UINT MaterialNo;
+    BYTE r1[8];
+    UBYTE B;
+    if (B == 255)
+    {
+      BYTE bC[3];  
+      BYTE t[20];      
+    }   
+    else
+    {         
+      BYTE t[19]; 
+      UINT sMinusOne;       
+    };
+    BYTE tt[15];   
+    if (k < HEADER.MeshCount - 1)  
+      UINT Unknown;   
+  } MESH;
+
+bt = ReadByte(FTell());
+if (bt != -1)
+{
+  INT FacesExtra;
+  
+}; 
