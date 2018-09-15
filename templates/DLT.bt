@@ -1,0 +1,27 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+struct {
+  UINT DataSize;
+  UINT Width;
+  UINT Heigth;
+  UINT MapCount;
+  FLOAT Unknown;
+} HEADER;
+
+UBYTE Image1[131072]; // 16 bit ? 
+UBYTE Image2[32768];
+UBYTE Image3[8192];
+UBYTE Image4[2048];
+UBYTE Image5[512];
+UBYTE Image6[128];
