@@ -15,14 +15,16 @@
 
 struct {
   UINT Unknown <name="Signature?">;
-  UINT Unknown;
+  UINT Unknown; // 2494616
   UINT Unknown; // 0
   UINT Unknown; // 0
-  UINT Unknown; // 1
+  UINT ObjectCount; // 1
   UINT FileCount;
+  // long double
   UINT Unknown;
   UINT MeshCount;;
   UINT Unknown; // 0
+  //
   UINT Unknown; // 886
   UINT Unknown; // 0
   UINT Unknown; // 0
@@ -44,8 +46,8 @@ TEXTURES FileNames(HEADER.FileCount) <name="Textures">;
 
 typedef struct { 
   struct {
-  char Name[32];
-    UINT KeyCount;
+    char Name[32];
+    UINT FrameCount;
     UINT TextureIndex;
     UINT VertexCount;
     UINT FaceCount;
@@ -58,7 +60,7 @@ typedef struct {
     FLOAT Unknown;
     FLOAT Unknown;
     FLOAT Unknown;
-    FLOAT Unknown;
+    INT Unknown;
   } VERTEXES[HEADER.VertexCount]; 
   struct {
     UINT16 I1;
@@ -84,7 +86,7 @@ typedef struct {
       FLOAT Z;
     } ROTATION;
     FLOAT Time; //
-  } ANIMATIONS[HEADER.KeyCount];
+  } ANIMATIONS[HEADER.FrameCount];
 } MESH <name=getName>;
 
 typedef struct (uint size) {
