@@ -16,9 +16,9 @@
 local uint i, height, width = 0;
 
 struct {
-  UINT Unknown;
+  UINT Unknown <name="Signature?">; // 250698
   UBYTE Unknown;
-  UBYTE Unknown;
+  UBYTE Type; // 0 - RGB565, 1 -
   UBYTE MipMapCount;
   UBYTE MaskCount;  
   UINT Width;
@@ -31,9 +31,19 @@ typedef struct {
   ubyte Red   : 5 <name="Red">; 
   ubyte Green : 6 <name="Green">;
   ubyte Blue  : 5 <name="Blue">; 
-} PIXEL16 <size = 2, name="Pixel">;
+} RGB565 <size = 2, name="Pixel">;
 
-PIXEL16 Pixels[HEADER.Width*HEADER.Height] <name="Texture pixels">; 
+typedef struct {
+  ubyte Red   : 5 <name="Red">; 
+  ubyte Green : 5 <name="Green">;
+  ubyte Blue  : 5 <name="Blue">; 
+  ubyte Alpha : 1 <name="Blue">;
+} RGB5551 <size = 2, name="Pixel">;
+
+if (HEADER.Type == 1)
+  RGB565 Pixels[HEADER.Width*HEADER.Height] <name="Texture pixels">; 
+else
+  RGB5551 Pixels[HEADER.Width*HEADER.Height] <name="Texture pixels">; 
 
 typedef struct (uint count) {
   height = HEADER.Height, width = HEADER.Width;
@@ -41,7 +51,10 @@ typedef struct (uint count) {
      height = height/2; 
      width = width/2;
      struct {
-       PIXEL16 MipMaps[height*width] <name="Map">;
+       if (HEADER.Type == 1)
+         RGB565 MipMaps[height*width] <name="Map">;
+       else
+         RGB5551 MipMaps[height*width] <name="Map">;
      } PIXELS;      
   };
 } MAPS;
@@ -69,4 +82,4 @@ struct {
      height = height/2; 
      width = width/2;     
   }; 
-} MASKS;
+} PALETTED_IMAGE;
