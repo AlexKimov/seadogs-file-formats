@@ -46,12 +46,12 @@ typedef struct {
   } A[Count];
 } TEXTURE_PROPERTIES;
 
-typedef struct {
-   INT16 X;     
-   INT16 Y;     
-   INT16 Z;
-   INT16 U;     
-   INT16 V;
+typedef struct {   
+   UINT16 X;     
+   UINT16 Y;     
+   UINT16 Z;
+   UINT16 U;     
+   UINT16 V;
    struct {
      UBYTE R; 
      UBYTE G;   
@@ -86,7 +86,7 @@ typedef struct {
     UINT FaceCount <name="Number of faces">;
     UINT Unknown; // always 1 
     UINT AnimationKeyCount;
-    char MeshName[4];
+    char Name[4];
   } HEADER <name="Header">;
 
   VERTEX VERTEXES[HEADER.VertexCount];
@@ -111,90 +111,82 @@ typedef struct {
       FLOAT X;
       FLOAT Y;
       FLOAT Z;
-    } POSITION;
+    } TRANSLATION;
     struct {
       FLOAT X;
       FLOAT Y;
       FLOAT Z;
     } ROTATION;
-    FLOAT Time; //
+    FLOAT Frame; //
   } ANIMATIONS[HEADER.AnimationKeyCount];
 
-} MESH <optimize=false, name=meshName>;
+} MESH <name=meshName>;
 
 
 typedef struct (uint size) {
-  MESH array[size];
+  MESH array[size] <optimize=false>;
 } MESH_ARRAY;
 
-typedef struct {
+struct {
+  struct {
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+  } OBJECT_ORIGIN <name="Origin">;
+  struct {
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+  } OBJECT_SCALE <name="Scale">;
+  UINT TextureCount <name="Number of textures">;
+  UINT TPCount <name="Number of texture properties">;
+  UINT ObjectCount; // some kind of flag
+  UINT SectionOffset <name="Offset">; 
+  FLOAT radius <name="Object culling radius?">;
+  P_X = OBJECT_ORIGIN.X;
+  P_Y = OBJECT_ORIGIN.Y;
+  P_Z = OBJECT_ORIGIN.Z; 
+  S_X = OBJECT_SCALE.X;  
+  S_Y = OBJECT_SCALE.Y;  
+  S_Z = OBJECT_SCALE.Z; 
+} FILE_HEADER <name="File Header">;
+
+FILE_LIST Textures(FILE_HEADER.TextureCount) <name="Textures List">;
+  
+TEXTURE_PROPERTIES TexProperties[FILE_HEADER.TPCount] <name="Properties of textures">;
+
+struct {    
+    UINT MeshCount;
+    UINT Zero; // not used
+    MESH_ARRAY Meshes(MeshCount); 
+} MODEL;
+
+if (FILE_HEADER.SectionOffset > 0) {
+  struct {
     struct {
-      struct {
-        FLOAT X;
-        FLOAT Y;
-        FLOAT Z;
-      } OBJECT_ORIGIN <name="Origin">;
-      struct {
-        FLOAT X;
-        FLOAT Y;
-        FLOAT Z;
-      } OBJECT_SCALE <name="Scale">;
-      UINT TextureCount <name="Number of textures">;
-      UINT TPCount <name="Number of texture properties">;
-      UINT ObjectCount; // some kind of flag
-      UINT SectionOffset <name="Offset">; 
-      FLOAT radius <name="Object culling radius?">;
-      P_X = OBJECT_ORIGIN.X;
-      P_Y = OBJECT_ORIGIN.Y;
-      P_Z = OBJECT_ORIGIN.Z; 
-      S_X = OBJECT_SCALE.X;  
-      S_Y = OBJECT_SCALE.Y;  
-      S_Z = OBJECT_SCALE.Z; 
-    } FILE_HEADER <name="File Header">;
-    
-    FILE_LIST Textures(FILE_HEADER.TextureCount) <name="Textures List">;
-      
-    TEXTURE_PROPERTIES TexProperties[FILE_HEADER.TPCount] <name="Properties of textures">;
+       UINT A;
+       UINT Size1;
+       UINT Size2;
+       UINT Size3;
+       UINT Size4;
+    } HEADER; 
+    if (HEADER.A == 1) 
+    { 
+      BYTE Data[HEADER.Size4];
+    } else 
+    {
 
-    struct {    
-      for ( i = 0; i < FILE_HEADER.ObjectCount; ++i ) {
-        UINT MeshCount;
-        UINT Zero; // not used
-        struct { 
-          for (k = 0; k < MeshCount; ++k) {
-            MESH Mesh <name="Meshes">;    
-          };
-        } MESHES;
-      };  
-    } OBJECTS;
+    };  
+  } BSP_Tree;
+};
 
-    if (FILE_HEADER.SectionOffset > 0) {
-      struct {
-        struct {
-           UINT A;
-           UINT Size1;
-           UINT Size2;
-           UINT Size3;
-           UINT Size4;
-        } HEADER; 
-        if (HEADER.A == 1) 
-        { 
-          BYTE Data[HEADER.Size4];
-        } else 
-        {
-
-        };  
-      } BSP_Tree;
-    };
-} CFF_FILE;
 
 string texFileName(TEXTURE_FILE &file) {
   return file.FileName;
 }
 
 string meshName(MESH &mesh) {
-  return mesh.HEADER.MeshName;
+  return mesh.HEADER.Name;
 }
 
-CFF_FILE CFFFile;
 
