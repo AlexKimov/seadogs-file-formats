@@ -40,6 +40,7 @@
 * [fmt_sd_dlt.py](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/noesis/fmt_sd_dlt.py) - скрипт для просмотра и сохранения файлов в формат **DLT** (Корсары ПДМ)
 * [fmt_sd_cff_clf.py](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/noesis/fmt_sd_cff_clf.py) - скрипт для просмотра **CFF** файлов (Корсары ПДМ)
 * [fmt_aos2_pak.py](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/noesis/fmt_aos2_pak.py) - скрипт для распаковки **PAK** файлов (Век Парсуников 2)
+* [fmt_sd2_tx.py](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/noesis/fmt_sd2_tx.py) - скрипт для распаковки **PAK** файлов (Век Парсуников 2)
 
 ### Шаблоны, описание форматов
 | №   | Формат | Прогресс | Шаблон (010 Editor) | WIKI | Краткое описание |
