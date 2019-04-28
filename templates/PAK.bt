@@ -39,7 +39,7 @@ struct {
     else
        UINT DataSize;      
     UINT Offset;
-    UINT File_TableUnknown; // 1 - ??
+    UINT Unknown; // 1 - ??
     UINT Empty; // 0  
     string Name; 
   } FILE_HEADER <name=fileName>;
