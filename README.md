@@ -39,6 +39,7 @@
 * [fmt_sd_tf.py](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/noesis/fmt_sd_tf.py) - скрипт для просмотра и сохранения файлов в формат **TF** (Корсары ПДМ)
 * [fmt_sd_dlt.py](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/noesis/fmt_sd_dlt.py) - скрипт для просмотра и сохранения файлов в формат **DLT** (Корсары ПДМ)
 * [fmt_sd_cff_clf.py](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/noesis/fmt_sd_cff_clf.py) - скрипт для просмотра **CFF** файлов (Корсары ПДМ)
+* [fmt_aos2_pak.py](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/noesis/fmt_aos2_pak.py) - скрипт для распаковки **PAK** файлов (Век Парсуников 2)
 
 ### Шаблоны, описание форматов
 | №   | Формат | Прогресс | Шаблон (010 Editor) | WIKI | Краткое описание |
@@ -115,3 +116,4 @@
 * [fmt_sd_tf.py](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/noesis/fmt_sd_tf.py) - script to view and save **TF** files (Sea Dogs 1)
 * [fmt_sd_dlt.py](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/noesis/fmt_sd_dlt.py) - script to view and save **DLT** files (Sea Dogs 1)
 * [fmt_sd_cff_clf.py](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/noesis/fmt_sd_cff_clf.py) - script to view **CFF** files (Sea Dogs 1)
+* [fmt_aos2_pak.py](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/noesis/fmt_aos2_pak.py) - script to unpack **PAK** files (Age of Sail 2)
