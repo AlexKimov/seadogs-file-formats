@@ -44,7 +44,7 @@ typedef struct {
     UINT Unknown;
     UINT Unknown;
   } A[Count];
-} TEXTURE_PROPERTIES;
+} MATERIALS <optimize=false>;
 
 typedef struct {   
    UINT16 X;     
@@ -140,7 +140,7 @@ struct {
   } OBJECT_SCALE <name="Scale">;
   UINT TextureCount <name="Number of textures">;
   UINT TPCount <name="Number of texture properties">;
-  UINT ObjectCount; // some kind of flag
+  UINT ModelCount; // some kind of flag
   UINT SectionOffset <name="Offset">; 
   FLOAT radius <name="Object culling radius?">;
   P_X = OBJECT_ORIGIN.X;
@@ -152,28 +152,43 @@ struct {
 } FILE_HEADER <name="File Header">;
 
 FILE_LIST Textures(FILE_HEADER.TextureCount) <name="Textures List">;
-  
-TEXTURE_PROPERTIES TexProperties[FILE_HEADER.TPCount] <name="Properties of textures">;
 
-struct {    
+struct {  
+  MATERIALS TexProperties[FILE_HEADER.TPCount] <name="Materials">;
+} MATS;
+
+typedef struct {    
     UINT MeshCount;
     UINT Zero; // not used
     MESH_ARRAY Meshes(MeshCount); 
 } MODEL;
 
+MODEL Models[FILE_HEADER.ModelCount] <optimize=false>;
+
 if (FILE_HEADER.SectionOffset > 0) {
   struct {
     struct {
-       UINT A;
-       UINT Size1;
-       UINT Size2;
-       UINT Size3;
-       UINT Size4;
+       UINT Type;
+       UINT Count1;
+       UINT Count2;
+       UINT Count3;
+       UINT DataSize;
     } HEADER; 
-    if (HEADER.A == 1) 
+    if (HEADER.Type == 1) 
     { 
-      BYTE Data[HEADER.Size4];
-    } else 
+      for (i = 0; i < HEADER.Count1 + HEADER.Count2; ++i)
+      {
+        struct {
+          INT Index;
+          INT Index;
+          do 
+          {
+            INT Index;
+          } while (Index >= 0);
+        } NODE;
+      };
+    } 
+      else 
     {
 
     };  
