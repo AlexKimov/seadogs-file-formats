@@ -19,13 +19,13 @@ struct {
   UINT Unknown; // 0
   UINT Unknown; // 0
   UINT ObjectCount; // 1
-  UINT FileCount;
+  UINT TextureCount;
   // long double
   UINT Unknown;
   UINT MeshCount;;
   UINT Unknown; // 0
   //
-  UINT Unknown; // 886
+  UINT AnimationCount; // 886
   UINT Unknown; // 0
   UINT Unknown; // 0
 } HEADER;
@@ -42,7 +42,7 @@ string getfileName(FILENAME &fn) {
   return fn.FileName;
 };
 
-TEXTURES FileNames(HEADER.FileCount) <name="Textures">;
+TEXTURES FileNames(HEADER.TextureCount) <name="Textures">;
 
 typedef struct { 
   struct {
@@ -85,7 +85,7 @@ typedef struct {
       FLOAT Y;
       FLOAT Z;
     } ROTATION;
-    FLOAT Time; //
+    FLOAT Frame; //
   } ANIMATIONS[HEADER.FrameCount];
 } MESH <name=getName>;
 
