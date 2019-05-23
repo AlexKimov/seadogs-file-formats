@@ -17,20 +17,70 @@ struct {
   UINT SectionOffset <name="First section offset">;
   UINT ObjectCount;
   UINT SectionoOffset <name="Second section offset">;
-  UINT AniKeyCount;
+  UINT FrameCount;
 } FILE_HEADER;
 
 typedef struct {
   UINT type;
-  UINT Unknown <name="Key?">;  
+  UINT Unknown;  
   UINT Length;
-  switch (type)
+  Printf("%d ", Length);
+  switch (Length)
   {
-    case 7: UINT Unknown; break;
-    case 29: 
+    case 4: 
+      FLOAT Unknown; 
+    break;
+    case 8: 
     { 
+      INT Unknown;
+      UINT Unknown; 
+    } break;
+    case 36: 
+    { 
+      char ObjectName[Length];
+    } break;
+    case 56: 
+    { 
+      FLOAT Unknown; 
+      FLOAT Unknown; 
+      FLOAT Unknown; 
+      FLOAT Unknown; 
+      FLOAT Unknown; 
+      FLOAT Unknown; 
+      char ObjectName[32];
+    } break;
+    case 296: 
+    { 
+      FLOAT Unknown; 
+      FLOAT Unknown; 
+      FLOAT Unknown; 
+      FLOAT Unknown; 
+      FLOAT Unknown; 
+      FLOAT Unknown; 
+      FLOAT Unknown; 
+      FLOAT Unknown; 
+      FLOAT Unknown; 
+      FLOAT Unknown; 
+      FLOAT Unknown; 
       UINT Unknown;
       UINT Unknown; 
+      FLOAT Unknown; 
+      FLOAT Unknown; 
+      FLOAT Unknown; 
+      FLOAT Unknown; 
+      FLOAT Unknown; 
+      FLOAT Unknown; 
+      UINT Unknown; 
+      FLOAT Unknown; 
+      FLOAT Unknown; 
+      FLOAT Unknown; 
+      FLOAT Unknown;
+      FLOAT Unknown;
+      FLOAT Unknown;
+      char ObjectName1[48];
+      char ObjectName2[48];
+      char ObjectName3[48];
+      char ObjectName4[48];
     } break;
     default: char ObjectName[Length];
   };
@@ -48,7 +98,7 @@ typedef struct (uint size) {
   OBJECT array[size] <optimize=false>;
 } OBJECT_ARRAY;
 
-OBJECT_ARRAY Array(FILE_HEADER.ObjectCount) <name="OBJECTS">;
+OBJECT_ARRAY Array(FILE_HEADER.ObjectCount) <name="NAMES">;
 
 struct {
   struct {
@@ -61,5 +111,5 @@ struct {
     FLOAT Y;
     FLOAT Z;
   } ROTATION;
-  FLOAT Time;
-} KEY[FILE_HEADER.AniKeyCount];
+  FLOAT Frame;
+} ANIMATIONS[FILE_HEADER.FrameCount];
