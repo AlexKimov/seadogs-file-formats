@@ -28,8 +28,6 @@ TVIF_IMAGE          = 2
 TVIF_SELECTEDIMAGE  = 32
 TVIF_PARAM          = 4
 
-
-
 TVS_LINESATROOT     = 4
 TVS_HASBUTTONS      = 1
 TVS_HASLINES        = 2 
@@ -47,10 +45,18 @@ PBM_SETPOS	        = (WM_USER + 2)
 
 BS_GROUPBOX         = 0x00000007
 
+BFFM_INITIALIZED = 1
+BFFM_SETSELECTIONA = WM_USER + 102
+BFFM_SETSELECTIONW = WM_USER + 103
+BIF_RETURNONLYFSDIRS = 0x00000001
+BIF_NEWDIALOGSTYLE = 0x00000040
+BFFCALLBACK = ctypes.WINFUNCTYPE(ctypes.c_int, wintypes.HWND, ctypes.c_uint, wintypes.LPARAM, wintypes.LPARAM)
+
 LPOFNHOOKPROC = ctypes.c_voidp
 LPCTSTR = LPTSTR = ctypes.c_wchar_p
+LPCSTR = LPSTR = ctypes.c_char_p
 HTREEITEM = wintypes.HANDLE
-
+LPVOID = ctypes.c_voidp
 
 class BITMAPINFOHEADER(ctypes.Structure):
     _fields_ = [('biSize', wintypes.DWORD),
@@ -123,10 +129,46 @@ class OPENFILENAME(ctypes.Structure):
                 ("flagsEx", wintypes.DWORD)]
 
 
+class BROWSEINFO(ctypes.Structure):
+    _fields_ = [("hwndOwner", wintypes.HWND),
+                ("pidlRoot", LPVOID),
+                ("pszDisplayName", LPTSTR),
+                ("lpszTitle", LPCTSTR),
+                ("ulFlags", wintypes.UINT),
+                ("lpfn", BFFCALLBACK),
+                ("lParam", wintypes.LPARAM),
+                ("iImage", wintypes.INT)]
+
+
 def MAKELONG(a, b):
     return (a & 0xffff) | ((b & 0xffff) << 16)
 
 
+class NoeUserOpenFolderDialog(ctypes.Structure):
+    def __init__(self, title = ""):  
+        self.bi = BROWSEINFO()
+        self.bi.hwndOwner = 0
+        self.bi.pidlRoot = 0
+        strBuffer = ctypes.create_string_buffer(title.encode('ascii'))
+        self.bi.lpszTitle = ctypes.cast(strBuffer, LPCTSTR)
+        self.bi.ulFlags = BIF_RETURNONLYFSDIRS | BIF_NEWDIALOGSTYLE
+        self.bi.iImage = 0
+    
+    def getOpenFolderName(self):
+        result = None
+        pidl = ctypes.windll.shell32.SHBrowseForFolder(ctypes.byref(self.bi))
+        try:
+            if pidl:  
+                buffer = ctypes.create_string_buffer(MAX_PATH)       
+                path = ctypes.cast(buffer, LPSTR)
+                if ctypes.windll.shell32.SHGetPathFromIDList(pidl, path):
+                    result = path.value.decode('ascii')
+        finally:       
+            ctypes.windll.ole32.CoTaskMemFree(pidl)
+            
+        return result    
+        
+        
 class NoeUserDialog(ctypes.Structure): 
     def __init__(self, title = "", default_extension = "", filter_string = "", \
             initialPath = "", allowMultiSelect = False):     
