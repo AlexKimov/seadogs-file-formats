@@ -97,12 +97,9 @@ typedef struct {
       UBYTE I2;
       UBYTE I3;
     } else {
-      BYTE A;
-      UBYTE I1;
-      BYTE B;
-      UBYTE I2;
-      BYTE C;
-      UBYTE I3;
+      UINT16 I1;
+      UINT16 I2;
+      UINT16 I3;
     };
   } FACE_INDEXES[HEADER.FaceCount] <name="Face Indexes">;
 
@@ -183,7 +180,8 @@ if (FILE_HEADER.SectionOffset > 0) {
           INT Index;
           do 
           {
-            INT Index;
+            INT16 Index;
+            INT16 Index;
           } while (Index >= 0);
         } NODE;
       };
