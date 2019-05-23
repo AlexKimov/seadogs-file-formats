@@ -5,14 +5,21 @@ import noewinext
 
 def registerNoesisTypes():
     handle = noesis.register("Sea Dogs (2000) cyclone model", ".cff;.clf")
+    
+    noesis.addOption(handle, "-noui", "disables UI", 0)
+    noesis.addOption(handle, "-texpath", "disables UI", noesis.OPTFLAG_WANTARG)
+    noesis.addOption(handle, "-framenumber", "set animation frame number to load", noesis.OPTFLAG_WANTARG)
+    noesis.addOption(handle, "-lodnumber", "set lod model to load", noesis.OPTFLAG_WANTARG)
+    noesis.addOption(handle, "-texformat", "set texture format for model textures", noesis.OPTFLAG_WANTARG)
+    
     noesis.setHandlerTypeCheck(handle, sdCycloneCheckType)
     noesis.setHandlerLoadModel(handle, sdCycloneLoadModel)
-        
+       
     return 1
   
 
 CYCLONE_INTERMEDIATE_FORMAT = 1  
-  
+STORM_ENGINE_DEFAULT_TEXTURE_FORMAT = "tf"
   
 class Vector3F:
     def read(self, reader):
@@ -52,6 +59,43 @@ class Vector3SH:
         self.y = reader.readShort()
         self.z = reader.readShort()        
  
+ 
+class animationsFile:
+    def __init__(self, reader):
+        self.filereader = reader
+        
+    def readHeader(self):
+        self.offset = self.filereader.readUInt() 
+        self.objectCount = self.filereader.readUInt()
+        self.offset = self.filereader.readUInt() 
+        self.frameCount = self.filereader.readUInt()
+        
+    def readObjectList(self): 
+        for i in range(self.objectCount):
+            self.type = self.filereader.readUInt()
+            self.filereader.seek(4, NOESEEK_REL)
+            self.size = self.filereader.readUInt()
+            if type == 7:
+                self.filereader.seek(4, NOESEEK_REL)
+            if type == 29:
+                self.filereader.seek(8, NOESEEK_REL)                
+            
+    def readAnimations(self):  
+        # read animations
+        for i in range(mesh.frameCount): 
+            frame = cycloneModelMeshAnimFrame()        
+            frame.translation.read(self.filereader) 
+            frame.rotation.read(self.filereader)   
+            
+            self.filereader.seek(4, NOESEEK_REL) # frame number   
+            
+            mesh.animationFrames.append(frame) 
+            
+    def read(self):
+        self.readHeader()
+        self.readObjectList()
+        self.readAnimations()
+    
  
 class cycloneModelFace: 
     def __init__(self):
@@ -99,13 +143,19 @@ class cycloneModelMeshAnimFrame:
     def __init__(self):  
         self.translation = Vector3F()
         self.rotation = Vector3F()
-        
+
+
+class sdLodModel:
+    def __init__(self):  
+        self.meshes = []    
+  
   
 class SDCycloneModel:
     def __init__(self, reader, isIntermediateFormat = 0): 
         self.filereader = reader
         self.textureList = []        
-        self.meshes = []
+        self.lods = []
+        self.frameCount = 0
         self.isIntermediateFormat = True if isIntermediateFormat == 1 else False
         
     def readHeader(self):
@@ -118,7 +168,7 @@ class SDCycloneModel:
             self.filereader.seek(4, NOESEEK_REL)
             self.meshCount = self.filereader.readUInt()
             self.filereader.seek(4, NOESEEK_REL)
-            self.animationCount = self.filereader.readUInt()
+            self.frameCount = self.filereader.readUInt()
             self.filereader.seek(8, NOESEEK_REL)            
         else:    
             self.position = Vector3F()
@@ -162,7 +212,7 @@ class SDCycloneModel:
         # read header
         if self.isIntermediateFormat:
             mesh.name = str(self.filereader.readBytes(32), 'ascii')
-            mesh.animFrameCount = self.filereader.readUInt()
+            mesh.animFrameCount = self.filereader.readUInt()   
             mesh.texIndex = self.filereader.readUInt()
             mesh.vertexCount = self.filereader.readUInt()       
             mesh.faceCount = self.filereader.readUInt()
@@ -193,6 +243,8 @@ class SDCycloneModel:
             mesh.faceCount = self.filereader.readUInt()
             unknown = self.filereader.readUInt()
             mesh.animFrameCount = self.filereader.readUInt()
+            if mesh.animFrameCount > self.frameCount:
+                self.frameCount = mesh.animFrameCount
             mesh.name = self.filereader.readBytes(4)            
         
             # read vertexes
@@ -223,42 +275,71 @@ class SDCycloneModel:
             
             mesh.animationFrames.append(frame) 
             
-        self.meshes.append(mesh)                
+        return mesh       
                
-    def getMeshes(self):
-        if not self.isIntermediateFormat:
-            self.meshCount = self.filereader.readUInt()
-            self.filereader.seek(4, NOESEEK_REL) 
+    def readLods(self):
+        for i in range(self.modelCount):
+            lodModel = sdLodModel()
+            if not self.isIntermediateFormat:
+                self.meshCount = self.filereader.readUInt()
+                self.filereader.seek(4, NOESEEK_REL) 
             
-        for i in range(self.meshCount): 
-            self.readMesh()
-      
+            for i in range(self.meshCount): 
+                lodModel.meshes.append(self.readMesh()) 
+                
+            self.lods.append(lodModel)    
+       
     def read(self): 
         if self.readHeader() == 1:
             return 0            
         self.getTextureList()
-        self.getMeshes()
+        self.readLods()
         
         return 1 
         
       
 class sdmodelViewDialogWindow:
     def __init__(self, model):
-        self.options = {"Frame": 0, "Path":""}    
+        self.model = model
+        self.options = {"Frame": 0, "Lod": 0, "Path":"", "Format":"", \
+            "Ext":STORM_ENGINE_DEFAULT_TEXTURE_FORMAT}    
         self.isCanceled = True
         
     def sdmodelViewButtonGetPath(self, noeWnd, controlId, wParam, lParam):    
         
-        return True 
+        dialog = noewinext.NoeUserOpenFolderDialog("Choose folder with model textures")
+        path = dialog.getOpenFolderName()
         
+        if path != None:
+            self.texPathEditBox.setText(path)
+                     
+        return True 
+      
     def sdmodelViewButtonLoad(self, noeWnd, controlId, wParam, lParam):
         frame = self.frameEditBox.getText()  
         try:
-            self.options["Frame"] = int(frame)        
+            frame = int(frame)
+            if frame > 0 and self.model.frameCount >= frame + 1:  
+                self.options["Frame"] = frame
+               
         except:
             pass
-       
-        self.options["Path"] = self.pathEditBox.getText() 
+            
+        lodIndex = self.lodEditBox.getText()  
+        try:
+            lodIndex = int(lodIndex)
+            if lodIndex > 0 and self.model.modelCount >= lodIndex + 1:
+                self.options["Lod"] = lodIndex          
+        except:
+            pass            
+
+        path = self.texPathEditBox.getText()        
+        if path != "":        
+            self.options["Path"] = self.texPathEditBox.getText() + "/"
+        
+        ext = self.extEditBox.getText() 
+        self.options["Ext"] = ext
+        
         self.isCanceled = False
         self.noeWnd.closeWindow()  
         
@@ -272,7 +353,7 @@ class sdmodelViewDialogWindow:
  
     def create(self):   
         self.noeWnd = noewin.NoeUserWindow( \
-            "Load cyclone model file", "openModelWindowClass", 385, 145) 
+            "Load cyclone model file", "openModelWindowClass", 385, 195) 
         noeWindowRect = noewin.getNoesisWindowRect()
         
         if noeWindowRect:
@@ -285,20 +366,53 @@ class sdmodelViewDialogWindow:
             
             self.noeWnd.createStatic("Textures path:", 5, 5, 110, 20)
             # choose path to textures          
-            index = self.noeWnd.createEditBox(5, 25, 275, 20, "", None, False, True)
-            self.pathEditBox = self.noeWnd.getControlByIndex(index)           
+            index = self.noeWnd.createEditBox(5, 28, 275, 20, "", None, False, True)
+            self.texPathEditBox = self.noeWnd.getControlByIndex(index) 
+
+            # extenstion   
+            self.noeWnd.createStatic("extension:", 170, 5, 60, 20)
+            index = self.noeWnd.createEditBox(240, 5, 40, 20, "", None, False)
+            self.extEditBox = self.noeWnd.getControlByIndex(index) 
+            self.extEditBox.setText("tf")            
             
-            self.noeWnd.createStatic("Frame:", 5, 53, 110, 20)
+            self.noeWnd.createStatic("Frame:", 5, 57, 80, 20)
             # choose frame number          
-            index = self.noeWnd.createEditBox(50, 50, 95, 20, "")
+            index = self.noeWnd.createEditBox(55, 55, 80, 20, "", None, False)
             self.frameEditBox = self.noeWnd.getControlByIndex(index)
-            self.frameEditBox.setText("0")            
-                
-            self.noeWnd.createButton("Open", 290, 20, 80, 25, \
-                 self.sdmodelViewButtonGetPath)                  
-            self.noeWnd.createButton("Load", 5, 85, 80, 30, \
+            self.frameEditBox.setText("0") 
+
+            self.noeWnd.createStatic("LOD:", 160, 57, 80, 20)
+            # choose lod          
+            index = self.noeWnd.createEditBox(200, 55, 80, 20, "", None, False)
+            self.lodEditBox = self.noeWnd.getControlByIndex(index)
+            self.lodEditBox.setText("0")  
+
+            # model info   
+            self.noeWnd.createStatic("lods:", 5, 85, 130, 20)
+            index = self.noeWnd.createEditBox(60, 85, 50, 20, "", None, False, True)
+            self.lodCountEditBox = self.noeWnd.getControlByIndex(index) 
+            self.lodCountEditBox.setText(str(self.model.modelCount))
+            
+            self.noeWnd.createStatic("textures:", 5, 105, 130, 20) 
+            index = self.noeWnd.createEditBox(60, 105, 50, 20, "", None, False, True)
+            self.textureCountEditBox = self.noeWnd.getControlByIndex(index)  
+            self.textureCountEditBox.setText(str(self.model.textureCount))
+            
+            self.noeWnd.createStatic("meshes:", 145, 85, 130, 20) 
+            index = self.noeWnd.createEditBox(200, 85, 50, 20, "", None, False, True)
+            self.meshCountEditBox = self.noeWnd.getControlByIndex(index)  
+            self.meshCountEditBox.setText(str(len(self.model.lods[0].meshes)))
+            
+            self.noeWnd.createStatic("frames:", 145, 105, 130, 20)             
+            index = self.noeWnd.createEditBox(200, 105, 50, 20, "", None, False, True)
+            self.frameCountEditBox = self.noeWnd.getControlByIndex(index)                    
+            self.frameCountEditBox.setText(str(self.model.frameCount))
+            
+            self.noeWnd.createButton("Open", 290, 27, 80, 21, \
+                 self.sdmodelViewButtonGetPath)                     
+            self.noeWnd.createButton("Load", 5, 135, 80, 30, \
                  self.sdmodelViewButtonLoad)
-            self.noeWnd.createButton("Cancel", 90, 85, 80, 30, \
+            self.noeWnd.createButton("Cancel", 90, 135, 80, 30, \
                  self.sdmodelViewButtonCancel)
                  
             self.noeWnd.doModal()                  
@@ -319,16 +433,34 @@ def sdCycloneLoadModel(data, mdlList):
         
     cycloneModel.read() 
    
-    #dialogWindow = sdmodelViewDialogWindow(cycloneModel)
-    #dialogWindow.create() 
-    #if dialogWindow.isCanceled:     
-    #    return 0
+    if not noesis.optWasInvoked("-noui"): 
+        dialogWindow = sdmodelViewDialogWindow(cycloneModel)
+        dialogWindow.create() 
+        if dialogWindow.isCanceled:     
+            return 0
 
-    #frameNumber = dialogWindow.options.get("Frame")    
-    #texturesPath = dialogWindow.options.get("Path") 
-    frameNumber = 0
-    texturesPath = ""
-    
+        frameNumber = dialogWindow.options.get("Frame")
+        texturesPath = dialogWindow.options.get("Path")
+        lodIndex = dialogWindow.options.get("Lod")
+        extension = dialogWindow.options.get("Ext")
+    else:
+        if noesis.optWasInvoked("-framenumber"):
+            frameNumber = noesis.optGetArg("-framenumber") 
+        else:
+            frameNumber = 0           
+        if noesis.optWasInvoked("-texpath"):
+            texturesPath = noesis.optGetArg("-texpath") 
+        else:          
+            texturesPath = ""       
+        if noesis.optWasInvoked("-lodnumber"):
+            lodIndex = noesis.optGetArg("-lodnumber") 
+        else:
+            lodIndex = 0
+        if noesis.optWasInvoked("-texformat"):
+            extension = noesis.optGetArg("-texformat") 
+        else:            
+            extension = STORM_ENGINE_DEFAULT_TEXTURE_FORMAT
+        
     ctx = rapi.rpgCreateContext()
     rapi.rpgSetOption(noesis.RPGOPT_TRIWINDBACKWARD, 1) # change face order
     
@@ -338,7 +470,7 @@ def sdCycloneLoadModel(data, mdlList):
         textures = []        
         for name in cycloneModel.textureList:          
             name = name.split(".")[0]
-            textureName = "{}{}.tf".format(texturesPath, name)               
+            textureName = "{}{}.{}".format(texturesPath, name, extension)              
             texture = rapi.loadExternalTex(textureName)
             if texture != None:
                 textures.append(texture)            
@@ -350,15 +482,13 @@ def sdCycloneLoadModel(data, mdlList):
             materials = []
             textures = []                    
     
-    #noesis.logPopup()
-    # load meshes
-    for mesh in cycloneModel.meshes:
+    
+    # show meshes
+    for msh in cycloneModel.lods[lodIndex].meshes:
 
-        if mesh.animFrameCount > 0:
-            if frameNumber > len(mesh.animationFrames):
-                frame = mesh.animationFrames[0]
-            else:                
-                frame = mesh.animationFrames[frameNumber]
+        if msh.animFrameCount > 0:
+            # animation transformations        
+            frame = msh.animationFrames[frameNumber]
             rotation = frame.rotation
             translation = frame.translation
 
@@ -374,29 +504,32 @@ def sdCycloneLoadModel(data, mdlList):
             rapi.rpgSetTransform(transMatrix)    
 
         if materials:
-            rapi.rpgSetMaterial(materials[mesh.texIndex].name)
+            rapi.rpgSetMaterial(materials[msh.texIndex].name)
     
         rapi.immBegin(noesis.RPGEO_TRIANGLE)
         
-        for face in mesh.faces:
+        for face in msh.faces:
+            # cff format
             if not cycloneModel.isIntermediateFormat:        
                 for index in face.indexes:
                     # uv
-                    uv = mesh.vertexes[index].uv
-                    uvX = uv.x / mesh.uvDelim
-                    uvY = uv.y / mesh.uvDelim
+                    uv = msh.vertexes[index].uv
+                    uvX = uv.x / msh.uvDelim
+                    uvY = uv.y / msh.uvDelim
                     rapi.immUV2((uvX, uvY))
                     # vertex pos
-                    position = mesh.vertexes[index].position
+                    position = msh.vertexes[index].position
                     posX = cycloneModel.position.x + position.x * cycloneModel.scale.x / 32767.0; 
                     posY = cycloneModel.position.y + position.y * cycloneModel.scale.y / 32767.0;  
                     posZ = cycloneModel.position.z + position.z * cycloneModel.scale.z / 32767.0;                
                     rapi.immVertex3( (posX, posY, posZ) ) 
             else:
-                uvs = mesh.face.uvs             
+            # clf format
+                uvs = face.uvs             
                 for i in range(3):
-                    rapi.immUV2((uvs[i].u, uvs[i].v))
-                    pos = mesh.vertexes[index].position                
+                    rapi.immUV2((uvs[i].x, uvs[i].y))
+                    index = face.indexes[i]
+                    pos = msh.vertexes[index].position                
                     rapi.immVertex3( (pos.x, pos.y, pos.z) )                             
         
         rapi.immEnd()              
