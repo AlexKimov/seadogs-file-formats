@@ -1,0 +1,17 @@
+[clf_cff_import]
+
+filename = "cff_clf_import.ms"
+folder = "build"
+
+files = [
+  "lib/ms.ms",
+  "lib/utils.ms",
+  "lib/dialogs.ms",  
+  "lib/ini.ms",    
+  "lib/settings.ms",
+  "lib/max.ms", 
+  "lib/stream.ms",  
+  "lib/cyclone_model.ms",  
+  "lib/cyclone.ms",    
+  "lib/cyclone_viewer.ms" 
+]

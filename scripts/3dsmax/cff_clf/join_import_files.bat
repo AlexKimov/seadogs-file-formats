@@ -1,0 +1,1 @@
+python join_maxscript_files.py import.toml
