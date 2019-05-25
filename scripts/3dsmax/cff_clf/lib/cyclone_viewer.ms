@@ -199,7 +199,8 @@ struct modelViewer
         )  
         
         if msh != undefined then
-        (          
+        (       
+          append scene.objects msh       
           -- mesh animations
           if settings.frameIndex == 0 then
           (        
@@ -222,6 +223,12 @@ struct modelViewer
       
       progressEnd()       
     ) 
-    redrawViews()   
+    
+    if scene.objects.count > 0 then
+    (
+      select scene.objects[1]
+      max zoomext sel  
+      redrawViews()       
+    ) 
   )  
 )
