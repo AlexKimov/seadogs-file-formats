@@ -12,7 +12,8 @@ struct cycloneViewerSettings
   isTextured = True,
   texFormat = "tf",
   lodIndex = 1,
-  frameIndex = 0  
+  frameIndex = 0, 
+  to3dsMaxSystem = True 
 )
 
 struct cyclonSceneViewer
@@ -79,10 +80,7 @@ struct cycloneAnimationViewer
     transformMatrix = preRotateY transformMatrix angles.y      
     transformMatrix = preRotateX transformMatrix angles.x    
     transformMatrix = preRotateZ transformMatrix angles.z       
-    
-    rotMatrix = (matrix3 [1,0,0] [0,0,1] [0,-1,0] [0,0,0]) 
-    transformMatrix = transformMatrix*rotMatrix
-    
+     
     max.controller.addKey msh.position.controller frame.time
     max.controller.addKey msh.rotation.controller frame.time 
     
@@ -196,28 +194,37 @@ struct modelViewer
           setProgressCancel true  
           exit        
         )  
-        
+                     
         if msh != undefined then
         (       
           append scene.objects msh       
           -- mesh animations
-          if settings.frameIndex == 0 then
-          (        
-            for frame in modelMesh.animationFrames do
-            (
-              if frame.time > animationRange.end then
-                max.animation.setLength frame.time 
-              setAnimationFrame msh frame 
-            )
-          )
-          else 
+          if modelMesh.header.frameCount > 0 then
           (
-            if settings.frameIndex <= modelMesh.header.frameCount then
-              setAnimationFrame msh modelMesh.animationFrames[settings.frameIndex] 
-            else        
-              setAnimationFrame msh modelMesh.animationFrames[0]
-          )    
-        )            
+            if settings.frameIndex == 0 then
+            (        
+              for frame in modelMesh.animationFrames do
+              (
+                if frame.time > animationRange.end then
+                  max.animation.setLength frame.time 
+                setAnimationFrame msh frame 
+              )
+            )
+            else 
+            (
+              if settings.frameIndex <= modelMesh.header.frameCount then
+                setAnimationFrame msh modelMesh.animationFrames[settings.frameIndex] 
+              else        
+                setAnimationFrame msh modelMesh.animationFrames[0]
+            ) 
+          )          
+        )
+
+        if settings.to3dsMaxSystem then
+        (
+          rotMatrix = (matrix3 [1, 0, 0] [0, 0, 1] [0, -1, 0] [0, 0, 0]) 
+          msh.transform = msh.transform*rotMatrix          
+        )        
       )
       
       progressEnd()       

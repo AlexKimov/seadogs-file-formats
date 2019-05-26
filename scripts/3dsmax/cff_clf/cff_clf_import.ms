@@ -17,7 +17,8 @@ struct settingsImportUI
   allLods = False,
   allFrames = True,
   isTextured = True,
-  path = ""  
+  path = "",
+  to3dsMaxSystem = True  
 )
 
 struct stringsImportUI
@@ -41,7 +42,8 @@ struct stringsImportUI
   buttonClearTexturePathCaption = "Clear",
   openTexturesFolder = "Choose textures folder",
   dropdownlistExtensionCaption = "ext.",
-  dropdownlistExtensionItems = #("tf", "bmp", "tga", "png")
+  dropdownlistExtensionItems = #("tf", "bmp", "tga", "png"),
+  convertCoordSystem = "convert coordinate system"
 )
 
 struct cycloneImportUI
@@ -80,7 +82,9 @@ struct cycloneImportUI
         if settings.allFrames == True then  
           viewer.settings.frameIndex = 0        
         else        
-          viewer.settings.frameIndex = settings.frame       
+          viewer.settings.frameIndex = settings.frame  
+        viewer.settings.to3dsMaxSystem = settings.to3dsMaxSystem 
+          
         viewer.createScene()
       )
       file.closeFile
@@ -104,22 +108,25 @@ struct cycloneImportUI
     (
       local owner = if owner != undefined do owner  
       groupBox group_model owner.strings.groupModelCaption \
-        pos:[5, 95] width:175 height:70 
+        pos:[5, 95] width:175 height:90 
         
       groupBox group_textures owner.strings.groupTexturesCaption \
         pos:[5, 0] width:175 height:90         
         
+      checkbox checkbox_convertCoord owner.strings.convertCoordSystem \
+        checked:owner.settings.to3dsMaxSystem pos:[25, 115]         
+        
       spinner spinner_lod owner.strings.editChooseLodModelTitle \
-        fieldWidth:40 type:#integer align:#right pos:[25, 115] \
+        fieldWidth:40 type:#integer align:#right pos:[25, 135] \
         range:[1, 10, owner.settings.lod]   
       spinner spinner_frame owner.strings.editChooseFrameTitle \
-        fieldWidth:40 type:#integer align:#right pos:[15, 135] \
+        fieldWidth:40 type:#integer align:#right pos:[15, 155] \
         range:[1, 2000, owner.settings.frame] 
 
       checkbox checkbox_allLods owner.strings.checkboxAllLodsCaption \
-        checked:owner.settings.allLods pos:[105, 115] 
+        checked:owner.settings.allLods pos:[105, 135] 
       checkbox checkbox_allFrames owner.strings.checkboxAllFramesCaption \
-        checked:owner.settings.allFrames pos:[105, 135]  
+        checked:owner.settings.allFrames pos:[105, 155]  
 
       --label label_choosePath owner.strings.labelChoosePath pos:[15, 20]          
       edittext edit_texPath "" fieldWidth:155 pos:[10, 40] readOnly:true
@@ -163,6 +170,7 @@ struct cycloneImportUI
         exportSettings.frame = setRollout.spinner_frame.value
         exportSettings.path = setRollout.edit_texPath.text
         exportSettings.texFormat = setRollout.dropdownlist_extension.text
+        exportSettings.to3dsMaxSystem = setRollout.checkbox_convertCoord.checked
         
         owner.importModel()
       )     
@@ -174,7 +182,7 @@ struct cycloneImportUI
     (     
       local owner = if owner != undefined do owner   
       
-      subrollout subroll_container "container" height:250 width:196 pos:[2, 2]
+      subrollout subroll_container "container" height:270 width:196 pos:[2, 2]
       on dialog resized point do
       (
         subroll_container.height = dialog.height
