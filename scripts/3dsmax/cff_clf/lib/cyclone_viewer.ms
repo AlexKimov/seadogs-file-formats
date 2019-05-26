@@ -104,7 +104,6 @@ struct modelViewer
   fn addMaterial name =
   (
     basename = fileUtils.getFileName name
-    settings.texturesPath = "C:\Program Files\1C\Корсары\RESOURCE\MODELS\CHARACTERS"
     filepath = settings.texturesPath + "/" + basename + "." + settings.texFormat
     bitmapMaterial = max.material.createMaterialFromBitmap filepath basename
 

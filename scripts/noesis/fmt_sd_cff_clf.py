@@ -517,6 +517,7 @@ def sdCycloneLoadModel(data, mdlList):
                     uvX = uv.x / msh.uvDelim
                     uvY = uv.y / msh.uvDelim
                     rapi.immUV2((uvX, uvY))
+                    
                     # vertex pos
                     position = msh.vertexes[index].position
                     posX = cycloneModel.position.x + position.x * cycloneModel.scale.x / 32767.0; 
