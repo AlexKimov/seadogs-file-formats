@@ -43,7 +43,7 @@ struct stringsImportUI
   buttonClearTexturePathCaption = "Clear",
   openTexturesFolder = "Choose textures folder",
   dropdownlistExtensionCaption = "ext.",
-  dropdownlistExtensionItems = #("tga", "bmp", "tga", "png"),
+  dropdownlistExtensionItems = #("tf", "bmp", "tga", "png"),
   checkboxConvertCoordSystem = "convert coordinate system",
   checkboxFaceOrder = "change face order"
 )
@@ -76,8 +76,7 @@ struct cycloneImportUI
       (
         viewer = modelViewer file.model
         viewer.settings.isTextured = settings.isTextured
-        --viewer.settings.texturesPath = settings.path
-        viewer.settings.texturesPath = "C:\Program Files\1C\Корсары\RESOURCE\MODELS\CHARACTERS"
+        viewer.settings.texturesPath = settings.path
         viewer.settings.texFormat = settings.texFormat
         if settings.allLods == True then
           viewer.settings.lodIndex = 0
