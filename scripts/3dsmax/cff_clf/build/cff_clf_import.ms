@@ -1119,7 +1119,7 @@ struct clfFile
       face.uv2 = [uv.x, uv.y, 0] 
       uv = freader.readVector2F()
       face.uv3 = [uv.x, uv.y, 0] 
-      
+        
       append msh.faces face
     )      
      
@@ -1426,7 +1426,9 @@ struct cycloneViewerSettings
   texFormat = "tf",
   lodIndex = 1,
   frameIndex = 0, 
-  to3dsMaxSystem = True 
+  to3dsMaxSystem = True,
+  isIntermediateFormat = False,
+  isClockwizeOrder = True  
 )
 
 struct cyclonSceneViewer
@@ -1437,38 +1439,64 @@ struct cyclonSceneViewer
 
 struct cycloneMeshViewer
 (
-  fn create modelMesh modelPos modelScale materials: =
+  isIntermediateFormat = False,
+  isClockwiseOrder = True, 
+  fn create modelMesh materials: modelPos: modelScale:  =
   ( 
     local faceArray = #()   
     local vertArray = #()    
 
     for vert in modelMesh.vertexes do 
-    (     
-      local x = modelPos.x + (vert.coordinates.x * modelScale.x) / 32767.0 
-      local y = modelPos.y + (vert.coordinates.y * modelScale.y) / 32767.0  
-      local z = modelPos.z + (vert.coordinates.z * modelScale.z) / 32767.0  
-      
-      append vertArray [x, y, z]   
-    )  
+    (    
+      if isIntermediateFormat then  
+        append vertArray vert.coordinates            
+      else
+      (     
+        local x = modelPos.x + (vert.coordinates.x * modelScale.x) / 32767.0 
+        local y = modelPos.y + (vert.coordinates.y * modelScale.y) / 32767.0  
+        local z = modelPos.z + (vert.coordinates.z * modelScale.z) / 32767.0   
+        
+        append vertArray [x, y, z] 
+      )
+    )      
     
     for face in modelMesh.faces do 
-    (      
-      face.indexes.x += 1 
-      face.indexes.y += 1 
-      face.indexes.z += 1 
+    (   
+      face.indexes.x += 1     
+      if isClockwiseOrder == False then
+      (    
+        face.indexes.y += 1 
+        face.indexes.z += 1 
+      ) 
+      else
+      (
+        face.indexes.z += 1      
+        face.indexes.y += 1       
+      )
+      
       append faceArray face.indexes
-    )     
-    
+    ) 
+      
     if materials != unsupplied then
     (
-      tvertArray = #()  
-      for vert in modelMesh.vertexes do 
-      (   
-        local uvX = vert.uv.x/modelMesh.header.uvDelim    
-        local uvY = vert.uv.y/modelMesh.header.uvDelim          
-        append tvertArray [uvX, -uvY, 0]
-      )    
+      tvertArray = #()
       
+      if isIntermediateFormat then          
+        for face in modelMesh.faces do 
+        (              
+          append tvertArray face.uv1
+          append tvertArray face.uv2           
+          append tvertArray face.uv3           
+        )        
+      else
+        for vert in modelMesh.vertexes do 
+        (   
+          local uvX = vert.uv.x/modelMesh.header.uvDelim    
+          local uvY = vert.uv.y/modelMesh.header.uvDelim 
+          
+          append tvertArray [uvX, -uvY, 0]
+        )         
+        
       msh = max.createTexturedMesh vertArray faceArray tvertArray \
         name:modelMesh.header.name
       
@@ -1537,14 +1565,18 @@ struct modelViewer
       result = bitmapMaterial
     )  
   ),
-  fn addMesh modelMesh modelOrigin modelScale mats: =
+  fn addMesh modelMesh mats: =
   (
-    if mats == unsupplied then
-      newMesh = meshViewer.create modelMesh modelOrigin modelScale
-    else
-      newMesh = meshViewer.create modelMesh modelOrigin modelScale materials:mats 
-
-    result = newMesh    
+    result = 
+    (
+      meshViewer.isIntermediateFormat = settings.isIntermediateFormat
+      if mats == unsupplied then
+        meshViewer.create modelMesh modelPos:model.header.origin \
+          modelScale:model.header.scale
+      else
+        meshViewer.create modelMesh modelPos:model.header.origin \
+          modelScale:model.header.scale materials:mats 
+    )   
   ), 
   fn setAnimationFrame msh frame =
   (
@@ -1602,10 +1634,9 @@ struct modelViewer
       for modelMesh in modelLod.meshes do 
       (      
         if settings.isTextured then
-          msh = addMesh modelMesh model.header.origin model.header.scale \
-            mats:scene.materials
+          msh = addMesh modelMesh mats:scene.materials
         else
-          msh = addMesh modelMesh model.header.origin model.header.scale
+          msh = addMesh modelMesh
         
         progressUpdate (progress*meshIndex) 
         meshIndex += 1   
@@ -1674,7 +1705,8 @@ struct settingsImportUI
   allFrames = True,
   isTextured = True,
   path = "",
-  to3dsMaxSystem = True  
+  to3dsMaxSystem = True,
+  isClockwizeOrder = True 
 )
 
 struct stringsImportUI
@@ -1698,8 +1730,9 @@ struct stringsImportUI
   buttonClearTexturePathCaption = "Clear",
   openTexturesFolder = "Choose textures folder",
   dropdownlistExtensionCaption = "ext.",
-  dropdownlistExtensionItems = #("tf", "bmp", "tga", "png"),
-  convertCoordSystem = "convert coordinate system"
+  dropdownlistExtensionItems = #("tga", "bmp", "tga", "png"),
+  checkboxConvertCoordSystem = "convert coordinate system",
+  checkboxFaceOrder = "change face order"
 )
 
 struct cycloneImportUI
@@ -1714,7 +1747,8 @@ struct cycloneImportUI
       dialogs.types = strings.importDialogTypes  
       filestream = dialogs.openFileDialog &fname "rb" 
       filename = fname       
-    )  
+    )
+    
     if filestream != undefined then 
     (    
       local ext = fileUtils.getFileExtension filename 
@@ -1729,7 +1763,8 @@ struct cycloneImportUI
       (
         viewer = modelViewer file.model
         viewer.settings.isTextured = settings.isTextured
-        viewer.settings.texturesPath = settings.path
+        --viewer.settings.texturesPath = settings.path
+        viewer.settings.texturesPath = "C:\Program Files\1C\Корсары\RESOURCE\MODELS\CHARACTERS"
         viewer.settings.texFormat = settings.texFormat
         if settings.allLods == True then
           viewer.settings.lodIndex = 0
@@ -1740,7 +1775,11 @@ struct cycloneImportUI
         else        
           viewer.settings.frameIndex = settings.frame  
         viewer.settings.to3dsMaxSystem = settings.to3dsMaxSystem 
+        viewer.settings.isIntermediateFormat = \
+          (if (classOf(file) == clfFile) then True else False)
           
+        viewer.settings.isClockwizeOrder = settings.isClockwizeOrder
+        
         viewer.createScene()
       )
       file.closeFile()
@@ -1764,33 +1803,35 @@ struct cycloneImportUI
     (
       local owner = if owner != undefined do owner  
       groupBox group_model owner.strings.groupModelCaption \
-        pos:[5, 95] width:175 height:90 
+        pos:[5, 97] width:175 height:110 
         
       groupBox group_textures owner.strings.groupTexturesCaption \
-        pos:[5, 0] width:175 height:90         
+        pos:[5, 0] width:175 height:92         
         
-      checkbox checkbox_convertCoord owner.strings.convertCoordSystem \
-        checked:owner.settings.to3dsMaxSystem pos:[25, 115]         
-        
+      checkbox checkbox_convertCoord owner.strings.checkboxconvertCoordSystem \
+        checked:owner.settings.to3dsMaxSystem pos:[25, 115]           
+      checkbox checkbox_faceOrder owner.strings.checkboxFaceOrder \
+        checked:owner.settings.isClockwizeOrder pos:[25, 135]   
+    
       spinner spinner_lod owner.strings.editChooseLodModelTitle \
-        fieldWidth:40 type:#integer align:#right pos:[25, 135] \
+        fieldWidth:40 type:#integer align:#right pos:[25, 160] \
         range:[1, 10, owner.settings.lod]   
       spinner spinner_frame owner.strings.editChooseFrameTitle \
-        fieldWidth:40 type:#integer align:#right pos:[15, 155] \
+        fieldWidth:40 type:#integer align:#right pos:[15, 180] \
         range:[1, 2000, owner.settings.frame] 
 
       checkbox checkbox_allLods owner.strings.checkboxAllLodsCaption \
-        checked:owner.settings.allLods pos:[105, 135] 
+        checked:owner.settings.allLods pos:[105, 160] 
       checkbox checkbox_allFrames owner.strings.checkboxAllFramesCaption \
-        checked:owner.settings.allFrames pos:[105, 155]  
+        checked:owner.settings.allFrames pos:[105, 180]  
 
       --label label_choosePath owner.strings.labelChoosePath pos:[15, 20]          
       edittext edit_texPath "" fieldWidth:155 pos:[10, 40] readOnly:true
       
       button button_setTexturePath owner.strings.buttonSetTexturePathCaption \
-        width:75 pos:[15, 60]
+        width:75 pos:[15, 62]
       button button_clearTexturePath owner.strings.buttonClearTexturePathCaption \
-        width:75 pos:[95, 60]        
+        width:75 pos:[95, 62]        
       checkbox checkbox_isTextured owner.strings.checkboxTexturedCaption \
         checked:owner.settings.isTextured pos:[15, 20] 
         
@@ -1827,6 +1868,7 @@ struct cycloneImportUI
         importSettings.path = setRollout.edit_texPath.text
         importSettings.texFormat = setRollout.dropdownlist_extension.text
         importSettings.to3dsMaxSystem = setRollout.checkbox_convertCoord.checked
+        importSettings.isClockwizeOrder = setRollout.checkbox_faceOrder.checked
         
         owner.importModel()
       )     
@@ -1838,7 +1880,7 @@ struct cycloneImportUI
     (     
       local owner = if owner != undefined do owner   
       
-      subrollout subroll_container "container" height:270 width:196 pos:[2, 2]
+      subrollout subroll_container "container" height:295 width:196 pos:[2, 2]
       on dialog resized point do
       (
         subroll_container.height = dialog.height
@@ -1868,6 +1910,7 @@ fn main =
 (
   currentPath = fileUtils.getCurrentPath(getThisScriptFilename())
   importUI = cycloneImportUI()
+  importUI.importModel filename:"Hubernator_Spa.clf"
 )
 
 main()

@@ -13,7 +13,9 @@ struct cycloneViewerSettings
   texFormat = "tf",
   lodIndex = 1,
   frameIndex = 0, 
-  to3dsMaxSystem = True 
+  to3dsMaxSystem = True,
+  isIntermediateFormat = False,
+  isClockwizeOrder = True  
 )
 
 struct cyclonSceneViewer
@@ -24,38 +26,64 @@ struct cyclonSceneViewer
 
 struct cycloneMeshViewer
 (
-  fn create modelMesh modelPos modelScale materials: =
+  isIntermediateFormat = False,
+  isClockwiseOrder = True, 
+  fn create modelMesh materials: modelPos: modelScale:  =
   ( 
     local faceArray = #()   
     local vertArray = #()    
 
     for vert in modelMesh.vertexes do 
-    (     
-      local x = modelPos.x + (vert.coordinates.x * modelScale.x) / 32767.0 
-      local y = modelPos.y + (vert.coordinates.y * modelScale.y) / 32767.0  
-      local z = modelPos.z + (vert.coordinates.z * modelScale.z) / 32767.0  
-      
-      append vertArray [x, y, z]   
-    )  
+    (    
+      if isIntermediateFormat then  
+        append vertArray vert.coordinates            
+      else
+      (     
+        local x = modelPos.x + (vert.coordinates.x * modelScale.x) / 32767.0 
+        local y = modelPos.y + (vert.coordinates.y * modelScale.y) / 32767.0  
+        local z = modelPos.z + (vert.coordinates.z * modelScale.z) / 32767.0   
+        
+        append vertArray [x, y, z] 
+      )
+    )      
     
     for face in modelMesh.faces do 
-    (      
-      face.indexes.x += 1 
-      face.indexes.y += 1 
-      face.indexes.z += 1 
+    (   
+      face.indexes.x += 1     
+      if isClockwiseOrder == False then
+      (    
+        face.indexes.y += 1 
+        face.indexes.z += 1 
+      ) 
+      else
+      (
+        face.indexes.z += 1      
+        face.indexes.y += 1       
+      )
+      
       append faceArray face.indexes
-    )     
-    
+    ) 
+      
     if materials != unsupplied then
     (
-      tvertArray = #()  
-      for vert in modelMesh.vertexes do 
-      (   
-        local uvX = vert.uv.x/modelMesh.header.uvDelim    
-        local uvY = vert.uv.y/modelMesh.header.uvDelim          
-        append tvertArray [uvX, -uvY, 0]
-      )    
+      tvertArray = #()
       
+      if isIntermediateFormat then          
+        for face in modelMesh.faces do 
+        (              
+          append tvertArray face.uv1
+          append tvertArray face.uv2           
+          append tvertArray face.uv3           
+        )        
+      else
+        for vert in modelMesh.vertexes do 
+        (   
+          local uvX = vert.uv.x/modelMesh.header.uvDelim    
+          local uvY = vert.uv.y/modelMesh.header.uvDelim 
+          
+          append tvertArray [uvX, -uvY, 0]
+        )         
+        
       msh = max.createTexturedMesh vertArray faceArray tvertArray \
         name:modelMesh.header.name
       
@@ -124,14 +152,18 @@ struct modelViewer
       result = bitmapMaterial
     )  
   ),
-  fn addMesh modelMesh modelOrigin modelScale mats: =
+  fn addMesh modelMesh mats: =
   (
-    if mats == unsupplied then
-      newMesh = meshViewer.create modelMesh modelOrigin modelScale
-    else
-      newMesh = meshViewer.create modelMesh modelOrigin modelScale materials:mats 
-
-    result = newMesh    
+    result = 
+    (
+      meshViewer.isIntermediateFormat = settings.isIntermediateFormat
+      if mats == unsupplied then
+        meshViewer.create modelMesh modelPos:model.header.origin \
+          modelScale:model.header.scale
+      else
+        meshViewer.create modelMesh modelPos:model.header.origin \
+          modelScale:model.header.scale materials:mats 
+    )   
   ), 
   fn setAnimationFrame msh frame =
   (
@@ -189,10 +221,9 @@ struct modelViewer
       for modelMesh in modelLod.meshes do 
       (      
         if settings.isTextured then
-          msh = addMesh modelMesh model.header.origin model.header.scale \
-            mats:scene.materials
+          msh = addMesh modelMesh mats:scene.materials
         else
-          msh = addMesh modelMesh model.header.origin model.header.scale
+          msh = addMesh modelMesh
         
         progressUpdate (progress*meshIndex) 
         meshIndex += 1   

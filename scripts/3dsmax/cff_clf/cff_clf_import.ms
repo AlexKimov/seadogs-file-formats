@@ -18,7 +18,8 @@ struct settingsImportUI
   allFrames = True,
   isTextured = True,
   path = "",
-  to3dsMaxSystem = True  
+  to3dsMaxSystem = True,
+  isClockwizeOrder = True 
 )
 
 struct stringsImportUI
@@ -42,8 +43,9 @@ struct stringsImportUI
   buttonClearTexturePathCaption = "Clear",
   openTexturesFolder = "Choose textures folder",
   dropdownlistExtensionCaption = "ext.",
-  dropdownlistExtensionItems = #("tf", "bmp", "tga", "png"),
-  convertCoordSystem = "convert coordinate system"
+  dropdownlistExtensionItems = #("tga", "bmp", "tga", "png"),
+  checkboxConvertCoordSystem = "convert coordinate system",
+  checkboxFaceOrder = "change face order"
 )
 
 struct cycloneImportUI
@@ -58,7 +60,8 @@ struct cycloneImportUI
       dialogs.types = strings.importDialogTypes  
       filestream = dialogs.openFileDialog &fname "rb" 
       filename = fname       
-    )  
+    )
+    
     if filestream != undefined then 
     (    
       local ext = fileUtils.getFileExtension filename 
@@ -73,7 +76,8 @@ struct cycloneImportUI
       (
         viewer = modelViewer file.model
         viewer.settings.isTextured = settings.isTextured
-        viewer.settings.texturesPath = settings.path
+        --viewer.settings.texturesPath = settings.path
+        viewer.settings.texturesPath = "C:\Program Files\1C\Корсары\RESOURCE\MODELS\CHARACTERS"
         viewer.settings.texFormat = settings.texFormat
         if settings.allLods == True then
           viewer.settings.lodIndex = 0
@@ -84,7 +88,11 @@ struct cycloneImportUI
         else        
           viewer.settings.frameIndex = settings.frame  
         viewer.settings.to3dsMaxSystem = settings.to3dsMaxSystem 
+        viewer.settings.isIntermediateFormat = \
+          (if (classOf(file) == clfFile) then True else False)
           
+        viewer.settings.isClockwizeOrder = settings.isClockwizeOrder
+        
         viewer.createScene()
       )
       file.closeFile()
@@ -108,33 +116,35 @@ struct cycloneImportUI
     (
       local owner = if owner != undefined do owner  
       groupBox group_model owner.strings.groupModelCaption \
-        pos:[5, 95] width:175 height:90 
+        pos:[5, 97] width:175 height:110 
         
       groupBox group_textures owner.strings.groupTexturesCaption \
-        pos:[5, 0] width:175 height:90         
+        pos:[5, 0] width:175 height:92         
         
-      checkbox checkbox_convertCoord owner.strings.convertCoordSystem \
-        checked:owner.settings.to3dsMaxSystem pos:[25, 115]         
-        
+      checkbox checkbox_convertCoord owner.strings.checkboxconvertCoordSystem \
+        checked:owner.settings.to3dsMaxSystem pos:[25, 115]           
+      checkbox checkbox_faceOrder owner.strings.checkboxFaceOrder \
+        checked:owner.settings.isClockwizeOrder pos:[25, 135]   
+    
       spinner spinner_lod owner.strings.editChooseLodModelTitle \
-        fieldWidth:40 type:#integer align:#right pos:[25, 135] \
+        fieldWidth:40 type:#integer align:#right pos:[25, 160] \
         range:[1, 10, owner.settings.lod]   
       spinner spinner_frame owner.strings.editChooseFrameTitle \
-        fieldWidth:40 type:#integer align:#right pos:[15, 155] \
+        fieldWidth:40 type:#integer align:#right pos:[15, 180] \
         range:[1, 2000, owner.settings.frame] 
 
       checkbox checkbox_allLods owner.strings.checkboxAllLodsCaption \
-        checked:owner.settings.allLods pos:[105, 135] 
+        checked:owner.settings.allLods pos:[105, 160] 
       checkbox checkbox_allFrames owner.strings.checkboxAllFramesCaption \
-        checked:owner.settings.allFrames pos:[105, 155]  
+        checked:owner.settings.allFrames pos:[105, 180]  
 
       --label label_choosePath owner.strings.labelChoosePath pos:[15, 20]          
       edittext edit_texPath "" fieldWidth:155 pos:[10, 40] readOnly:true
       
       button button_setTexturePath owner.strings.buttonSetTexturePathCaption \
-        width:75 pos:[15, 60]
+        width:75 pos:[15, 62]
       button button_clearTexturePath owner.strings.buttonClearTexturePathCaption \
-        width:75 pos:[95, 60]        
+        width:75 pos:[95, 62]        
       checkbox checkbox_isTextured owner.strings.checkboxTexturedCaption \
         checked:owner.settings.isTextured pos:[15, 20] 
         
@@ -171,6 +181,7 @@ struct cycloneImportUI
         importSettings.path = setRollout.edit_texPath.text
         importSettings.texFormat = setRollout.dropdownlist_extension.text
         importSettings.to3dsMaxSystem = setRollout.checkbox_convertCoord.checked
+        importSettings.isClockwizeOrder = setRollout.checkbox_faceOrder.checked
         
         owner.importModel()
       )     
@@ -182,7 +193,7 @@ struct cycloneImportUI
     (     
       local owner = if owner != undefined do owner   
       
-      subrollout subroll_container "container" height:270 width:196 pos:[2, 2]
+      subrollout subroll_container "container" height:295 width:196 pos:[2, 2]
       on dialog resized point do
       (
         subroll_container.height = dialog.height
@@ -212,6 +223,7 @@ fn main =
 (
   currentPath = fileUtils.getCurrentPath(getThisScriptFilename())
   importUI = cycloneImportUI()
+  importUI.importModel filename:"Hubernator_Spa.clf"
 )
 
 main()

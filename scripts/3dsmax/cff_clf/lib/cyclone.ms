@@ -86,7 +86,7 @@ struct clfFile
       face.uv2 = [uv.x, uv.y, 0] 
       uv = freader.readVector2F()
       face.uv3 = [uv.x, uv.y, 0] 
-      
+        
       append msh.faces face
     )      
      
