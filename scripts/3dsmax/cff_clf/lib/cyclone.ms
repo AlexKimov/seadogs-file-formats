@@ -326,6 +326,30 @@ struct cffFile
       --result = false
     --)  
   ),
+  fn writeHeader =
+  (
+    print "test"
+  ),
+  fn writeTextureList =
+  (
+    print "test"  
+  ),
+  fn writeMaterials =
+  (
+    print "test"  
+  ), 
+  fn writeMesh =
+  (
+    print "test"  
+  ),   
+  fn writeLods =
+  (
+    print "test"  
+  ),    
+  fn writeFile =
+  (
+    print "test"  
+  ),
   fn closeFile =
   (
     fclose fstream

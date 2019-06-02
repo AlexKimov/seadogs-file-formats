@@ -87,7 +87,7 @@ struct cycloneImportUI
           
         viewer.createScene()
       )
-      file.closeFile
+      file.closeFile()
     )    
   ),
   fn getPath =  
@@ -161,16 +161,16 @@ struct cycloneImportUI
       on button_importModel pressed do
       (
         setRollout = owner.dialog.subroll_container.settingsRollout
-        exportSettings = owner.settings
+        importSettings = owner.settings
         
-        exportSettings.isTextured = setRollout.checkbox_isTextured.checked           
-        exportSettings.allLods = setRollout.checkbox_allLods.checked 
-        exportSettings.allFrames = setRollout.checkbox_allFrames.checked       
-        exportSettings.lod = setRollout.spinner_lod.value
-        exportSettings.frame = setRollout.spinner_frame.value
-        exportSettings.path = setRollout.edit_texPath.text
-        exportSettings.texFormat = setRollout.dropdownlist_extension.text
-        exportSettings.to3dsMaxSystem = setRollout.checkbox_convertCoord.checked
+        importSettings.isTextured = setRollout.checkbox_isTextured.checked           
+        importSettings.allLods = setRollout.checkbox_allLods.checked 
+        importSettings.allFrames = setRollout.checkbox_allFrames.checked       
+        importSettings.lod = setRollout.spinner_lod.value
+        importSettings.frame = setRollout.spinner_frame.value
+        importSettings.path = setRollout.edit_texPath.text
+        importSettings.texFormat = setRollout.dropdownlist_extension.text
+        importSettings.to3dsMaxSystem = setRollout.checkbox_convertCoord.checked
         
         owner.importModel()
       )     

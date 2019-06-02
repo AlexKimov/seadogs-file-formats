@@ -70,8 +70,9 @@ struct cycloneMeshViewer
 
 struct cycloneAnimationViewer
 (
-  fn create msh frame =
+  fn create msh frame transfCoordinates:true =
   (
+    -- rads to degrees
     local angles = eulerAngles (frame.rotation.x * (180/pi)) \
       (frame.rotation.y * (180/pi)) (frame.rotation.z * (180/pi))
         
@@ -80,6 +81,12 @@ struct cycloneAnimationViewer
     transformMatrix = preRotateY transformMatrix angles.y      
     transformMatrix = preRotateX transformMatrix angles.x    
     transformMatrix = preRotateZ transformMatrix angles.z       
+     
+    if transfCoordinates then
+    (
+      transMatrix = (matrix3 [1, 0, 0] [0, 0, 1] [0, -1, 0] [0, 0, 0]) 
+      transformMatrix = transformMatrix*transMatrix
+    )    
      
     max.controller.addKey msh.position.controller frame.time
     max.controller.addKey msh.rotation.controller frame.time 
@@ -128,7 +135,8 @@ struct modelViewer
   ), 
   fn setAnimationFrame msh frame =
   (
-    animationViewer.create msh frame
+    animationViewer.create msh frame \
+      transfCoordinates:settings.to3dsMaxSystem
   ),  
   fn createScene =
   (
@@ -194,9 +202,9 @@ struct modelViewer
           setProgressCancel true  
           exit        
         )  
-                     
+                             
         if msh != undefined then
-        (       
+        (          
           append scene.objects msh       
           -- mesh animations
           if modelMesh.header.frameCount > 0 then
@@ -217,14 +225,17 @@ struct modelViewer
               else        
                 setAnimationFrame msh modelMesh.animationFrames[0]
             ) 
+          )
+          else
+          (
+            -- convert coordinates to 3dsMax ones        
+            if settings.to3dsMaxSystem then
+            (
+              transMatrix = (matrix3 [1, 0, 0] [0, 0, 1] [0, -1, 0] [0, 0, 0]) 
+              msh.transform = msh.transform*transMatrix         
+            )            
           )          
-        )
-
-        if settings.to3dsMaxSystem then
-        (
-          rotMatrix = (matrix3 [1, 0, 0] [0, 0, 1] [0, -1, 0] [0, 0, 0]) 
-          msh.transform = msh.transform*rotMatrix          
-        )        
+        )      
       )
       
       progressEnd()       

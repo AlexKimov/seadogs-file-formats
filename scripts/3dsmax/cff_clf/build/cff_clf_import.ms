@@ -1359,6 +1359,30 @@ struct cffFile
       --result = false
     --)  
   ),
+  fn writeHeader =
+  (
+    print "test"
+  ),
+  fn writeTextureList =
+  (
+    print "test"  
+  ),
+  fn writeMaterials =
+  (
+    print "test"  
+  ), 
+  fn writeMesh =
+  (
+    print "test"  
+  ),   
+  fn writeLods =
+  (
+    print "test"  
+  ),    
+  fn writeFile =
+  (
+    print "test"  
+  ),
   fn closeFile =
   (
     fclose fstream
@@ -1459,8 +1483,9 @@ struct cycloneMeshViewer
 
 struct cycloneAnimationViewer
 (
-  fn create msh frame =
+  fn create msh frame transfCoordinates:true =
   (
+    -- rads to degrees
     local angles = eulerAngles (frame.rotation.x * (180/pi)) \
       (frame.rotation.y * (180/pi)) (frame.rotation.z * (180/pi))
         
@@ -1469,6 +1494,12 @@ struct cycloneAnimationViewer
     transformMatrix = preRotateY transformMatrix angles.y      
     transformMatrix = preRotateX transformMatrix angles.x    
     transformMatrix = preRotateZ transformMatrix angles.z       
+     
+    if transfCoordinates then
+    (
+      transMatrix = (matrix3 [1, 0, 0] [0, 0, 1] [0, -1, 0] [0, 0, 0]) 
+      transformMatrix = transformMatrix*transMatrix
+    )    
      
     max.controller.addKey msh.position.controller frame.time
     max.controller.addKey msh.rotation.controller frame.time 
@@ -1517,7 +1548,8 @@ struct modelViewer
   ), 
   fn setAnimationFrame msh frame =
   (
-    animationViewer.create msh frame
+    animationViewer.create msh frame \
+      transfCoordinates:settings.to3dsMaxSystem
   ),  
   fn createScene =
   (
@@ -1583,9 +1615,9 @@ struct modelViewer
           setProgressCancel true  
           exit        
         )  
-                     
+                             
         if msh != undefined then
-        (       
+        (          
           append scene.objects msh       
           -- mesh animations
           if modelMesh.header.frameCount > 0 then
@@ -1606,14 +1638,17 @@ struct modelViewer
               else        
                 setAnimationFrame msh modelMesh.animationFrames[0]
             ) 
+          )
+          else
+          (
+            -- convert coordinates to 3dsMax ones        
+            if settings.to3dsMaxSystem then
+            (
+              transMatrix = (matrix3 [1, 0, 0] [0, 0, 1] [0, -1, 0] [0, 0, 0]) 
+              msh.transform = msh.transform*transMatrix         
+            )            
           )          
-        )
-
-        if settings.to3dsMaxSystem then
-        (
-          rotMatrix = (matrix3 [1, 0, 0] [0, 0, 1] [0, -1, 0] [0, 0, 0]) 
-          msh.transform = msh.transform*rotMatrix          
-        )        
+        )      
       )
       
       progressEnd()       
@@ -1708,7 +1743,7 @@ struct cycloneImportUI
           
         viewer.createScene()
       )
-      file.closeFile
+      file.closeFile()
     )    
   ),
   fn getPath =  
@@ -1782,16 +1817,16 @@ struct cycloneImportUI
       on button_importModel pressed do
       (
         setRollout = owner.dialog.subroll_container.settingsRollout
-        exportSettings = owner.settings
+        importSettings = owner.settings
         
-        exportSettings.isTextured = setRollout.checkbox_isTextured.checked           
-        exportSettings.allLods = setRollout.checkbox_allLods.checked 
-        exportSettings.allFrames = setRollout.checkbox_allFrames.checked       
-        exportSettings.lod = setRollout.spinner_lod.value
-        exportSettings.frame = setRollout.spinner_frame.value
-        exportSettings.path = setRollout.edit_texPath.text
-        exportSettings.texFormat = setRollout.dropdownlist_extension.text
-        exportSettings.to3dsMaxSystem = setRollout.checkbox_convertCoord.checked
+        importSettings.isTextured = setRollout.checkbox_isTextured.checked           
+        importSettings.allLods = setRollout.checkbox_allLods.checked 
+        importSettings.allFrames = setRollout.checkbox_allFrames.checked       
+        importSettings.lod = setRollout.spinner_lod.value
+        importSettings.frame = setRollout.spinner_frame.value
+        importSettings.path = setRollout.edit_texPath.text
+        importSettings.texFormat = setRollout.dropdownlist_extension.text
+        importSettings.to3dsMaxSystem = setRollout.checkbox_convertCoord.checked
         
         owner.importModel()
       )     
