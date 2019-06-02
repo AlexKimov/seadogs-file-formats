@@ -71,10 +71,7 @@ struct cycloneModelLodMeshVertex
 
 struct cycloneModelLodMeshFace
 (
-  indexes = (point3 0 0 0),
-  uv1 = (point3 0 0 0),
-  uv2 = (point3 0 0 0),
-  uv3 = (point3 0 0 0)  
+  indexes = (point3 0 0 0)  
 )
 
 struct cycloneModelLodAnimationFrame

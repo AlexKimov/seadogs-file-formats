@@ -997,10 +997,7 @@ struct cycloneModelLodMeshVertex
 
 struct cycloneModelLodMeshFace
 (
-  indexes = (point3 0 0 0),
-  uv1 = (point3 0 0 0),
-  uv2 = (point3 0 0 0),
-  uv3 = (point3 0 0 0)  
+  indexes = (point3 0 0 0)  
 )
 
 struct cycloneModelLodAnimationFrame
@@ -1113,13 +1110,11 @@ struct clfFile
       
       face.indexes = freader.readVector3UI16()
       fseek fstream 2 #seek_cur
-      uv = freader.readVector2F()
-      face.uv1 = [uv.x, uv.y, 0]      
-      uv = freader.readVector2F()
-      face.uv2 = [uv.x, uv.y, 0] 
-      uv = freader.readVector2F()
-      face.uv3 = [uv.x, uv.y, 0] 
-        
+
+      msh.vertexes[face.indexes[1] + 1].uv = freader.readVector2F()  
+      msh.vertexes[face.indexes[2] + 1].uv = freader.readVector2F() 
+      msh.vertexes[face.indexes[3] + 1].uv = freader.readVector2F() 
+      
       append msh.faces face
     )      
      
@@ -1481,21 +1476,21 @@ struct cycloneMeshViewer
     (
       tvertArray = #()
       
-      if isIntermediateFormat then          
-        for face in modelMesh.faces do 
-        (              
-          append tvertArray face.uv1
-          append tvertArray face.uv2           
-          append tvertArray face.uv3           
+      for vert in modelMesh.vertexes do 
+      (       
+        if isIntermediateFormat then 
+        (         
+          local uvX = vert.uv.x         
+          local uvY = vert.uv.y          
         )        
-      else
-        for vert in modelMesh.vertexes do 
-        (   
+        else
+        (
           local uvX = vert.uv.x/modelMesh.header.uvDelim    
           local uvY = vert.uv.y/modelMesh.header.uvDelim 
-          
-          append tvertArray [uvX, -uvY, 0]
-        )         
+        )    
+        
+        append tvertArray [uvX, -uvY, 0]  
+      )         
         
       msh = max.createTexturedMesh vertArray faceArray tvertArray \
         name:modelMesh.header.name

@@ -80,13 +80,11 @@ struct clfFile
       
       face.indexes = freader.readVector3UI16()
       fseek fstream 2 #seek_cur
-      uv = freader.readVector2F()
-      face.uv1 = [uv.x, uv.y, 0]      
-      uv = freader.readVector2F()
-      face.uv2 = [uv.x, uv.y, 0] 
-      uv = freader.readVector2F()
-      face.uv3 = [uv.x, uv.y, 0] 
-        
+
+      msh.vertexes[face.indexes[1] + 1].uv = freader.readVector2F()  
+      msh.vertexes[face.indexes[2] + 1].uv = freader.readVector2F() 
+      msh.vertexes[face.indexes[3] + 1].uv = freader.readVector2F() 
+      
       append msh.faces face
     )      
      

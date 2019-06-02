@@ -68,21 +68,21 @@ struct cycloneMeshViewer
     (
       tvertArray = #()
       
-      if isIntermediateFormat then          
-        for face in modelMesh.faces do 
-        (              
-          append tvertArray face.uv1
-          append tvertArray face.uv2           
-          append tvertArray face.uv3           
+      for vert in modelMesh.vertexes do 
+      (       
+        if isIntermediateFormat then 
+        (         
+          local uvX = vert.uv.x         
+          local uvY = vert.uv.y          
         )        
-      else
-        for vert in modelMesh.vertexes do 
-        (   
+        else
+        (
           local uvX = vert.uv.x/modelMesh.header.uvDelim    
           local uvY = vert.uv.y/modelMesh.header.uvDelim 
-          
-          append tvertArray [uvX, -uvY, 0]
-        )         
+        )    
+        
+        append tvertArray [uvX, -uvY, 0]  
+      )         
         
       msh = max.createTexturedMesh vertArray faceArray tvertArray \
         name:modelMesh.header.name
