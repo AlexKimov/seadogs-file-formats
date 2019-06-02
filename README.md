@@ -43,6 +43,10 @@
 * [fmt_sd2_tx.py](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/noesis/fmt_sd2_tx.py) - скрипт для просмотра **TX** файлов (Корсары 2, 3)
 * [fmt_sd2_zap.py](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/noesis/fmt_sd2_zap.py) - скрипт для просмотра **ZAP** файлов (Корсары 2, 3)
 
+#### 3dsMax
+* [cff_clf_export.zip](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/3dsmax/cff_clf/build/cff_clf_export.zip) - импорт моделей с анимациями (Корсары, Век Парсуников 2, Рыцари Морей)
+
+
 ### Шаблоны, описание форматов
 | №   | Формат | Прогресс | Шаблон (010 Editor) | WIKI | Краткое описание |
 | :-- | :-------- | :------ | :------- | :--   | :--   |
@@ -121,3 +125,6 @@
 * [fmt_aos2_pak.py](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/noesis/fmt_aos2_pak.py) - script to unpack **PAK** files (Age of Sail 2)
 * [fmt_sd2_tx.py](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/noesis/fmt_sd2_tx.py) - script to view **TX** files (Sea Dogs 2, 3)
 * [fmt_sd2_zap.py](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/noesis/fmt_sd2_zap.py) - script to view **ZAP** files (Sea Dogs 2, 3)
+
+#### 3dsMax
+* [cff_clf_export.zip](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/3dsmax/cff_clf/build/cff_clf_export.zip) - model import (Sea Dogs 1, Age of Sail 2)
