@@ -9,7 +9,7 @@ filein "cyclone_model.ms"
 struct cffStrings
 (
   types = "Cyclone final format (*.cff)|*.cff",
-  openFileCaption = "",
+  openFileCaption = "Open file",
   saveFileCaption = "",
   progressString = "Reading LOD model meshes" 
 )
@@ -17,8 +17,8 @@ struct cffStrings
 struct clfStrings
 (
   types = "Cyclone final format (*.clf)|*.clf",
-  openFileCaption = "",
-  saveFileCaption = "",
+  openFileCaption = "Open file",
+  saveFileCaption = "",  
   progressString = "Reading LOD model meshes"   
 )
 
@@ -361,21 +361,18 @@ struct cffFile
     else  
       fwriter = streamWriter(fstream)    
   ),   
-  fn openFile mode =
-  (
+  fn openFile =
+  (   
     dialogs.types = strings.types
-    if mode == "rb" then
-      dialogs.caption = strings.openFileCaption
-    else
-      dialogs.caption = strings.saveFileCaption
+    dialogs.caption = strings.openFileCaption
+
     local fname = filename
-    fstream = dialogs.openFileDialog &fname mode
+    fstream = dialogs.openFileDialog &fname "rb"
+
     if fstream != undefined then
     (
-      filename = fname
-      freader = rseFormatReader(fstream)
-      fwriter = rseFormatWriter(fstream)  
+      freader = streamReader(fstream)
+      result = fstream
     )  
-    result = fstream
   )   
 )

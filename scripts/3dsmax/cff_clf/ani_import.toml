@@ -1,0 +1,20 @@
+[clf_cff_import]
+
+filename = "ani_import.ms"
+folder = "build"
+
+files = [
+  "lib/ms.ms",
+  "lib/utils.ms",
+  "lib/dialogs.ms",  
+  "lib/ini.ms",    
+  "lib/settings.ms",
+  "lib/max.ms", 
+  "lib/stream.ms",  
+  "lib/ani_model.ms",  
+  "lib/ani.ms", 
+  "lib/cyclone_model.ms",    
+  "lib/cyclone.ms",   
+  "lib/cyclone_viewer.ms",  
+  "lib/ani_viewer.ms" 
+]

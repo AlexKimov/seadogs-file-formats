@@ -5,13 +5,11 @@
 filein "dialogs.ms"
 filein "stream.ms"
 filein "ani_model.ms"
-filein "ani_viewer.ms"
 
 struct aniStrings
 (
-  types = "Se Dogs 1 animated scene (*.ani)|*.ani",
-  openFileCaption = "",
-  saveFileCaption = ""
+  types = "Sea Dogs 1 animated scene (*.ani)|*.ani",
+  openFileCaption = "Open .ani file"
 )
 
 struct aniFile
@@ -50,13 +48,13 @@ struct aniFile
   (
     for i = 1 to scene.header.frameCount do
     (
-      frame = aniSceneFrame()  
+      frame = aniAnimationFrame()  
      
       frame.position = freader.readVector3F()   
       frame.rotation = freader.readVector3F()
       frame.time = ReadFloat fstream
       
-      append scene.animationFrames frame
+      append scene.animations frame
     )    
   ),
   fn readFile =
@@ -64,6 +62,7 @@ struct aniFile
     readHeader()
     readObjects()
     readAnimations()
+    result = True
   ),  
   fn closeFile =
   (
@@ -75,17 +74,20 @@ struct aniFile
     this.filename = filename 
     freader = streamReader(fstream)   
   ),   
-  fn openFile mode =
+  fn openFile mode:"rb" =
   (
+    result = False
+    
     dialogs.types = strings.types
     dialogs.caption = strings.openFileCaption
+    
     local fname = filename
     fstream = dialogs.openFileDialog &fname mode
     if fstream != undefined then
     (
       filename = fname
-      freader = rseFormatReader(fstream) 
-    )  
-    result = fstream
+      freader = formatReader(fstream)    
+      result = True      
+    )
   )    
 )
