@@ -11,8 +11,16 @@ filein "lib/ani_viewer.ms"
 
 struct settingsImportAni
 (
-  animOn = True,
-  pathToModelsFolder = ""
+  pathToModelsFolder = "",
+  allLods = False,
+  allFrames = True,
+  isTextured = True,
+  path = "",
+  to3dsMaxSystem = True,
+  isClockwizeOrder = True,
+  lod = 1,
+  frame = 1,
+  texFormat = "tf"
 )
 
 struct stringsImportAni
@@ -20,14 +28,30 @@ struct stringsImportAni
   rolloutTitle = "Import .ani scene",
   rolloutImportTitle = "Import",
   buttonImportCaption = "Open .ani file",
-  groupModelsCaption = "Models",
+  groupModelsCaption = "Folder",
   buttonSetPathCaption = "Get path",
   buttonClearPathCaption = "Clear",
   rolloutSettingsTitle = "Settings",
-  checkboxAnimOnCaption = "animate",
+  rolloutImportSettingsTitle = "Model import settings",
   importDialogCaption = "Import .ani file",
   importDialogTypes  = "Sea Dogs 1 animated scenes file (*.ani)|*.ani",
-  openFolder = "Open \"Models\" folder"
+  openFolder = "Open \"Models\" folder",
+  editChooseLodModelTitle = "LOD",
+  groupModelCaption = "Model",
+  groupTexturesCaption = "Textures",
+  editChooseFrameTitle = "Frame",
+  checkboxAllLodsCaption = "all lods",
+  checkboxAllFramesCaption = "all frames",
+  labelChoosePath = "Path",
+  checkboxTexturedCaption = "add textures",
+  buttonSetTexturePathCaption = "Get path",
+  buttonClearTexturePathCaption = "Clear",
+  openTexturesFolder = "Choose textures folder",
+  dropdownlistExtensionCaption = "ext.",
+  dropdownlistExtensionItems = #("tf", "bmp", "tga", "png"),
+  checkboxConvertCoordSystem = "convert coordinate system",
+  checkboxFaceOrder = "change face order",
+  editChooseStartFrameTitle = "Start"  
 )
 
 struct aniSceneImportUI
@@ -51,15 +75,39 @@ struct aniSceneImportUI
       if file.readFile() then
       (
         sceneViewer = aniSceneViewer file.scene
-        sceneViewer.settings.showAnimations = settings.animOn
-        sceneViewer.settings.modelsFolderPath = settings.pathToModelsFolder
-        --sceneViewer.settings.modelsFolderPath = "C:\Program Files\1C\Корсары\RESOURCE\MODELS"
+        viewerSettings = sceneViewer.settings  
+        
+        viewerSettings.modelsFolderPath = settings.pathToModelsFolder     
+        viewerSettings.isTextured = settings.isTextured     
+        if settings.allLods then 
+          viewerSettings.lodIndex = 0
+        else
+          viewerSettings.lodIndex = viewerSettings.lodIndex
+        if settings.allFrames  then 
+          viewerSettings.frameIndex = 0
+        else
+          viewerSettings.frameIndex = viewerSettings.frameIndex              
+        viewerSettings.texturesPath = settings.path
+        viewerSettings.texFormat = settings.texFormat
+        viewerSettings.to3dsMaxSystem = settings.to3dsMaxSystem 
+        viewerSettings.isClockwizeOrder = settings.isClockwizeOrder
+        sceneViewer.settings.modelsFolderPath = "C:\Program Files\1C\Корсары\RESOURCE\MODELS"
         
         sceneViewer.create()
       ) 
       file.closeFile()      
     )    
   ),
+  fn getTexturesPath =
+  (
+    path = dialogs.openFolder strings.openFolder
+    if path != undefined then
+      this.dialog.subroll_container.importSettingsRollout.edit_modelsPath.text = path
+  ),
+  fn clearTexturesPath =
+  (
+    this.dialog.subroll_container.importSettingsRollout.edit_modelsPath.text = "" 
+  ),  
   fn getFolderPath =
   (
     path = dialogs.openFolder strings.openFolder
@@ -70,6 +118,56 @@ struct aniSceneImportUI
   (
     this.dialog.subroll_container.settingsRollout.edit_modelsPath.text = "" 
   ),
+  importSettingsRollout =
+  (
+    rollout importSettingsRollout strings.rolloutImportSettingsTitle 
+    (
+      local owner = if owner != undefined do owner  
+      groupBox group_model owner.strings.groupModelCaption \
+        pos:[5, 97] width:175 height:110 
+        
+      groupBox group_textures owner.strings.groupTexturesCaption \
+        pos:[5, 0] width:175 height:92         
+        
+      checkbox checkbox_convertCoord owner.strings.checkboxconvertCoordSystem \
+        checked:owner.settings.to3dsMaxSystem pos:[25, 115]           
+      checkbox checkbox_faceOrder owner.strings.checkboxFaceOrder \
+        checked:owner.settings.isClockwizeOrder pos:[25, 135]   
+    
+      spinner spinner_lod owner.strings.editChooseLodModelTitle \
+        fieldWidth:40 type:#integer align:#right pos:[25, 160] \
+        range:[1, 10, owner.settings.lod]   
+      spinner spinner_frame owner.strings.editChooseFrameTitle \
+        fieldWidth:40 type:#integer align:#right pos:[15, 180] \
+        range:[1, 2000, owner.settings.frame] 
+
+      checkbox checkbox_allLods owner.strings.checkboxAllLodsCaption \
+        checked:owner.settings.allLods pos:[105, 160] 
+      checkbox checkbox_allFrames owner.strings.checkboxAllFramesCaption \
+        checked:owner.settings.allFrames pos:[105, 180]  
+        
+      edittext edit_texPath "" fieldWidth:155 pos:[10, 40] readOnly:true
+      
+      button button_getTexturePath owner.strings.buttonSetTexturePathCaption \
+        width:75 pos:[15, 62]
+      button button_clearTexturePath owner.strings.buttonClearTexturePathCaption \
+        width:75 pos:[95, 62]        
+      checkbox checkbox_isTextured owner.strings.checkboxTexturedCaption \
+        checked:owner.settings.isTextured pos:[15, 20]           
+        
+      dropdownlist dropdownlist_extension items:owner.strings.dropdownlistExtensionItems \
+        pos:[120, 15] width:50
+        
+      on button_getTexturePath pressed do
+      (
+        owner.getTexturesPath()
+      )  
+      on button_clearTexturePath pressed do
+      (
+        owner.clearTexturesath()
+      )       
+    )    
+  ),  
   settingsRollout =
   (
     rollout settingsRollout strings.rolloutSettingsTitle 
@@ -77,22 +175,20 @@ struct aniSceneImportUI
       local owner = if owner != undefined do owner  
       
       groupBox group_model owner.strings.groupModelsCaption \
-        pos:[5, 0] width:175 height:115   
-      checkbox checkbox_animOn owner.strings.checkboxAnimOnCaption \
-        checked:owner.settings.animOn pos:[15, 17]        
+        pos:[5, 0] width:175 height:90         
       edittext edit_modelsPath "Path to Models folder" fieldWidth:154 \
-        pos:[15, 40] readOnly:true labelOnTop:true
+        pos:[15, 20] readOnly:true labelOnTop:true
         
-      button button_setTexturePath owner.strings.buttonSetPathCaption \
-        width:75 pos:[15, 85]
-      button button_clearTexturePath owner.strings.buttonClearPathCaption \
-        width:75 pos:[95, 85] 
+      button button_setModelsPath owner.strings.buttonSetPathCaption \
+        width:75 pos:[15, 60]
+      button button_clearModelsPath owner.strings.buttonClearPathCaption \
+        width:75 pos:[95, 60] 
 
-      on button_setTexturePath pressed do
+      on button_setModelsPath pressed do
       (
         owner.getFolderPath()
       )  
-      on button_clearTexturePath pressed do
+      on button_clearModelsPath pressed do
       (
         owner.clearFolderPath()
       )                 
@@ -108,11 +204,20 @@ struct aniSceneImportUI
       
       on button_importAniScene pressed do
       (
-        setRollout = owner.dialog.subroll_container.settingsRollout
+        setRollout = owner.dialog.subroll_container.importSettingsRollout
+        importSetRollout = owner.dialog.subroll_container.settingsRollout
         importSettings = owner.settings
         
-        importSettings.animOn = setRollout.checkbox_animOn.checked
-        importSettings.pathToModelsFolder = setRollout.edit_modelsPath.text
+        importSettings.pathToModelsFolder = importSetRollout.edit_modelsPath.text        
+        importSettings.isTextured = setRollout.checkbox_isTextured.checked           
+        importSettings.allLods = setRollout.checkbox_allLods.checked 
+        importSettings.allFrames = setRollout.checkbox_allFrames.checked       
+        importSettings.lod = setRollout.spinner_lod.value
+        importSettings.frame = setRollout.spinner_frame.value
+        importSettings.path = setRollout.edit_texPath.text
+        importSettings.texFormat = setRollout.dropdownlist_extension.text
+        importSettings.to3dsMaxSystem = setRollout.checkbox_convertCoord.checked
+        importSettings.isClockwizeOrder = setRollout.checkbox_faceOrder.checked
         
         owner.importModel()
       )     
@@ -124,7 +229,7 @@ struct aniSceneImportUI
     (     
       local owner = if owner != undefined do owner   
       
-      subrollout subroll_container "container" height:200 width:196 pos:[2, 2]
+      subrollout subroll_container "container" height:410 width:196 pos:[2, 2]
       on dialog resized point do
       (
         subroll_container.height = dialog.height
@@ -142,9 +247,12 @@ struct aniSceneImportUI
     dialog.owner = this 
     importRollout.owner = this 
     settingsRollout.owner = this 
+    importSettingsRollout.owner = this 
     
-    createDialog dialog width:200 pos:mouse.screenpos style:#(#style_toolwindow, #style_sysmenu)     
-    AddSubRollout dialog.subroll_container settingsRollout     
+    createDialog dialog width:200 pos:mouse.screenpos \
+      style:#(#style_sysmenu, #style_resizing, #style_titlebar)     
+    AddSubRollout dialog.subroll_container settingsRollout 
+    AddSubRollout dialog.subroll_container importSettingsRollout rolledUp:true  
     AddSubRollout dialog.subroll_container importRollout      
   ),
   on create do init()  

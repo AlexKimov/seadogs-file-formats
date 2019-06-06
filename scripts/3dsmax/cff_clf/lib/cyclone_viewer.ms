@@ -15,7 +15,8 @@ struct cycloneViewerSettings
   frameIndex = 0, 
   to3dsMaxSystem = True,
   isIntermediateFormat = False,
-  isClockwizeOrder = True  
+  isClockwizeOrder = True,
+  startFrame = 0  
 )
 
 struct cyclonSceneViewer
@@ -98,17 +99,17 @@ struct cycloneMeshViewer
 
 struct cycloneAnimationViewer
 (
-  fn create msh frame transfCoordinates:true =
+  fn create msh frame startframe:0 transfCoordinates:true =
   (
     -- rads to degrees
     local angles = eulerAngles (frame.rotation.x * (180/pi)) \
       (frame.rotation.y * (180/pi)) (frame.rotation.z * (180/pi))
         
     local transformMatrix = matrix3 1
-    transformMatrix.row4 = frame.position
-    transformMatrix = preRotateY transformMatrix angles.y      
-    transformMatrix = preRotateX transformMatrix angles.x    
-    transformMatrix = preRotateZ transformMatrix angles.z       
+    transformMatrix.row4 = frame.position 
+    transformMatrix = preRotateY transformMatrix angles.y     
+    transformMatrix = preRotateX transformMatrix angles.x            
+    transformMatrix = preRotateZ transformMatrix angles.z           
      
     if transfCoordinates then
     (
@@ -121,8 +122,8 @@ struct cycloneAnimationViewer
     
     animate on
     (   
-      at time frame.time msh.position.controller.value = transformMatrix.translationpart 
-      at time frame.time msh.rotation.controller.value = transformMatrix.rotationpart
+      at time (frame.time + startFrame) msh.position.controller.value = transformMatrix.translationpart 
+      at time (frame.time + startFrame) msh.rotation.controller.value = transformMatrix.rotationpart
     )
   )
 )
@@ -167,7 +168,7 @@ struct modelViewer
   ), 
   fn setAnimationFrame msh frame =
   (
-    animationViewer.create msh frame \
+    animationViewer.create msh frame startFrame:settings.startFrame \
       transfCoordinates:settings.to3dsMaxSystem
   ),  
   fn createScene =
@@ -259,10 +260,10 @@ struct modelViewer
           )
           else
           (
-            -- convert coordinates to 3dsMax ones        
+            --convert coordinates to 3dsMax ones        
             if settings.to3dsMaxSystem then
             (
-              transMatrix = (matrix3 [1, 0, 0] [0, 0, 1] [0, -1, 0] [0, 0, 0]) 
+              transMatrix = (matrix3 [-1, 0, 0] [0, 0, 1] [0, -1, 0] [0, 0, 0]) 
               msh.transform = msh.transform*transMatrix         
             )            
           )          

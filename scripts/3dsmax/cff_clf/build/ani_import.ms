@@ -601,6 +601,17 @@ struct maxMaterial
   )    
 )
 
+struct maxObjects
+(
+  fn addCamera camname: =
+  (
+    cam = FreeCamera()
+    if camname != unsupplied and camname != "" then 
+      cam.name = camname
+    cam      
+  )
+)
+
 struct max3ds
 (
   strings,
@@ -612,6 +623,7 @@ struct max3ds
   controller,
   animation,
   material,
+  objects,
   fn setUnits unitsSystem type =
   (
     units.DisplayType = unitsSystem
@@ -740,6 +752,7 @@ struct max3ds
     this.controller = maxController()
     this.animation = maxAnimation()
     this.material = maxMaterial() 
+    this.objects = maxObjects()
 	-- set viewport mod
     VP = NitrousGraphicsManager.GetActiveViewportSetting()
     VP.VisualStyleMode = VisualStyle
@@ -867,8 +880,12 @@ struct streamReader
 	for i = 1 to length do
 	(
       byte = ReadByte fstream #unsigned
-      if byte != 0 then 
-        str += bit.intAsChar (byte)
+      if byte == 0 then
+      (    
+        fseek fstream (length - i) #seek_cur
+        exit         
+      )  
+      str += bit.intAsChar (byte)           
 	)
 	return str
   )  
@@ -991,7 +1008,8 @@ struct aniFile
         sceneObject = aniSceneObject()
         sceneObject.frame = frame
         sceneObject.name = freader.ReadChars size
-        append scene.objects sceneObject      
+        append scene.objects sceneObject
+        print sceneObject.name        
       ) 
       else      
         fseek fstream size #seek_cur
@@ -1538,7 +1556,8 @@ struct cycloneViewerSettings
   frameIndex = 0, 
   to3dsMaxSystem = True,
   isIntermediateFormat = False,
-  isClockwizeOrder = True  
+  isClockwizeOrder = True,
+  startFrame = 0  
 )
 
 struct cyclonSceneViewer
@@ -1621,17 +1640,17 @@ struct cycloneMeshViewer
 
 struct cycloneAnimationViewer
 (
-  fn create msh frame transfCoordinates:true =
+  fn create msh frame startframe:0 transfCoordinates:true =
   (
     -- rads to degrees
     local angles = eulerAngles (frame.rotation.x * (180/pi)) \
       (frame.rotation.y * (180/pi)) (frame.rotation.z * (180/pi))
         
     local transformMatrix = matrix3 1
-    transformMatrix.row4 = frame.position
-    transformMatrix = preRotateY transformMatrix angles.y      
-    transformMatrix = preRotateX transformMatrix angles.x    
-    transformMatrix = preRotateZ transformMatrix angles.z       
+    transformMatrix.row4 = frame.position 
+    transformMatrix = preRotateY transformMatrix angles.y     
+    transformMatrix = preRotateX transformMatrix angles.x            
+    transformMatrix = preRotateZ transformMatrix angles.z           
      
     if transfCoordinates then
     (
@@ -1644,8 +1663,8 @@ struct cycloneAnimationViewer
     
     animate on
     (   
-      at time frame.time msh.position.controller.value = transformMatrix.translationpart 
-      at time frame.time msh.rotation.controller.value = transformMatrix.rotationpart
+      at time (frame.time + startFrame) msh.position.controller.value = transformMatrix.translationpart 
+      at time (frame.time + startFrame) msh.rotation.controller.value = transformMatrix.rotationpart
     )
   )
 )
@@ -1690,7 +1709,7 @@ struct modelViewer
   ), 
   fn setAnimationFrame msh frame =
   (
-    animationViewer.create msh frame \
+    animationViewer.create msh frame startFrame:settings.startFrame \
       transfCoordinates:settings.to3dsMaxSystem
   ),  
   fn createScene =
@@ -1782,10 +1801,10 @@ struct modelViewer
           )
           else
           (
-            -- convert coordinates to 3dsMax ones        
+            --convert coordinates to 3dsMax ones        
             if settings.to3dsMaxSystem then
             (
-              transMatrix = (matrix3 [1, 0, 0] [0, 0, 1] [0, -1, 0] [0, 0, 0]) 
+              transMatrix = (matrix3 [-1, 0, 0] [0, 0, 1] [0, -1, 0] [0, 0, 0]) 
               msh.transform = msh.transform*transMatrix         
             )            
           )          
@@ -1810,7 +1829,15 @@ struct modelViewer
 struct aniViewerSettings
 (
   showAnimations = True,
-  modelsFolderPath = ""
+  modelsFolderPath = "",
+  texturesPath = "",
+  isTextured = True,
+  texFormat = "tf",
+  lodIndex = 1,
+  frameIndex = 0, 
+  to3dsMaxSystem = True,
+  isClockwizeOrder = True,
+  startFrame  
 )
 
 struct aniSceneViewer
@@ -1821,7 +1848,7 @@ struct aniSceneViewer
   sceneObjects = #(),
   fn setAnimationFrame cam frame =
   (
-    camAnimationViewer.create cam frame
+    camAnimationViewer.create cam frame transfCoordinates:settings.isClockwizeOrder
   ), 
   fn loadModel modelName =
   (
@@ -1859,12 +1886,23 @@ struct aniSceneViewer
       (
         append sceneObjects model 
         
-        viewer = modelViewer model       
+        viewer = modelViewer model
+
+        viewer.settings.isTextured = settings.isTextured
+        viewer.settings.texturesPath = settings.texturesPath
+        viewer.settings.texFormat = settings.texFormat
+        viewer.settings.lodIndex = settings.lodIndex    
+        viewer.settings.frameIndex = settings.frameIndex  
+        viewer.settings.to3dsMaxSystem = settings.to3dsMaxSystem 
+        viewer.settings.isClockwizeOrder = settings.isClockwizeOrder
+        viewer.settings.startFrame = sceneObject.frame
+        
         viewer.createScene()
       )
     )
+    
     -- add camera
-    sceneCamera = FreeCamera name:"Scene camera" 
+    sceneCamera = max.objects.addCamera name:"Scene camera" 
     sceneCamera.farrange = 0.2
     
     -- animate camera
@@ -1873,6 +1911,7 @@ struct aniSceneViewer
       for frame in aniScene.animations do
         setAnimationFrame sceneCamera frame
     )
+    
   )
 )
 
@@ -1880,8 +1919,16 @@ struct aniSceneViewer
 
 struct settingsImportAni
 (
-  animOn = True,
-  pathToModelsFolder = ""
+  pathToModelsFolder = "",
+  allLods = False,
+  allFrames = True,
+  isTextured = True,
+  path = "",
+  to3dsMaxSystem = True,
+  isClockwizeOrder = True,
+  lod = 1,
+  frame = 1,
+  texFormat = "tf"
 )
 
 struct stringsImportAni
@@ -1889,14 +1936,30 @@ struct stringsImportAni
   rolloutTitle = "Import .ani scene",
   rolloutImportTitle = "Import",
   buttonImportCaption = "Open .ani file",
-  groupModelsCaption = "Models",
+  groupModelsCaption = "Folder",
   buttonSetPathCaption = "Get path",
   buttonClearPathCaption = "Clear",
   rolloutSettingsTitle = "Settings",
-  checkboxAnimOnCaption = "animate",
+  rolloutImportSettingsTitle = "Model import settings",
   importDialogCaption = "Import .ani file",
   importDialogTypes  = "Sea Dogs 1 animated scenes file (*.ani)|*.ani",
-  openFolder = "Open \"Models\" folder"
+  openFolder = "Open \"Models\" folder",
+  editChooseLodModelTitle = "LOD",
+  groupModelCaption = "Model",
+  groupTexturesCaption = "Textures",
+  editChooseFrameTitle = "Frame",
+  checkboxAllLodsCaption = "all lods",
+  checkboxAllFramesCaption = "all frames",
+  labelChoosePath = "Path",
+  checkboxTexturedCaption = "add textures",
+  buttonSetTexturePathCaption = "Get path",
+  buttonClearTexturePathCaption = "Clear",
+  openTexturesFolder = "Choose textures folder",
+  dropdownlistExtensionCaption = "ext.",
+  dropdownlistExtensionItems = #("tf", "bmp", "tga", "png"),
+  checkboxConvertCoordSystem = "convert coordinate system",
+  checkboxFaceOrder = "change face order",
+  editChooseStartFrameTitle = "Start"  
 )
 
 struct aniSceneImportUI
@@ -1920,15 +1983,39 @@ struct aniSceneImportUI
       if file.readFile() then
       (
         sceneViewer = aniSceneViewer file.scene
-        sceneViewer.settings.showAnimations = settings.animOn
-        sceneViewer.settings.modelsFolderPath = settings.pathToModelsFolder
-        --sceneViewer.settings.modelsFolderPath = "C:\Program Files\1C\Корсары\RESOURCE\MODELS"
+        viewerSettings = sceneViewer.settings  
+        
+        viewerSettings.modelsFolderPath = settings.pathToModelsFolder     
+        viewerSettings.isTextured = settings.isTextured     
+        if settings.allLods then 
+          viewerSettings.lodIndex = 0
+        else
+          viewerSettings.lodIndex = viewerSettings.lodIndex
+        if settings.allFrames  then 
+          viewerSettings.frameIndex = 0
+        else
+          viewerSettings.frameIndex = viewerSettings.frameIndex              
+        viewerSettings.texturesPath = settings.path
+        viewerSettings.texFormat = settings.texFormat
+        viewerSettings.to3dsMaxSystem = settings.to3dsMaxSystem 
+        viewerSettings.isClockwizeOrder = settings.isClockwizeOrder
+        sceneViewer.settings.modelsFolderPath = "C:\Program Files\1C\Корсары\RESOURCE\MODELS"
         
         sceneViewer.create()
       ) 
       file.closeFile()      
     )    
   ),
+  fn getTexturesPath =
+  (
+    path = dialogs.openFolder strings.openFolder
+    if path != undefined then
+      this.dialog.subroll_container.importSettingsRollout.edit_modelsPath.text = path
+  ),
+  fn clearTexturesPath =
+  (
+    this.dialog.subroll_container.importSettingsRollout.edit_modelsPath.text = "" 
+  ),  
   fn getFolderPath =
   (
     path = dialogs.openFolder strings.openFolder
@@ -1939,6 +2026,56 @@ struct aniSceneImportUI
   (
     this.dialog.subroll_container.settingsRollout.edit_modelsPath.text = "" 
   ),
+  importSettingsRollout =
+  (
+    rollout importSettingsRollout strings.rolloutImportSettingsTitle 
+    (
+      local owner = if owner != undefined do owner  
+      groupBox group_model owner.strings.groupModelCaption \
+        pos:[5, 97] width:175 height:110 
+        
+      groupBox group_textures owner.strings.groupTexturesCaption \
+        pos:[5, 0] width:175 height:92         
+        
+      checkbox checkbox_convertCoord owner.strings.checkboxconvertCoordSystem \
+        checked:owner.settings.to3dsMaxSystem pos:[25, 115]           
+      checkbox checkbox_faceOrder owner.strings.checkboxFaceOrder \
+        checked:owner.settings.isClockwizeOrder pos:[25, 135]   
+    
+      spinner spinner_lod owner.strings.editChooseLodModelTitle \
+        fieldWidth:40 type:#integer align:#right pos:[25, 160] \
+        range:[1, 10, owner.settings.lod]   
+      spinner spinner_frame owner.strings.editChooseFrameTitle \
+        fieldWidth:40 type:#integer align:#right pos:[15, 180] \
+        range:[1, 2000, owner.settings.frame] 
+
+      checkbox checkbox_allLods owner.strings.checkboxAllLodsCaption \
+        checked:owner.settings.allLods pos:[105, 160] 
+      checkbox checkbox_allFrames owner.strings.checkboxAllFramesCaption \
+        checked:owner.settings.allFrames pos:[105, 180]  
+        
+      edittext edit_texPath "" fieldWidth:155 pos:[10, 40] readOnly:true
+      
+      button button_getTexturePath owner.strings.buttonSetTexturePathCaption \
+        width:75 pos:[15, 62]
+      button button_clearTexturePath owner.strings.buttonClearTexturePathCaption \
+        width:75 pos:[95, 62]        
+      checkbox checkbox_isTextured owner.strings.checkboxTexturedCaption \
+        checked:owner.settings.isTextured pos:[15, 20]           
+        
+      dropdownlist dropdownlist_extension items:owner.strings.dropdownlistExtensionItems \
+        pos:[120, 15] width:50
+        
+      on button_getTexturePath pressed do
+      (
+        owner.getTexturesPath()
+      )  
+      on button_clearTexturePath pressed do
+      (
+        owner.clearTexturesath()
+      )       
+    )    
+  ),  
   settingsRollout =
   (
     rollout settingsRollout strings.rolloutSettingsTitle 
@@ -1946,22 +2083,20 @@ struct aniSceneImportUI
       local owner = if owner != undefined do owner  
       
       groupBox group_model owner.strings.groupModelsCaption \
-        pos:[5, 0] width:175 height:115   
-      checkbox checkbox_animOn owner.strings.checkboxAnimOnCaption \
-        checked:owner.settings.animOn pos:[15, 17]        
+        pos:[5, 0] width:175 height:90         
       edittext edit_modelsPath "Path to Models folder" fieldWidth:154 \
-        pos:[15, 40] readOnly:true labelOnTop:true
+        pos:[15, 20] readOnly:true labelOnTop:true
         
-      button button_setTexturePath owner.strings.buttonSetPathCaption \
-        width:75 pos:[15, 85]
-      button button_clearTexturePath owner.strings.buttonClearPathCaption \
-        width:75 pos:[95, 85] 
+      button button_setModelsPath owner.strings.buttonSetPathCaption \
+        width:75 pos:[15, 60]
+      button button_clearModelsPath owner.strings.buttonClearPathCaption \
+        width:75 pos:[95, 60] 
 
-      on button_setTexturePath pressed do
+      on button_setModelsPath pressed do
       (
         owner.getFolderPath()
       )  
-      on button_clearTexturePath pressed do
+      on button_clearModelsPath pressed do
       (
         owner.clearFolderPath()
       )                 
@@ -1977,11 +2112,20 @@ struct aniSceneImportUI
       
       on button_importAniScene pressed do
       (
-        setRollout = owner.dialog.subroll_container.settingsRollout
+        setRollout = owner.dialog.subroll_container.importSettingsRollout
+        importSetRollout = owner.dialog.subroll_container.settingsRollout
         importSettings = owner.settings
         
-        importSettings.animOn = setRollout.checkbox_animOn.checked
-        importSettings.pathToModelsFolder = setRollout.edit_modelsPath.text
+        importSettings.pathToModelsFolder = importSetRollout.edit_modelsPath.text        
+        importSettings.isTextured = setRollout.checkbox_isTextured.checked           
+        importSettings.allLods = setRollout.checkbox_allLods.checked 
+        importSettings.allFrames = setRollout.checkbox_allFrames.checked       
+        importSettings.lod = setRollout.spinner_lod.value
+        importSettings.frame = setRollout.spinner_frame.value
+        importSettings.path = setRollout.edit_texPath.text
+        importSettings.texFormat = setRollout.dropdownlist_extension.text
+        importSettings.to3dsMaxSystem = setRollout.checkbox_convertCoord.checked
+        importSettings.isClockwizeOrder = setRollout.checkbox_faceOrder.checked
         
         owner.importModel()
       )     
@@ -1993,7 +2137,7 @@ struct aniSceneImportUI
     (     
       local owner = if owner != undefined do owner   
       
-      subrollout subroll_container "container" height:200 width:196 pos:[2, 2]
+      subrollout subroll_container "container" height:410 width:196 pos:[2, 2]
       on dialog resized point do
       (
         subroll_container.height = dialog.height
@@ -2011,9 +2155,12 @@ struct aniSceneImportUI
     dialog.owner = this 
     importRollout.owner = this 
     settingsRollout.owner = this 
+    importSettingsRollout.owner = this 
     
-    createDialog dialog width:200 pos:mouse.screenpos style:#(#style_toolwindow, #style_sysmenu)     
-    AddSubRollout dialog.subroll_container settingsRollout     
+    createDialog dialog width:200 pos:mouse.screenpos \
+      style:#(#style_sysmenu, #style_resizing, #style_titlebar)     
+    AddSubRollout dialog.subroll_container settingsRollout 
+    AddSubRollout dialog.subroll_container importSettingsRollout rolledUp:true  
     AddSubRollout dialog.subroll_container importRollout      
   ),
   on create do init()  

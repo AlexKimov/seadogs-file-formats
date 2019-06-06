@@ -9,7 +9,15 @@ filein "lib/cyclone_viewer.ms"
 struct aniViewerSettings
 (
   showAnimations = True,
-  modelsFolderPath = ""
+  modelsFolderPath = "",
+  texturesPath = "",
+  isTextured = True,
+  texFormat = "tf",
+  lodIndex = 1,
+  frameIndex = 0, 
+  to3dsMaxSystem = True,
+  isClockwizeOrder = True,
+  startFrame  
 )
 
 struct aniSceneViewer
@@ -20,7 +28,7 @@ struct aniSceneViewer
   sceneObjects = #(),
   fn setAnimationFrame cam frame =
   (
-    camAnimationViewer.create cam frame
+    camAnimationViewer.create cam frame transfCoordinates:settings.isClockwizeOrder
   ), 
   fn loadModel modelName =
   (
@@ -58,12 +66,23 @@ struct aniSceneViewer
       (
         append sceneObjects model 
         
-        viewer = modelViewer model       
+        viewer = modelViewer model
+
+        viewer.settings.isTextured = settings.isTextured
+        viewer.settings.texturesPath = settings.texturesPath
+        viewer.settings.texFormat = settings.texFormat
+        viewer.settings.lodIndex = settings.lodIndex    
+        viewer.settings.frameIndex = settings.frameIndex  
+        viewer.settings.to3dsMaxSystem = settings.to3dsMaxSystem 
+        viewer.settings.isClockwizeOrder = settings.isClockwizeOrder
+        viewer.settings.startFrame = sceneObject.frame
+        
         viewer.createScene()
       )
     )
+    
     -- add camera
-    sceneCamera = FreeCamera name:"Scene camera" 
+    sceneCamera = max.objects.addCamera name:"Scene camera" 
     sceneCamera.farrange = 0.2
     
     -- animate camera
@@ -72,5 +91,6 @@ struct aniSceneViewer
       for frame in aniScene.animations do
         setAnimationFrame sceneCamera frame
     )
+    
   )
 )

@@ -38,7 +38,8 @@ struct aniFile
         sceneObject = aniSceneObject()
         sceneObject.frame = frame
         sceneObject.name = freader.ReadChars size
-        append scene.objects sceneObject      
+        append scene.objects sceneObject
+        print sceneObject.name        
       ) 
       else      
         fseek fstream size #seek_cur

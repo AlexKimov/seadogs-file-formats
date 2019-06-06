@@ -240,6 +240,17 @@ struct maxMaterial
   )    
 )
 
+struct maxObjects
+(
+  fn addCamera camname: =
+  (
+    cam = FreeCamera()
+    if camname != unsupplied and camname != "" then 
+      cam.name = camname
+    cam      
+  )
+)
+
 struct max3ds
 (
   strings,
@@ -251,6 +262,7 @@ struct max3ds
   controller,
   animation,
   material,
+  objects,
   fn setUnits unitsSystem type =
   (
     units.DisplayType = unitsSystem
@@ -379,6 +391,7 @@ struct max3ds
     this.controller = maxController()
     this.animation = maxAnimation()
     this.material = maxMaterial() 
+    this.objects = maxObjects()
 	-- set viewport mod
     VP = NitrousGraphicsManager.GetActiveViewportSetting()
     VP.VisualStyleMode = VisualStyle

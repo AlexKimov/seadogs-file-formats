@@ -118,8 +118,12 @@ struct streamReader
 	for i = 1 to length do
 	(
       byte = ReadByte fstream #unsigned
-      if byte != 0 then 
-        str += bit.intAsChar (byte)
+      if byte == 0 then
+      (    
+        fseek fstream (length - i) #seek_cur
+        exit         
+      )  
+      str += bit.intAsChar (byte)           
 	)
 	return str
   )  
