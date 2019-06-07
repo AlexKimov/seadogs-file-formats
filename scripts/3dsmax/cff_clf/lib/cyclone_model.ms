@@ -96,13 +96,20 @@ struct cycloneModelLod
 
 struct cycloneModel
 (
+  name = "",
   header = cyclonModelHeader(),
   textureList = #(),
   materials = #(),
   modelLods = #(),
-  fn create =
+  fn addLod objs = 
   (
-    getMaterials()
-    getModels()
+    lod = cycloneModelLod()
+    for obj in objs do
+    (
+      msh = cycloneModelLodMesh()
+      
+      append meshes.lod msh    
+    )
+    append modelLods lod
   )
 )

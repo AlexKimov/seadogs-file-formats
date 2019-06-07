@@ -171,7 +171,7 @@ struct modelViewer
     animationViewer.create msh frame startFrame:settings.startFrame \
       transfCoordinates:settings.to3dsMaxSystem
   ),  
-  fn createScene =
+  fn createScene redraw:true =
   (
     -- textures
     if settings.isTextured then 
@@ -273,7 +273,10 @@ struct modelViewer
       progressEnd()       
     ) 
     
-    if scene.objects.count > 0 then
+    -- group model meshes
+    max.nodes.createGroup scene.objects model.name opened:true
+    
+    if scene.objects.count > 0 and redraw then
     (
       select scene.objects[1]
       max zoomext sel  

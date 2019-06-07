@@ -10,14 +10,27 @@ filein "lib/cyclone.ms"
 
 struct settingsExportUI
 (
-  w = 2
+  exportMaterials = true,
+  exportAnimations = true,
+  extension = "",
+  selectionType = 1,
+  modelName = ""
 )
 
 struct stringsExportUI
 (
   buttonExportCaption = "Export model",
   rolloutExportTitle = "Export",
-  rolloutTitle = "Export"
+  rolloutTitle = "Export",
+  rolloutSettingsTitle = "Settings",
+  groupLodCaption = "LOD",
+  radioSelectItems  = #("by selection", "by group", "by prefix"),
+  radioSelectCaption = "Select objects:",
+  groupMeshCaption = "Mesh",
+  dropdownlistExtensionItems = #("", "bmp", "tga", "png", "tf"),
+  labelTextureType = "Texture type",
+  checkboxExportMaterials = "Export materials",
+  checkboxexportAnimations = "Export animations"  
 )
 
 struct cycloneExportUI
@@ -26,7 +39,51 @@ struct cycloneExportUI
   strings,
   fn exportModel filename: =
   ( 
-    print "123"
+    if settings.selectionType == 1 then
+    (
+      objs = for obj in selection where isproperty node #verts collect obj
+      model = cycloneModel()
+      model.addLod objs      
+    )
+    else if settings.selectionType == 2 then
+    (
+      model = cycloneModel() 
+      for modelGroup in objects where isGroupHead obj do 
+	  (
+        objs = for obj in modelGroup.children where isproperty node #verts collect obj
+        model.addLod objs
+      )      
+    )
+    else
+    (
+      objs = for obj in objects \
+        where isproperty node #verts and findString obj.name exportSettings.modelName collect obj
+      model = cycloneModel()
+      model.addLod objs    
+  ), 
+  settingsRollout =
+  (
+    rollout settingsRollout strings.rolloutSettingsTitle
+    (
+      local owner = if owner != undefined do owner 
+      
+      groupBox group_lod owner.strings.groupLodCaption pos:[5, 0] width:175 \
+        height:115 
+      radiobuttons radio_selectObject owner.strings.radioSelectCaption \
+        labels:owner.strings.radioSelectItems pos:[20, 20]
+      edittext edit_modelName "" fieldWidth:145 pos:[15, 87] 
+
+      groupBox group_mesh owner.strings.groupMeshCaption pos:[5, 120] width:175 \
+        height:90
+      dropdownlist dropdownlist_extension items:owner.strings.dropdownlistExtensionItems \
+        pos:[100, 140] width:50
+      label label_texType owner.strings.labelTextureType pos:[30, 143]   
+
+      checkbox checkbox_exportMaterials owner.strings.checkboxExportMaterials \
+        checked:owner.settings.exportMaterials pos:[30, 165] 
+      checkbox checkbox_exportAnimations owner.strings.checkboxexportAnimations \
+        checked:owner.settings.exportAnimations pos:[30, 185]        
+    )
   ),  
   exportRollout =
   (
@@ -37,6 +94,15 @@ struct cycloneExportUI
       button button_exportModel owner.strings.buttonExportCaption width:120          
       on button_exportModel pressed do
       (
+        setRollout = owner.dialog.subroll_container.settingsRollout
+        exportSettings = owner.settings
+        
+        exportSettings.selectionType = setRollout.dropdownlist_extension.state
+        exportSettings.exportAnimations = setRollout.checkbox_exportAnimations.checked 
+        exportSettings.exportMaterials = setRollout.checkbox_exportMaterials.checked 
+        exportSettings.modelName = setRollout.edit_modelName.text
+        exportSettings.extension = setRollout.dropdownlist_extension.text
+        
         owner.exportModel()
       )     
     )
@@ -47,7 +113,7 @@ struct cycloneExportUI
     (     
       local owner = if owner != undefined do owner   
       
-      subrollout subroll_container "container" height:230 width:196 pos:[2, 2]
+      subrollout subroll_container "container" height:295 width:196 pos:[2, 2]
       on dialog resized point do
       (
         subroll_container.height = dialog.height
@@ -64,9 +130,12 @@ struct cycloneExportUI
       
     dialog.owner = this 
     exportRollout.owner = this 
+    settingsRollout.owner = this
     
-    createDialog dialog width:200 pos:mouse.screenpos style:#(#style_toolwindow, #style_sysmenu)    
-    AddSubRollout dialog.subroll_container exportRollout      
+    createDialog dialog width:200 pos:mouse.screenpos \
+      style:#(#style_sysmenu, #style_resizing, #style_titlebar)   
+    AddSubRollout dialog.subroll_container settingsRollout      
+    AddSubRollout dialog.subroll_container exportRollout   
   ),
   on create do init()  
 )

@@ -4,6 +4,7 @@
 
 filein "dialogs.ms"
 filein "stream.ms"
+filein "utils.ms"
 filein "cyclone_model.ms"
 
 struct cffStrings
@@ -137,7 +138,9 @@ struct clfFile
       readHeader()
       readTextureList()
       readLods()
-
+      
+      model.name = fileUtils.getFileName filename
+      
       result = true
     --)	  
     --catch	
@@ -146,6 +149,73 @@ struct clfFile
       --result = false
     --)  
   ),
+  fn writeHeader =
+  (
+    WriteLong fstream 269554195
+    WriteLong fstream 2626104
+    WriteLong fstream 0
+    WriteLong fstream 0
+    WriteLong fstream model.header.lodCount #unsigned
+    WriteLong fstream model.header.textureCount #unsigned
+    WriteLong fstream 0
+    WriteLong fstream model.header.meshCount #unsigned
+    WriteLong fstream 0
+    WriteLong fstream model.header.frameCount #unsigned    
+    WriteLong fstream 0
+    WriteLong fstream 0 
+  ),
+  fn writeTextureList =
+  (
+    for textureFilename in model.textureList do
+      fwriter.writeString str:msh.header.name length:256  
+  ), 
+  fn writeMesh msh =
+  (
+    -- header
+    fwriter.writeString str:msh.header.name length:32
+    WriteLong fstream msh.header.frameCount #unsigned  
+    WriteLong fstream msh.header.textureIndex #unsigned
+    WriteLong fstream msh.header.vertexCount #unsigned
+    WriteLong fstream msh.header.faceCount #unsigned
+  
+    -- vertexes
+    for vert in msh.vertexes do
+    (
+      fwriter.writeVector3F vert.coordinates sign:#unsigned
+      fwriter.writeVector3F [0, 0, 0]
+      WriteLong fstream 0
+    )    
+    
+    -- faces
+    for face in msh.faces do
+    (    
+      fwriter.writeVector3UI16 face.indexes
+      WriteShort fstream 0
+      fwriter.writeVector2F face.uv1
+      fwriter.writeVector2F face.uv2
+      fwriter.writeVector2F face.uv3
+    )
+    
+    -- animations
+    for frame in msh.animationFrames do
+    (    
+      freader.writeVector3F frame.position  
+      freader.writeVector3F frame.rotation
+      WriteFloat fstream frame.time
+    )    
+  ),   
+  fn writeLods =
+  (
+    for lod in model.modelLods do
+      for msh in lod do
+        writeMesh msh
+  ),    
+  fn writeFile =
+  (
+    writeHeader ()
+    writeTextureList()
+    writeLods()    
+  ),  
   fn closeFile =
   (
     fclose fstream
@@ -316,6 +386,9 @@ struct cffFile
       readTextureList()
       readMaterials()           
       readLods()
+      
+      model.name = fileUtils.getFileName filename
+      
       result = true
     --)	  
     --catch	
@@ -323,30 +396,6 @@ struct cffFile
       --dialogs.showMessage (formattedprint filename --format:strings.errorReadFile)
       --result = false
     --)  
-  ),
-  fn writeHeader =
-  (
-    print "test"
-  ),
-  fn writeTextureList =
-  (
-    print "test"  
-  ),
-  fn writeMaterials =
-  (
-    print "test"  
-  ), 
-  fn writeMesh =
-  (
-    print "test"  
-  ),   
-  fn writeLods =
-  (
-    print "test"  
-  ),    
-  fn writeFile =
-  (
-    print "test"  
   ),
   fn closeFile =
   (
