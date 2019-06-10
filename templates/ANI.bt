@@ -22,9 +22,8 @@ struct {
 
 typedef struct {
   UINT type;
-  UINT Unknown;  
+  UINT StartFrame;  
   UINT Length;
-  Printf("%d ", Length);
   switch (Length)
   {
     case 4: 
@@ -98,7 +97,7 @@ typedef struct (uint size) {
   OBJECT array[size] <optimize=false>;
 } OBJECT_ARRAY;
 
-OBJECT_ARRAY Array(FILE_HEADER.ObjectCount) <name="NAMES">;
+OBJECT_ARRAY Array(FILE_HEADER.ObjectCount) <name="Objects">;
 
 struct {
   struct {
