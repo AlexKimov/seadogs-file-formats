@@ -17,7 +17,8 @@ struct aniViewerSettings
   frameIndex = 0, 
   to3dsMaxSystem = True,
   isClockwizeOrder = True,
-  startFrame  
+  startFrame = 0,
+  addCamera = true  
 )
 
 struct aniCameraAnimationViewer
@@ -111,20 +112,24 @@ struct aniSceneViewer
     )
     
     -- add camera
-    sceneCamera = max.objects.addCamera name:"Scene camera" 
-    sceneCamera.clipManually = true
-    sceneCamera.nearclip = 0.004
-    sceneCamera.farclip = 500
-    sceneCamera.fov = 65.47
+	if settings.addCamera then
+	(
+      sceneCamera = max.objects.addCamera name:"Scene camera" 
+      sceneCamera.clipManually = true
+      sceneCamera.nearclip = 0.004
+      sceneCamera.farclip = 500
+      sceneCamera.fov = 65.47
     
-    -- animate camera
-    if aniScene.header.frameCount > 0 then
-    (    
-      if aniScene.header.frameCount > animationRange.end then
-         max.animation.setLength aniScene.header.frameCount
-      for frame in aniScene.animations do
-        setAnimationFrame sceneCamera frame
-    )
+      -- animate camera
+      if aniScene.header.frameCount > 0 then
+      (    
+        if aniScene.header.frameCount > animationRange.end then
+           max.animation.setLength aniScene.header.frameCount
+        for frame in aniScene.animations do
+          setAnimationFrame sceneCamera frame
+      )	
+	)
+
     
     redrawViews()
   )

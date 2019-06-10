@@ -16,15 +16,16 @@ struct settingsImportAni
 (
   pathToModelsFolder = "",
   pathToTexturesFolder = "",
-  allLods = False,
-  allFrames = True,
-  isTextured = True,
+  allLods = false,
+  allFrames = true,
+  isTextured = true,
   path = "",
-  to3dsMaxSystem = True,
-  isClockwizeOrder = True,
+  to3dsMaxSystem = true,
+  isClockwizeOrder = true,
   lod = 1,
   frame = 1,
   texFormat = "tf",
+  addCamera = false,
   fn loadFromIni filename =
   (
     local sets = iniSettings(this)
@@ -40,8 +41,8 @@ struct stringsImportAni
   groupModelsCaption = "Folder",
   buttonSetPathCaption = "Get path",
   buttonClearPathCaption = "Clear",
-  rolloutSettingsTitle = "Settings",
-  rolloutImportSettingsTitle = "Model import settings",
+  rolloutSettingsTitle = "Paths",
+  rolloutImportSettingsTitle = "Models",
   importDialogCaption = "Import .ani file",
   importDialogTypes  = "Sea Dogs 1 animated scenes file (*.ani)|*.ani",
   openFolder = "Open \"Models\" folder",
@@ -59,8 +60,14 @@ struct stringsImportAni
   dropdownlistExtensionCaption = "ext.",
   dropdownlistExtensionItems = #("tf", "bmp", "tga", "png"),
   checkboxConvertCoordSystem = "convert coordinate system",
-  checkboxFaceOrder = "change face order",
+  checkboxFaceOrder = "Change face order",
   editChooseStartFrameTitle = "Start" ,
+  groupIniCaption = "Path",
+  buttonClearCaption = "Clear scene", 
+  rolloutClearTitle = "Clear", 
+  groupCameraCaption  = "Camera",
+  checkboxCameraCaption  = "Add camera",
+  editPathToModelsText = "Path to Models folder",
   fn loadFromIni filename =
   (
     local sets = iniSettings(this)
@@ -72,6 +79,7 @@ struct aniSceneImportUI
 (
   settings,
   strings,
+  iniFilename = "ani.ini",
   fn importModel filename: =
   (
     if filename == unsupplied then
@@ -105,32 +113,31 @@ struct aniSceneImportUI
         viewerSettings.texFormat = settings.texFormat
         viewerSettings.to3dsMaxSystem = settings.to3dsMaxSystem 
         viewerSettings.isClockwizeOrder = settings.isClockwizeOrder
-        
+        viewerSettings.addCamera = settings.addCamera
+		
         sceneViewer.create()
       ) 
       file.closeFile()      
     )    
   ),
-  fn getTexturesPath =
+  fn getPath =
   (
-    path = dialogs.openFolder strings.openFolder
-    if path != undefined then
-      this.dialog.subroll_container.importSettingsRollout.edit_modelsPath.text = path
+    path = dialogs.openFolder strings.openFolder	  
   ),
-  fn clearTexturesPath =
+  clearRollout =
   (
-    this.dialog.subroll_container.importSettingsRollout.edit_modelsPath.text = "" 
+    rollout clearRollout strings.rolloutClearTitle 
+    (
+	  local owner = if owner != undefined do owner 
+	  
+      button button_removeObjects owner.strings.buttonClearCaption width:120	  
+		
+      on button_removeObjects pressed do
+      (
+        print "none"
+      )	  
+    )	
   ),  
-  fn getFolderPath =
-  (
-    path = dialogs.openFolder strings.openFolder
-    if path != undefined then
-      this.dialog.subroll_container.settingsRollout.edit_modelsPath.text = path
-  ),
-  fn clearFolderPath =
-  (
-    this.dialog.subroll_container.settingsRollout.edit_modelsPath.text = "" 
-  ),
   importSettingsRollout =
   (
     rollout importSettingsRollout strings.rolloutImportSettingsTitle 
@@ -138,10 +145,14 @@ struct aniSceneImportUI
       local owner = if owner != undefined do owner  
       groupBox group_model owner.strings.groupModelCaption \
         pos:[5, 97] width:175 height:110 
-        
       groupBox group_textures owner.strings.groupTexturesCaption \
         pos:[5, 0] width:175 height:92         
+      groupBox group_camera owner.strings.groupCameraCaption \
+        pos:[5, 210] width:175 height:45  
         
+      checkbox checkbox_addCamera owner.strings.checkboxCameraCaption \
+        checked:owner.settings.addCamera pos:[25, 230] 		
+		
       checkbox checkbox_convertCoord owner.strings.checkboxconvertCoordSystem \
         checked:owner.settings.to3dsMaxSystem pos:[25, 115]           
       checkbox checkbox_faceOrder owner.strings.checkboxFaceOrder \
@@ -174,11 +185,12 @@ struct aniSceneImportUI
         
       on button_getTexturePath pressed do
       (
-        owner.getTexturesPath()
+        pathToTexFolders = owner.getPath()
+		if pathToTexFolders != undefined then edit_texPath.text = pathToTexFolders
       )  
       on button_clearTexturePath pressed do
       (
-        owner.clearTexturesath()
+        edit_texPath.text = "" 
       )       
     )    
   ),  
@@ -188,23 +200,24 @@ struct aniSceneImportUI
     (
       local owner = if owner != undefined do owner  
       
-      groupBox group_model owner.strings.groupModelsCaption \
-        pos:[5, 0] width:175 height:90         
-      edittext edit_modelsPath "Path to Models folder" fieldWidth:154 \
-        pos:[15, 20] readOnly:true labelOnTop:true
+      --groupBox group_model owner.strings.groupModelsCaption \
+        --pos:[5, 0] width:175 height:90         
+      edittext edit_modelsPath owner.strings.editPathToModelsText fieldWidth:154 \
+        pos:[15, 5] readOnly:true labelOnTop:true text:owner.settings.pathToModelsFolder
         
       button button_setModelsPath owner.strings.buttonSetPathCaption \
-        width:75 pos:[15, 60]
+        width:75 pos:[15, 45]
       button button_clearModelsPath owner.strings.buttonClearPathCaption \
-        width:75 pos:[95, 60] 
+        width:75 pos:[95, 45] 
 
       on button_setModelsPath pressed do
       (
-        owner.getFolderPath()
+        pathToModFolders = owner.getPath()
+		if pathToModFolders != undefined then edit_modelsPath.text = pathToModFolders
       )  
       on button_clearModelsPath pressed do
       (
-        owner.clearFolderPath()
+        edit_modelsPath.text = ""
       )                 
     )    
   ),  
@@ -232,7 +245,8 @@ struct aniSceneImportUI
         importSettings.texFormat = setRollout.dropdownlist_extension.text
         importSettings.to3dsMaxSystem = setRollout.checkbox_convertCoord.checked
         importSettings.isClockwizeOrder = setRollout.checkbox_faceOrder.checked
-        
+        importSettings.addCamera = setRollout.checkbox_addCamera.checked
+		
         owner.importModel()
       )     
     )
@@ -251,23 +265,34 @@ struct aniSceneImportUI
     )     
   ), 
   fn close = try (destroyDialog dialog) catch(),  
-  fn init =
+  fn show =
   (
     if settings == undefined then
-      settings = settingsImportAni()
-    if strings == undefined then  
-      strings = stringsImportAni()
-      
+	(
+	  settings = settingsImportAni()
+      settings.loadFromIni (sys.currentPath + iniFilename)
+	)
+	
+    if strings == undefined then 
+    (
+      strings = stringsImportAni()  
+      strings.loadFromIni (sys.currentPath + iniFilename)  
+    )	
+
+    createDialog dialog width:200 pos:mouse.screenpos \
+      style:#(#style_sysmenu, #style_resizing, #style_titlebar)  	  
+    AddSubRollout dialog.subroll_container settingsRollout 
+    AddSubRollout dialog.subroll_container importSettingsRollout rolledUp:true  
+    AddSubRollout dialog.subroll_container clearRollout	rolledUp:true 
+    AddSubRollout dialog.subroll_container importRollout 	  
+  ),
+  fn init =
+  (    
     dialog.owner = this 
     importRollout.owner = this 
     settingsRollout.owner = this 
     importSettingsRollout.owner = this 
-	
-    createDialog dialog width:200 pos:mouse.screenpos \
-      style:#(#style_sysmenu, #style_resizing, #style_titlebar)     
-    AddSubRollout dialog.subroll_container settingsRollout 
-    AddSubRollout dialog.subroll_container importSettingsRollout rolledUp:true  
-    AddSubRollout dialog.subroll_container importRollout      
+	clearRollout.owner = this 
   ),
   on create do init()  
 )
@@ -275,11 +300,8 @@ struct aniSceneImportUI
 fn main = 
 (
   sys.currentPath = fileUtils.getCurrentPath(getThisScriptFilename())
-  aniSettings = settingsImportAni()
-  aniSettings.loadFromIni (sys.currentPath + "ani.ini")
-  aniStrings = stringsImportAni()
-  aniStrings.loadFromIni (sys.currentPath + "ani.ini")
-  aniSceneImport = aniSceneImportUI settings:aniSettings strings:aniStrings
+  aniSceneImport = aniSceneImportUI()
+  aniSceneImport.show() 
 )
 
 main()

@@ -1767,7 +1767,12 @@ struct settingsImportUI
   isTextured = True,
   path = "",
   to3dsMaxSystem = True,
-  isClockwizeOrder = True 
+  isClockwizeOrder = True,
+  fn loadFromIni filename =
+  (
+    local sets = iniSettings(this)
+    sets.loadFromIniFile filename "settings"
+  )     
 )
 
 struct stringsImportUI
@@ -1793,13 +1798,19 @@ struct stringsImportUI
   dropdownlistExtensionCaption = "ext.",
   dropdownlistExtensionItems = #("tf", "bmp", "tga", "png"),
   checkboxConvertCoordSystem = "convert coordinate system",
-  checkboxFaceOrder = "change face order"
+  checkboxFaceOrder = "change face order",
+  fn loadFromIni filename =
+  (
+    local sets = iniSettings(this)
+    sets.loadFromIniFile filename "strings"
+  )     
 )
 
 struct cycloneImportUI
 (
   settings,
   strings,
+  iniFilename = "cff.ini",  
   fn importModel filename: =
   ( 
     if filename == unsupplied then
@@ -1947,33 +1958,39 @@ struct cycloneImportUI
       )      
     )     
   ),  
-  fn close = try (destroyDialog dialog) catch(),  
-  fn init =
+  fn close = try (destroyDialog dialog) catch(), 
+  fn show =
   (
     if settings == undefined then
-      settings = settingsImportUI()
-    if strings == undefined then  
-      strings = stringsImportUI()
-      
-    dialog.owner = this 
-    importRollout.owner = this 
-    settingsRollout.owner = this 
-    
+	(
+	  settings = settingsImportUI()
+      settings.loadFromIni (sys.currentPath + iniFilename)
+	)
+	
+    if strings == undefined then 
+    (
+      strings = stringsImportUI()  
+      strings.loadFromIni (sys.currentPath + iniFilename)  
+    )	
+	
     createDialog dialog width:200 pos:mouse.screenpos style:#(#style_toolwindow, #style_sysmenu) 
     AddSubRollout dialog.subroll_container settingsRollout      
     AddSubRollout dialog.subroll_container importRollout      
+  ),  
+  fn init =
+  (
+    dialog.owner = this 
+    importRollout.owner = this 
+    settingsRollout.owner = this  
   ),
   on create do init()
 )
 
 fn main = 
 (
-  currentPath = fileUtils.getCurrentPath(getThisScriptFilename())
-  cffSettings = settingsImportAni()
-  cffSettings.loadFromIni (currentPath + "cff.ini")
-  cffStrings = stringsImportAni()
-  cffStrings.loadFromIni (currentPath + "cff.ini")  
-  importUI = cycloneImportUI settings:cffSettings strings:cffStrings
+  currentPath = fileUtils.getCurrentPath(getThisScriptFilename()) 
+  importUI = cycloneImportUI()
+  importUI.show()
 )
 
 main()
