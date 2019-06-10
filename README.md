@@ -45,7 +45,7 @@
 
 #### 3dsMax
 * [cff_clf_import.zip](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/3dsmax/cff_clf/build/cff_clf_import.zip) - импорт моделей с анимациями (Корсары, Век Парсуников 2, Рыцари Морей)
-
+* [ani_import.zip](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/3dsmax/cff_clf/build/ani_import.zip) - импорт анимированных сцен .ani (только модели и анимации)
 
 ### Шаблоны, описание форматов
 | №   | Формат | Прогресс | Шаблон (010 Editor) | WIKI | Краткое описание |
@@ -128,3 +128,4 @@
 
 #### 3dsMax
 * [cff_clf_import.zip](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/3dsmax/cff_clf/build/cff_clf_import.zip) - model import (Sea Dogs 1, Age of Sail 2)
+* [ani_import.zip](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/3dsmax/cff_clf/build/ani_import.zip) - import .ami files (animated scenes)
