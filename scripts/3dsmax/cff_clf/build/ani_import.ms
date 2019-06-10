@@ -1,6 +1,5 @@
 -- lib/ms.ms
 
-
 clearlistener() 
 
 -- lib/utils.ms
@@ -68,22 +67,17 @@ struct converter (
   (
     try
     (	  
-      str as boolean
+      str as booleanClass
 	)  
     catch 
 	(
 	  --messageBox "Error. Can't convert: " + str + " to boolean value"
-	  -1
+	  undefined
 	)	
   ),   
   fn stringToArray str = 
   (
-    array = #()
-    elements = filterstring str "(,)"
-	if elements.count > 0 then
-	  for element in elements do
-        append array (element as name)
-   	array  
+    filterstring str "(,)" 
   )
 )
 
@@ -264,7 +258,7 @@ ini = iniFile()
 -- lib/settings.ms
 
 
-struct settings
+struct iniSettings
 (
   properties,
   iniFile = "settings.ini",
@@ -302,7 +296,6 @@ struct settings
   fn loadFromIniFile filename iniSectionTitle =
   (
     local intValue = 0
-    local array = #()
     local point = [0, 0]
     local strValue = ""
     local boolValue = true
@@ -315,12 +308,12 @@ struct settings
     (
       local strValue
       names = getPropNames properties
-      for name in names do
+      for propName in names do
       (
-        strName = name as string
+        strName = propName as string
         if ini.isKeyExist iniSectionTitle strName then
         (
-          prop = getProperty properties name
+          prop = getProperty properties propName
           propClass = classof prop
           case propClass of 
           (        
@@ -328,32 +321,32 @@ struct settings
             (
               intValue = ini.getIntegerValue iniSectionTitle strName
               if intValue > 0 then
-                setProperty properties name intValue             
+                setProperty properties propName intValue             
             )
             Array:
             (
-              array = ini.getArrayValue iniSectionTitle strName
-              if array.count > 0 then
-                setProperty properties name array             
+              strArray = ini.getArrayValue iniSectionTitle strName
+              if strArray.count > 0 then
+                setProperty properties propName strArray            
             )                
             Point2: 
             (
               point = ini.getPoint2Value iniSectionTitle strName
               if point.x > 0 then
-                setProperty properties name point            
+                setProperty properties propName point            
             ) 
             BooleanClass: 
             (
               boolValue = ini.getBooleanValue iniSectionTitle strName
               if boolValue != undefined then
-                setProperty properties name boolValue  
+                setProperty properties propName boolValue  
             )    
             -- String, Value, etc...
             default:
             (
               strValue = ini.getValue iniSectionTitle strName
               if strValue != "" then
-                setProperty properties name strValue             
+                setProperty properties propName strValue             
             )            
           )                     
         )
@@ -362,6 +355,27 @@ struct settings
   )
 )
 
+
+-- lib/system.ms
+
+struct systemUtils
+(
+  fn getDateTimeinSeconds =
+  (
+    epochDateTime = dotnetObject "System.DateTime" 1970 1 1 0 0 0 
+    curDateTime = (dotNetClass "System.DateTime").Now.Subtract(epochDateTime)
+    result = (curDateTime.TotalSeconds as integer)
+  )
+)
+
+struct maxSystem
+(
+  currentPath = "",
+  utils = systemUtils()
+)
+
+
+sys = maxSystem()
 
 -- lib/max.ms
 
@@ -1008,8 +1022,7 @@ struct aniFile
         sceneObject = aniSceneObject()
         sceneObject.frame = frame
         sceneObject.name = freader.ReadChars size
-        append scene.objects sceneObject
-        print sceneObject.name        
+        append scene.objects sceneObject       
       ) 
       else      
         fseek fstream size #seek_cur
@@ -1158,14 +1171,21 @@ struct cycloneModelLod
 
 struct cycloneModel
 (
+  name = "",
   header = cyclonModelHeader(),
   textureList = #(),
   materials = #(),
   modelLods = #(),
-  fn create =
+  fn addLod objs = 
   (
-    getMaterials()
-    getModels()
+    lod = cycloneModelLod()
+    for obj in objs do
+    (
+      msh = cycloneModelLodMesh()
+      
+      append meshes.lod msh    
+    )
+    append modelLods lod
   )
 )
 
@@ -1303,7 +1323,9 @@ struct clfFile
       readHeader()
       readTextureList()
       readLods()
-
+      
+      model.name = fileUtils.getFileName filename
+      
       result = true
     --)	  
     --catch	
@@ -1312,6 +1334,73 @@ struct clfFile
       --result = false
     --)  
   ),
+  fn writeHeader =
+  (
+    WriteLong fstream 269554195
+    WriteLong fstream 2626104
+    WriteLong fstream 0
+    WriteLong fstream 0
+    WriteLong fstream model.header.lodCount #unsigned
+    WriteLong fstream model.header.textureCount #unsigned
+    WriteLong fstream 0
+    WriteLong fstream model.header.meshCount #unsigned
+    WriteLong fstream 0
+    WriteLong fstream model.header.frameCount #unsigned    
+    WriteLong fstream 0
+    WriteLong fstream 0 
+  ),
+  fn writeTextureList =
+  (
+    for textureFilename in model.textureList do
+      fwriter.writeString str:msh.header.name length:256  
+  ), 
+  fn writeMesh msh =
+  (
+    -- header
+    fwriter.writeString str:msh.header.name length:32
+    WriteLong fstream msh.header.frameCount #unsigned  
+    WriteLong fstream msh.header.textureIndex #unsigned
+    WriteLong fstream msh.header.vertexCount #unsigned
+    WriteLong fstream msh.header.faceCount #unsigned
+  
+    -- vertexes
+    for vert in msh.vertexes do
+    (
+      fwriter.writeVector3F vert.coordinates sign:#unsigned
+      fwriter.writeVector3F [0, 0, 0]
+      WriteLong fstream 0
+    )    
+    
+    -- faces
+    for face in msh.faces do
+    (    
+      fwriter.writeVector3UI16 face.indexes
+      WriteShort fstream 0
+      fwriter.writeVector2F face.uv1
+      fwriter.writeVector2F face.uv2
+      fwriter.writeVector2F face.uv3
+    )
+    
+    -- animations
+    for frame in msh.animationFrames do
+    (    
+      freader.writeVector3F frame.position  
+      freader.writeVector3F frame.rotation
+      WriteFloat fstream frame.time
+    )    
+  ),   
+  fn writeLods =
+  (
+    for lod in model.modelLods do
+      for msh in lod do
+        writeMesh msh
+  ),    
+  fn writeFile =
+  (
+    writeHeader ()
+    writeTextureList()
+    writeLods()    
+  ),  
   fn closeFile =
   (
     fclose fstream
@@ -1482,6 +1571,9 @@ struct cffFile
       readTextureList()
       readMaterials()           
       readLods()
+      
+      model.name = fileUtils.getFileName filename
+      
       result = true
     --)	  
     --catch	
@@ -1489,30 +1581,6 @@ struct cffFile
       --dialogs.showMessage (formattedprint filename --format:strings.errorReadFile)
       --result = false
     --)  
-  ),
-  fn writeHeader =
-  (
-    print "test"
-  ),
-  fn writeTextureList =
-  (
-    print "test"  
-  ),
-  fn writeMaterials =
-  (
-    print "test"  
-  ), 
-  fn writeMesh =
-  (
-    print "test"  
-  ),   
-  fn writeLods =
-  (
-    print "test"  
-  ),    
-  fn writeFile =
-  (
-    print "test"  
   ),
   fn closeFile =
   (
@@ -1712,7 +1780,7 @@ struct modelViewer
     animationViewer.create msh frame startFrame:settings.startFrame \
       transfCoordinates:settings.to3dsMaxSystem
   ),  
-  fn createScene =
+  fn createScene redraw:true =
   (
     -- textures
     if settings.isTextured then 
@@ -1814,7 +1882,10 @@ struct modelViewer
       progressEnd()       
     ) 
     
-    if scene.objects.count > 0 then
+    -- group model meshes
+    max.nodes.createGroup scene.objects model.name opened:true
+    
+    if scene.objects.count > 0 and redraw then
     (
       select scene.objects[1]
       max zoomext sel  
@@ -1840,12 +1911,43 @@ struct aniViewerSettings
   startFrame  
 )
 
+struct aniCameraAnimationViewer
+(
+  fn create msh frame transfCoordinates:true =
+  (
+    -- rads to degrees
+    local angles = eulerAngles (frame.rotation.x * (180/pi)) \
+      (frame.rotation.y * (180/pi)) (frame.rotation.z * (180/pi))
+        
+    local transformMatrix = matrix3 1
+    transformMatrix.row4 = frame.position 
+    transformMatrix = preRotateY transformMatrix angles.y      
+    transformMatrix = preRotateX transformMatrix angles.x                
+    transformMatrix = preRotateZ transformMatrix angles.z     
+     
+    if transfCoordinates then
+    (
+      transMatrix = (matrix3 [0, -1, 0] [-1, 0, 0] [0, 0, -1] [0, 0, 0]) 
+      transformMatrix = transformMatrix*transMatrix
+    )    
+     
+    max.controller.addKey msh.position.controller frame.time
+    max.controller.addKey msh.rotation.controller frame.time 
+    
+    animate on
+    (   
+      at time frame.time msh.position.controller.value = transformMatrix.translationpart 
+      at time frame.time msh.rotation.controller.value = transformMatrix.rotationpart
+    )
+  )
+)
+
 struct aniSceneViewer
 (
   aniScene,
   settings = aniViewerSettings(),
-  camAnimationViewer = cycloneAnimationViewer(),
-  sceneObjects = #(),
+  camAnimationViewer = aniCameraAnimationViewer(),
+  sceneModels = #(),
   fn setAnimationFrame cam frame =
   (
     camAnimationViewer.create cam frame transfCoordinates:settings.isClockwizeOrder
@@ -1884,10 +1986,8 @@ struct aniSceneViewer
     
       if model != undefined then
       (
-        append sceneObjects model 
-        
         viewer = modelViewer model
-
+              
         viewer.settings.isTextured = settings.isTextured
         viewer.settings.texturesPath = settings.texturesPath
         viewer.settings.texFormat = settings.texFormat
@@ -1897,21 +1997,27 @@ struct aniSceneViewer
         viewer.settings.isClockwizeOrder = settings.isClockwizeOrder
         viewer.settings.startFrame = sceneObject.frame
         
-        viewer.createScene()
+        viewer.createScene redraw:false     
       )
     )
     
     -- add camera
     sceneCamera = max.objects.addCamera name:"Scene camera" 
-    sceneCamera.farrange = 0.2
+    sceneCamera.clipManually = true
+    sceneCamera.nearclip = 0.004
+    sceneCamera.farclip = 500
+    sceneCamera.fov = 65.47
     
     -- animate camera
     if aniScene.header.frameCount > 0 then
     (    
+      if aniScene.header.frameCount > animationRange.end then
+         max.animation.setLength aniScene.header.frameCount
       for frame in aniScene.animations do
         setAnimationFrame sceneCamera frame
     )
     
+    redrawViews()
   )
 )
 
@@ -1920,6 +2026,7 @@ struct aniSceneViewer
 struct settingsImportAni
 (
   pathToModelsFolder = "",
+  pathToTexturesFolder = "",
   allLods = False,
   allFrames = True,
   isTextured = True,
@@ -1928,7 +2035,12 @@ struct settingsImportAni
   isClockwizeOrder = True,
   lod = 1,
   frame = 1,
-  texFormat = "tf"
+  texFormat = "tf",
+  fn loadFromIni filename =
+  (
+    local sets = iniSettings(this)
+    sets.loadFromIniFile filename "settings"
+  )   
 )
 
 struct stringsImportAni
@@ -1959,7 +2071,12 @@ struct stringsImportAni
   dropdownlistExtensionItems = #("tf", "bmp", "tga", "png"),
   checkboxConvertCoordSystem = "convert coordinate system",
   checkboxFaceOrder = "change face order",
-  editChooseStartFrameTitle = "Start"  
+  editChooseStartFrameTitle = "Start" ,
+  fn loadFromIni filename =
+  (
+    local sets = iniSettings(this)
+    sets.loadFromIniFile filename "strings"
+  )   
 )
 
 struct aniSceneImportUI
@@ -1999,7 +2116,6 @@ struct aniSceneImportUI
         viewerSettings.texFormat = settings.texFormat
         viewerSettings.to3dsMaxSystem = settings.to3dsMaxSystem 
         viewerSettings.isClockwizeOrder = settings.isClockwizeOrder
-        sceneViewer.settings.modelsFolderPath = "C:\Program Files\1C\Корсары\RESOURCE\MODELS"
         
         sceneViewer.create()
       ) 
@@ -2054,7 +2170,8 @@ struct aniSceneImportUI
       checkbox checkbox_allFrames owner.strings.checkboxAllFramesCaption \
         checked:owner.settings.allFrames pos:[105, 180]  
         
-      edittext edit_texPath "" fieldWidth:155 pos:[10, 40] readOnly:true
+      edittext edit_texPath "" \
+	    fieldWidth:155 pos:[10, 40] readOnly:true text:owner.settings.pathToTexturesFolder
       
       button button_getTexturePath owner.strings.buttonSetTexturePathCaption \
         width:75 pos:[15, 62]
@@ -2156,7 +2273,7 @@ struct aniSceneImportUI
     importRollout.owner = this 
     settingsRollout.owner = this 
     importSettingsRollout.owner = this 
-    
+	
     createDialog dialog width:200 pos:mouse.screenpos \
       style:#(#style_sysmenu, #style_resizing, #style_titlebar)     
     AddSubRollout dialog.subroll_container settingsRollout 
@@ -2168,7 +2285,12 @@ struct aniSceneImportUI
 
 fn main = 
 (
-  aniSceneImport = aniSceneImportUI()
+  sys.currentPath = fileUtils.getCurrentPath(getThisScriptFilename())
+  aniSettings = settingsImportAni()
+  aniSettings.loadFromIni (sys.currentPath + "ani.ini")
+  aniStrings = stringsImportAni()
+  aniStrings.loadFromIni (sys.currentPath + "ani.ini")
+  aniSceneImport = aniSceneImportUI settings:aniSettings strings:aniStrings
 )
 
 main()

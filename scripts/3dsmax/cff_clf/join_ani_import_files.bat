@@ -1,1 +1,1 @@
-python join_maxscript_files.py ani_import.toml
+python3 join_maxscript_files.py ani_import.toml

@@ -8,10 +8,14 @@ filein "lib/ms.ms"
 filein "lib/utils.ms"
 filein "lib/ani.ms"
 filein "lib/ani_viewer.ms"
+filein "lib/ini.ms"
+filein "lib/system.ms"
+filein "lib/settings.ms"
 
 struct settingsImportAni
 (
   pathToModelsFolder = "",
+  pathToTexturesFolder = "",
   allLods = False,
   allFrames = True,
   isTextured = True,
@@ -20,7 +24,12 @@ struct settingsImportAni
   isClockwizeOrder = True,
   lod = 1,
   frame = 1,
-  texFormat = "tf"
+  texFormat = "tf",
+  fn loadFromIni filename =
+  (
+    local sets = iniSettings(this)
+    sets.loadFromIniFile filename "settings"
+  )   
 )
 
 struct stringsImportAni
@@ -51,7 +60,12 @@ struct stringsImportAni
   dropdownlistExtensionItems = #("tf", "bmp", "tga", "png"),
   checkboxConvertCoordSystem = "convert coordinate system",
   checkboxFaceOrder = "change face order",
-  editChooseStartFrameTitle = "Start"  
+  editChooseStartFrameTitle = "Start" ,
+  fn loadFromIni filename =
+  (
+    local sets = iniSettings(this)
+    sets.loadFromIniFile filename "strings"
+  )   
 )
 
 struct aniSceneImportUI
@@ -91,7 +105,6 @@ struct aniSceneImportUI
         viewerSettings.texFormat = settings.texFormat
         viewerSettings.to3dsMaxSystem = settings.to3dsMaxSystem 
         viewerSettings.isClockwizeOrder = settings.isClockwizeOrder
-        sceneViewer.settings.modelsFolderPath = "C:\Program Files\1C\Корсары\RESOURCE\MODELS"
         
         sceneViewer.create()
       ) 
@@ -146,7 +159,8 @@ struct aniSceneImportUI
       checkbox checkbox_allFrames owner.strings.checkboxAllFramesCaption \
         checked:owner.settings.allFrames pos:[105, 180]  
         
-      edittext edit_texPath "" fieldWidth:155 pos:[10, 40] readOnly:true
+      edittext edit_texPath "" \
+	    fieldWidth:155 pos:[10, 40] readOnly:true text:owner.settings.pathToTexturesFolder
       
       button button_getTexturePath owner.strings.buttonSetTexturePathCaption \
         width:75 pos:[15, 62]
@@ -248,7 +262,7 @@ struct aniSceneImportUI
     importRollout.owner = this 
     settingsRollout.owner = this 
     importSettingsRollout.owner = this 
-    
+	
     createDialog dialog width:200 pos:mouse.screenpos \
       style:#(#style_sysmenu, #style_resizing, #style_titlebar)     
     AddSubRollout dialog.subroll_container settingsRollout 
@@ -260,7 +274,12 @@ struct aniSceneImportUI
 
 fn main = 
 (
-  aniSceneImport = aniSceneImportUI()
+  sys.currentPath = fileUtils.getCurrentPath(getThisScriptFilename())
+  aniSettings = settingsImportAni()
+  aniSettings.loadFromIni (sys.currentPath + "ani.ini")
+  aniStrings = stringsImportAni()
+  aniStrings.loadFromIni (sys.currentPath + "ani.ini")
+  aniSceneImport = aniSceneImportUI settings:aniSettings strings:aniStrings
 )
 
 main()

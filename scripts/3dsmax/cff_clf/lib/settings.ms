@@ -7,7 +7,7 @@
 filein "utils.ms"
 filein "ini.ms"
 
-struct settings
+struct iniSettings
 (
   properties,
   iniFile = "settings.ini",
@@ -45,7 +45,6 @@ struct settings
   fn loadFromIniFile filename iniSectionTitle =
   (
     local intValue = 0
-    local array = #()
     local point = [0, 0]
     local strValue = ""
     local boolValue = true
@@ -58,12 +57,12 @@ struct settings
     (
       local strValue
       names = getPropNames properties
-      for name in names do
+      for propName in names do
       (
-        strName = name as string
+        strName = propName as string
         if ini.isKeyExist iniSectionTitle strName then
         (
-          prop = getProperty properties name
+          prop = getProperty properties propName
           propClass = classof prop
           case propClass of 
           (        
@@ -71,32 +70,32 @@ struct settings
             (
               intValue = ini.getIntegerValue iniSectionTitle strName
               if intValue > 0 then
-                setProperty properties name intValue             
+                setProperty properties propName intValue             
             )
             Array:
             (
-              array = ini.getArrayValue iniSectionTitle strName
-              if array.count > 0 then
-                setProperty properties name array             
+              strArray = ini.getArrayValue iniSectionTitle strName
+              if strArray.count > 0 then
+                setProperty properties propName strArray            
             )                
             Point2: 
             (
               point = ini.getPoint2Value iniSectionTitle strName
               if point.x > 0 then
-                setProperty properties name point            
+                setProperty properties propName point            
             ) 
             BooleanClass: 
             (
               boolValue = ini.getBooleanValue iniSectionTitle strName
               if boolValue != undefined then
-                setProperty properties name boolValue  
+                setProperty properties propName boolValue  
             )    
             -- String, Value, etc...
             default:
             (
               strValue = ini.getValue iniSectionTitle strName
               if strValue != "" then
-                setProperty properties name strValue             
+                setProperty properties propName strValue             
             )            
           )                     
         )

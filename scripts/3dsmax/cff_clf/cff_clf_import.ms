@@ -221,8 +221,11 @@ struct cycloneImportUI
 fn main = 
 (
   currentPath = fileUtils.getCurrentPath(getThisScriptFilename())
-  importUI = cycloneImportUI()
-  importUI.importModel filename:"Hubernator_Spa.clf"
+  cffSettings = settingsImportAni()
+  cffSettings.loadFromIni (currentPath + "cff.ini")
+  cffStrings = stringsImportAni()
+  cffStrings.loadFromIni (currentPath + "cff.ini")  
+  importUI = cycloneImportUI settings:cffSettings strings:cffStrings
 )
 
 main()

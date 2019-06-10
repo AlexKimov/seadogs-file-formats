@@ -66,22 +66,17 @@ struct converter (
   (
     try
     (	  
-      str as boolean
+      str as booleanClass
 	)  
     catch 
 	(
 	  --messageBox "Error. Can't convert: " + str + " to boolean value"
-	  -1
+	  undefined
 	)	
   ),   
   fn stringToArray str = 
   (
-    array = #()
-    elements = filterstring str "(,)"
-	if elements.count > 0 then
-	  for element in elements do
-        append array (element as name)
-   	array  
+    filterstring str "(,)" 
   )
 )
 

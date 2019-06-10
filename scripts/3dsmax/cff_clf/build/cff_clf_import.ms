@@ -1,6 +1,5 @@
 -- lib/ms.ms
 
-
 clearlistener() 
 
 -- lib/utils.ms
@@ -68,22 +67,17 @@ struct converter (
   (
     try
     (	  
-      str as boolean
+      str as booleanClass
 	)  
     catch 
 	(
 	  --messageBox "Error. Can't convert: " + str + " to boolean value"
-	  -1
+	  undefined
 	)	
   ),   
   fn stringToArray str = 
   (
-    array = #()
-    elements = filterstring str "(,)"
-	if elements.count > 0 then
-	  for element in elements do
-        append array (element as name)
-   	array  
+    filterstring str "(,)" 
   )
 )
 
@@ -264,7 +258,7 @@ ini = iniFile()
 -- lib/settings.ms
 
 
-struct settings
+struct iniSettings
 (
   properties,
   iniFile = "settings.ini",
@@ -302,7 +296,6 @@ struct settings
   fn loadFromIniFile filename iniSectionTitle =
   (
     local intValue = 0
-    local array = #()
     local point = [0, 0]
     local strValue = ""
     local boolValue = true
@@ -315,12 +308,12 @@ struct settings
     (
       local strValue
       names = getPropNames properties
-      for name in names do
+      for propName in names do
       (
-        strName = name as string
+        strName = propName as string
         if ini.isKeyExist iniSectionTitle strName then
         (
-          prop = getProperty properties name
+          prop = getProperty properties propName
           propClass = classof prop
           case propClass of 
           (        
@@ -328,32 +321,32 @@ struct settings
             (
               intValue = ini.getIntegerValue iniSectionTitle strName
               if intValue > 0 then
-                setProperty properties name intValue             
+                setProperty properties propName intValue             
             )
             Array:
             (
-              array = ini.getArrayValue iniSectionTitle strName
-              if array.count > 0 then
-                setProperty properties name array             
+              strArray = ini.getArrayValue iniSectionTitle strName
+              if strArray.count > 0 then
+                setProperty properties propName strArray            
             )                
             Point2: 
             (
               point = ini.getPoint2Value iniSectionTitle strName
               if point.x > 0 then
-                setProperty properties name point            
+                setProperty properties propName point            
             ) 
             BooleanClass: 
             (
               boolValue = ini.getBooleanValue iniSectionTitle strName
               if boolValue != undefined then
-                setProperty properties name boolValue  
+                setProperty properties propName boolValue  
             )    
             -- String, Value, etc...
             default:
             (
               strValue = ini.getValue iniSectionTitle strName
               if strValue != "" then
-                setProperty properties name strValue             
+                setProperty properties propName strValue             
             )            
           )                     
         )
@@ -601,6 +594,17 @@ struct maxMaterial
   )    
 )
 
+struct maxObjects
+(
+  fn addCamera camname: =
+  (
+    cam = FreeCamera()
+    if camname != unsupplied and camname != "" then 
+      cam.name = camname
+    cam      
+  )
+)
+
 struct max3ds
 (
   strings,
@@ -612,6 +616,7 @@ struct max3ds
   controller,
   animation,
   material,
+  objects,
   fn setUnits unitsSystem type =
   (
     units.DisplayType = unitsSystem
@@ -740,6 +745,7 @@ struct max3ds
     this.controller = maxController()
     this.animation = maxAnimation()
     this.material = maxMaterial() 
+    this.objects = maxObjects()
 	-- set viewport mod
     VP = NitrousGraphicsManager.GetActiveViewportSetting()
     VP.VisualStyleMode = VisualStyle
@@ -867,8 +873,12 @@ struct streamReader
 	for i = 1 to length do
 	(
       byte = ReadByte fstream #unsigned
-      if byte != 0 then 
-        str += bit.intAsChar (byte)
+      if byte == 0 then
+      (    
+        fseek fstream (length - i) #seek_cur
+        exit         
+      )  
+      str += bit.intAsChar (byte)           
 	)
 	return str
   )  
@@ -1022,14 +1032,21 @@ struct cycloneModelLod
 
 struct cycloneModel
 (
+  name = "",
   header = cyclonModelHeader(),
   textureList = #(),
   materials = #(),
   modelLods = #(),
-  fn create =
+  fn addLod objs = 
   (
-    getMaterials()
-    getModels()
+    lod = cycloneModelLod()
+    for obj in objs do
+    (
+      msh = cycloneModelLodMesh()
+      
+      append meshes.lod msh    
+    )
+    append modelLods lod
   )
 )
 
@@ -1039,7 +1056,7 @@ struct cycloneModel
 struct cffStrings
 (
   types = "Cyclone final format (*.cff)|*.cff",
-  openFileCaption = "",
+  openFileCaption = "Open file",
   saveFileCaption = "",
   progressString = "Reading LOD model meshes" 
 )
@@ -1047,8 +1064,8 @@ struct cffStrings
 struct clfStrings
 (
   types = "Cyclone final format (*.clf)|*.clf",
-  openFileCaption = "",
-  saveFileCaption = "",
+  openFileCaption = "Open file",
+  saveFileCaption = "",  
   progressString = "Reading LOD model meshes"   
 )
 
@@ -1167,7 +1184,9 @@ struct clfFile
       readHeader()
       readTextureList()
       readLods()
-
+      
+      model.name = fileUtils.getFileName filename
+      
       result = true
     --)	  
     --catch	
@@ -1176,6 +1195,73 @@ struct clfFile
       --result = false
     --)  
   ),
+  fn writeHeader =
+  (
+    WriteLong fstream 269554195
+    WriteLong fstream 2626104
+    WriteLong fstream 0
+    WriteLong fstream 0
+    WriteLong fstream model.header.lodCount #unsigned
+    WriteLong fstream model.header.textureCount #unsigned
+    WriteLong fstream 0
+    WriteLong fstream model.header.meshCount #unsigned
+    WriteLong fstream 0
+    WriteLong fstream model.header.frameCount #unsigned    
+    WriteLong fstream 0
+    WriteLong fstream 0 
+  ),
+  fn writeTextureList =
+  (
+    for textureFilename in model.textureList do
+      fwriter.writeString str:msh.header.name length:256  
+  ), 
+  fn writeMesh msh =
+  (
+    -- header
+    fwriter.writeString str:msh.header.name length:32
+    WriteLong fstream msh.header.frameCount #unsigned  
+    WriteLong fstream msh.header.textureIndex #unsigned
+    WriteLong fstream msh.header.vertexCount #unsigned
+    WriteLong fstream msh.header.faceCount #unsigned
+  
+    -- vertexes
+    for vert in msh.vertexes do
+    (
+      fwriter.writeVector3F vert.coordinates sign:#unsigned
+      fwriter.writeVector3F [0, 0, 0]
+      WriteLong fstream 0
+    )    
+    
+    -- faces
+    for face in msh.faces do
+    (    
+      fwriter.writeVector3UI16 face.indexes
+      WriteShort fstream 0
+      fwriter.writeVector2F face.uv1
+      fwriter.writeVector2F face.uv2
+      fwriter.writeVector2F face.uv3
+    )
+    
+    -- animations
+    for frame in msh.animationFrames do
+    (    
+      freader.writeVector3F frame.position  
+      freader.writeVector3F frame.rotation
+      WriteFloat fstream frame.time
+    )    
+  ),   
+  fn writeLods =
+  (
+    for lod in model.modelLods do
+      for msh in lod do
+        writeMesh msh
+  ),    
+  fn writeFile =
+  (
+    writeHeader ()
+    writeTextureList()
+    writeLods()    
+  ),  
   fn closeFile =
   (
     fclose fstream
@@ -1346,6 +1432,9 @@ struct cffFile
       readTextureList()
       readMaterials()           
       readLods()
+      
+      model.name = fileUtils.getFileName filename
+      
       result = true
     --)	  
     --catch	
@@ -1353,30 +1442,6 @@ struct cffFile
       --dialogs.showMessage (formattedprint filename --format:strings.errorReadFile)
       --result = false
     --)  
-  ),
-  fn writeHeader =
-  (
-    print "test"
-  ),
-  fn writeTextureList =
-  (
-    print "test"  
-  ),
-  fn writeMaterials =
-  (
-    print "test"  
-  ), 
-  fn writeMesh =
-  (
-    print "test"  
-  ),   
-  fn writeLods =
-  (
-    print "test"  
-  ),    
-  fn writeFile =
-  (
-    print "test"  
   ),
   fn closeFile =
   (
@@ -1391,22 +1456,19 @@ struct cffFile
     else  
       fwriter = streamWriter(fstream)    
   ),   
-  fn openFile mode =
-  (
+  fn openFile =
+  (   
     dialogs.types = strings.types
-    if mode == "rb" then
-      dialogs.caption = strings.openFileCaption
-    else
-      dialogs.caption = strings.saveFileCaption
+    dialogs.caption = strings.openFileCaption
+
     local fname = filename
-    fstream = dialogs.openFileDialog &fname mode
+    fstream = dialogs.openFileDialog &fname "rb"
+
     if fstream != undefined then
     (
-      filename = fname
-      freader = rseFormatReader(fstream)
-      fwriter = rseFormatWriter(fstream)  
+      freader = streamReader(fstream)
+      result = fstream
     )  
-    result = fstream
   )   
 )
 
@@ -1423,7 +1485,8 @@ struct cycloneViewerSettings
   frameIndex = 0, 
   to3dsMaxSystem = True,
   isIntermediateFormat = False,
-  isClockwizeOrder = True  
+  isClockwizeOrder = True,
+  startFrame = 0  
 )
 
 struct cyclonSceneViewer
@@ -1506,17 +1569,17 @@ struct cycloneMeshViewer
 
 struct cycloneAnimationViewer
 (
-  fn create msh frame transfCoordinates:true =
+  fn create msh frame startframe:0 transfCoordinates:true =
   (
     -- rads to degrees
     local angles = eulerAngles (frame.rotation.x * (180/pi)) \
       (frame.rotation.y * (180/pi)) (frame.rotation.z * (180/pi))
         
     local transformMatrix = matrix3 1
-    transformMatrix.row4 = frame.position
-    transformMatrix = preRotateY transformMatrix angles.y      
-    transformMatrix = preRotateX transformMatrix angles.x    
-    transformMatrix = preRotateZ transformMatrix angles.z       
+    transformMatrix.row4 = frame.position 
+    transformMatrix = preRotateY transformMatrix angles.y     
+    transformMatrix = preRotateX transformMatrix angles.x            
+    transformMatrix = preRotateZ transformMatrix angles.z           
      
     if transfCoordinates then
     (
@@ -1529,8 +1592,8 @@ struct cycloneAnimationViewer
     
     animate on
     (   
-      at time frame.time msh.position.controller.value = transformMatrix.translationpart 
-      at time frame.time msh.rotation.controller.value = transformMatrix.rotationpart
+      at time (frame.time + startFrame) msh.position.controller.value = transformMatrix.translationpart 
+      at time (frame.time + startFrame) msh.rotation.controller.value = transformMatrix.rotationpart
     )
   )
 )
@@ -1575,10 +1638,10 @@ struct modelViewer
   ), 
   fn setAnimationFrame msh frame =
   (
-    animationViewer.create msh frame \
+    animationViewer.create msh frame startFrame:settings.startFrame \
       transfCoordinates:settings.to3dsMaxSystem
   ),  
-  fn createScene =
+  fn createScene redraw:true =
   (
     -- textures
     if settings.isTextured then 
@@ -1667,10 +1730,10 @@ struct modelViewer
           )
           else
           (
-            -- convert coordinates to 3dsMax ones        
+            --convert coordinates to 3dsMax ones        
             if settings.to3dsMaxSystem then
             (
-              transMatrix = (matrix3 [1, 0, 0] [0, 0, 1] [0, -1, 0] [0, 0, 0]) 
+              transMatrix = (matrix3 [-1, 0, 0] [0, 0, 1] [0, -1, 0] [0, 0, 0]) 
               msh.transform = msh.transform*transMatrix         
             )            
           )          
@@ -1680,7 +1743,10 @@ struct modelViewer
       progressEnd()       
     ) 
     
-    if scene.objects.count > 0 then
+    -- group model meshes
+    max.nodes.createGroup scene.objects model.name opened:true
+    
+    if scene.objects.count > 0 and redraw then
     (
       select scene.objects[1]
       max zoomext sel  
@@ -1903,8 +1969,11 @@ struct cycloneImportUI
 fn main = 
 (
   currentPath = fileUtils.getCurrentPath(getThisScriptFilename())
-  importUI = cycloneImportUI()
-  importUI.importModel filename:"Hubernator_Spa.clf"
+  cffSettings = settingsImportAni()
+  cffSettings.loadFromIni (currentPath + "cff.ini")
+  cffStrings = stringsImportAni()
+  cffStrings.loadFromIni (currentPath + "cff.ini")  
+  importUI = cycloneImportUI settings:cffSettings strings:cffStrings
 )
 
 main()

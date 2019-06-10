@@ -9,6 +9,7 @@ files = [
   "lib/dialogs.ms",  
   "lib/ini.ms",    
   "lib/settings.ms",
+  "lib/system.ms",
   "lib/max.ms", 
   "lib/stream.ms",  
   "lib/ani_model.ms",  
