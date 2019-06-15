@@ -11,14 +11,29 @@
 //   History: 
 //------------------------------------------------
 
-UINT A;
-UINT D;
-FLOAT K;
-INT Q[D];
-FLOAT C[D*3];
-FLOAT B[A*3];
+UINT FrameCount;
+UINT BoneCount;
+FLOAT Speed;
+
+INT BONE_PARENT_ID[BoneCount];
 
 struct {
-  FLOAT S[A*4];
-} Array[D];
+  FLOAT X;
+  FLOAT Y;
+  FLOAT Z;
+} BONE_POSITION[BoneCount];
 
+struct {
+  FLOAT X;
+  FLOAT Y;
+  FLOAT Z;
+} POSITION[FrameCount];
+
+struct {
+  struct {
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+    FLOAT W;
+  } ROTATION[FrameCount];
+} BONE_ANIMATION[BoneCount];
