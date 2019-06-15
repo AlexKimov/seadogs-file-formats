@@ -11,7 +11,7 @@
 //   History: 
 //------------------------------------------------
 
-local uint i, k;
+local uint i, k, pos;
 local byte bt;
 
 typedef struct {
@@ -43,13 +43,13 @@ struct {
     FLOAT X;
     FLOAT Y;
     FLOAT Z;
-  } OBJECT_ORIGIN <name="Origin">;
+  } OBJECT_POSITION <name="Origin">;
   struct {
     FLOAT X;
     FLOAT Y;
     FLOAT Z;
     FLOAT W;
-  } OBJECT_SCALE <name="Scale">;
+  } OBJECT_ROTATION <name="Scale">;
 } HEADER <name="File Header">;
 
 NAMES_LIST Names(HEADER.NameCount) <name="Names">;
@@ -94,28 +94,37 @@ for ( k = 0; k < HEADER.LocatorCount; ++k )
     UINT LocatorGroupOffset;
     UINT LocatorNameOffset;
     struct {
+      // transformation matrix
+      INT Zero; 
+      struct {  
+        FLOAT X;   
+        FLOAT Y; 
+        FLOAT Z; 
+      } XAxis;
+      INT Zero;
+      struct {  
+        FLOAT X;   
+        FLOAT Y; 
+        FLOAT Z; 
+      } YAxis;
+      INT Zero;
+      struct {  
+        FLOAT X;   
+        FLOAT Y; 
+        FLOAT Z; 
+      } ZAxis;
+      INT Zero;
+      struct {
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z; 
+      } POSITION;  
       // 
-      INT Zero;   
-      FLOAT X;   
-      FLOAT Y; 
-      FLOAT Z; 
-      INT Zero;
-      FLOAT X; 
-      FLOAT Y; 
-      FLOAT Z; 
-      INT Zero;
-      FLOAT X;
-      FLOAT Y;
-      FLOAT Z;
-      INT Zero;
-      FLOAT X;
-      FLOAT Y;
-      FLOAT Z;   
-      // 
-      FLOAT A; 
-      FLOAT B; 
-      INT A;       
-      INT B;     
+      FLOAT s0; 
+      FLOAT s1; 
+      INT Unknown;       
+      INT Unknown;     
+      BYTE Some[20]; 
     } PROPERTIES;
   } LOCATOR;
 
@@ -125,16 +134,18 @@ for ( k = 0; k < HEADER.MeshCount; ++k )
     UINT Offset;
     INT Unknown; // 3103
     //
-    FLOAT G;
-    FLOAT G;
-    FLOAT G;
-    FLOAT G;  
+    struct {
+      FLOAT X;
+      FLOAT Y;
+      FLOAT Z;
+      FLOAT R; 
+    } BOUNDING_SPHERE; 
     //
     INT Zero;
     UINT FaceCount;
     UINT startTriangles;
-    UINT nPartPoints;
-    UINT startPoints;
+    UINT VertCount;
+    UINT startVert;
     UINT MaterialNo;
     BYTE r1[8];
     UBYTE B;
@@ -148,14 +159,118 @@ for ( k = 0; k < HEADER.MeshCount; ++k )
       BYTE t[19]; 
       UINT sMinusOne;       
     };
-    BYTE tt[15];   
+    BYTE tt[16];   
     if (k < HEADER.MeshCount - 1)  
       UINT Unknown;   
   } MESH;
 
-bt = ReadByte(FTell());
-if (bt != -1)
+if (HEADER.MeshCount > 0) 
 {
-  INT FacesExtra;
-  
-}; 
+  bt = ReadByte(FTell());
+  if (bt != -1)
+  {
+    INT FacesExtra;
+    struct {
+      UINT16 I1;
+      UINT16 I2;
+      UINT16 I3;
+    } FACE[HEADER.FaceCount];
+  }; 
+   
+  UINT AB;
+  UINT Size;
+  if (AB == 0)
+  {
+    UINT E;
+    UINT EE;
+  };
+    
+  pos = FTell();
+
+  struct {
+  for (i = 0; i < HEADER.MeshCount; ++i)
+  {
+    if (AB != 0)   
+      FSeek(pos + MESH[i].startVert*44.0);
+    else
+      FSeek(pos + MESH[i].startVert*36.0);
+    struct {
+    struct {
+      struct {
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
+      } POSITION;
+      struct {
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
+        FLOAT W;
+      } U4;
+      struct {
+        FLOAT U;
+        FLOAT V;
+      } UV;
+      if (AB != 0)
+      {
+        FLOAT U;
+        FLOAT V;
+      };
+    } VERTEX[MESH[i].VertCount];
+    } MESH_VERTEXES;
+  };
+  } VERTEXES;
+
+  if (AB == 0)
+  struct {
+    FLOAT A;
+    FLOAT A;
+    FLOAT A;
+    FLOAT A;
+    FLOAT A;
+    FLOAT A;
+    FLOAT A;
+    FLOAT A;
+    FLOAT A;
+    FLOAT A;
+    FLOAT A;
+  } UNKI[EE/44.0];   
+
+
+  if (HEADER.Version > 0) 
+  {
+    UINT CountA;
+    UINT CountB;
+    
+    struct {
+      UINT A;
+      FLOAT A;
+      FLOAT A;
+      FLOAT A;
+      FLOAT A;
+      FLOAT A;
+    } K1[CountA];
+    
+    UINT E;
+    struct {
+      FLOAT A;
+      FLOAT A;
+      FLOAT A;
+    } K2[CountB];
+    
+    struct {
+      UBYTE I1;
+      UBYTE I2;
+      UBYTE I3;
+    
+      UBYTE I1;
+      UBYTE I2;
+      UBYTE I3;
+    
+      UBYTE I1;
+      UBYTE I2;
+      UBYTE I3;
+    } FACES[FacesExtra];
+  };
+};
+
