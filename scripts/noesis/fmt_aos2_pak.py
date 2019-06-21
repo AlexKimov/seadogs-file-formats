@@ -4,9 +4,9 @@ import noewin
 import noewinext
 import tempfile
 
-def registerNoesisTypes():
-    #handle = noesis.register("Age of Sale 2 Resource archive", ".pak")
-    #noesis.setHandlerExtractArc(handle, aosExtractResources)
+def registerNoesisTypes():  
+    handle = noesis.register("Age of Sale 2/Privateer's Bounty resource archive", ".pak")
+    noesis.setHandlerExtractArc(handle, aosExtractResources)
     
     handle = noesis.registerTool("Age of Sale 2 resource viewer", aosResViewerToolMethod, \
         "View Age of Sale 2 resource files.")
@@ -14,6 +14,10 @@ def registerNoesisTypes():
     noesis.setToolVisibleCallback(handle, aosResourceViewerVisible) 
     
     return 1
+
+
+AGE_OF_SAIL_FORMAT       = 1001
+PRIVATEERS_BOUNTY_FORMAT = 1002   
   
   
 class pakDirHeader:
@@ -26,6 +30,7 @@ class pakDirHeader:
         self.name = name
         self.parent = None
         
+        
 class pakFileHeader:  
     def __init__(self, pos, type, size, offset, name):
         self.pos = pos
@@ -33,11 +38,108 @@ class pakFileHeader:
         self.size = size 
         self.offset = offset
         self.name = name
+      
+      
+class pakFileTableReader:
+    def __init__(self, filereader):
+        self.filereader = filereader
+        self.fileTable = {}
+        
+    def readRecHeader(self):
+        pos = self.filereader.tell()
+        type = self.filereader.readUByte()
+        size = self.filereader.readUInt()
+        offset = self.filereader.readUInt()
+        dirExist = self.filereader.readUInt()
+        self.filereader.seek(4, NOESEEK_REL) 
+        name = self.filereader.readString()
+
+        if type == 1:
+            return pakFileHeader(pos, type, size, offset, name) 
+        else:
+            return pakDirHeader(pos, type, size, offset, dirExist, name)        
+    
+    # wtf    
+    def readDirRecord(self, header = None):      
+        recHeader = self.readRecHeader()
+
+        if recHeader.type == 0:
+            self.readDirRecord(recHeader)
+            if header != None and header.count > 0:
+               self.readDirRecord(header)
+         
+        if recHeader.type == 1:  
+            self.filereader.seek(recHeader.pos, NOESEEK_ABS)
+            fileHeaders = []
+
+            for i in range(header.count):
+                fileRecHeader = self.readRecHeader()
+                fileHeaders.append(fileRecHeader)
+                
+            self.fileTable.update({header:fileHeaders})		
+            
+            self.readDirRecord()   
+                          
+        if recHeader.type == 2 and recHeader.dirExist == 1:
+            self.readDirRecord() 
+            
+    def readRecords(self):
+        self.readDirRecord()
+
+
+class pakDirectoryEntry:
+    def __init__(self, fileCount = 0, name = ""):
+        self.fileCount = fileCount
+        self.name = name
+
+
+class pakFileEntry:
+    def __init__(self, size = 0, offset = 0, name = ""):
+        self.size = size
+        self.offset = offset
+        self.name = name
+
+
+class pakPBFileTableReader:      
+    def __init__(self, filereader):
+        self.filereader = filereader   
+        self.fileTable = {}
+        
+    def readDirEntry(self):    
+        fileCount = self.filereader.readUInt()
+        name = self.filereader.readString()
+        
+        return pakDirectoryEntry(fileCount, name)
+        
+    def readFileEntry(self):    
+        size = self.filereader.readUInt()
+        offset = self.filereader.readUInt()
+        self.filereader.seek(4, NOESEEK_REL)         
+        name = self.filereader.readString()
+        
+        return pakFileEntry(size, offset, name)
+        
+    def readRecords(self):  
+        dirCount = self.filereader.readUInt()
+
+        dirEntries = []
+        for i in range(dirCount):
+            dirEntries.append(self.readDirEntry())
+
+        for dirEntry in dirEntries:
+            fileEntries = []
+            for i in range(dirEntry.fileCount):
+                   fileEntries.append(self.readFileEntry())
+                
+            self.fileTable.update({dirEntry: fileEntries})    
+            
+        return self.fileTable
         
         
 class aosResorceFile:
     def __init__(self):
-        self.fileTable = None    
+        self.fileTable = {}
+        self.format = AGE_OF_SAIL_FORMAT
         
     def unpack(self, filepath):      
         for directory, files in self.fileTable.items():
@@ -70,65 +172,40 @@ class aosResorceFile:
         if magic != "ENPAK":
             return False
         
-        self.filereader.seek(20, NOESEEK_REL) 
-
-        return True        
-                
-    def readRecHeader(self):
-        pos = self.filereader.tell()
-        type = self.filereader.readUByte()
-        size = self.filereader.readUInt()
-        offset = self.filereader.readUInt()
-        dirExist = self.filereader.readUInt()
-        self.filereader.seek(4, NOESEEK_REL) 
-        name = self.filereader.readString()
-
-        if type == 1:
-            return pakFileHeader(pos, type, size, offset, name) 
+        gameType = self.filereader.readByte()
+        if gameType == 0: # Privateer's Bounty
+            self.filereader.seek(3, NOESEEK_REL) 
+            self.format = PRIVATEERS_BOUNTY_FORMAT
+            self.filereader.seek(self.filereader.readUInt(), NOESEEK_ABS) # filetable pos
+        elif gameType <= 2: # AOS 2
+            self.filereader.seek(19, NOESEEK_REL)
         else:
-            return pakDirHeader(pos, type, size, offset, dirExist, name)        
-    
-    # wtf    
-    def readDirRecord(self, header = None):      
-        recHeader = self.readRecHeader()
-        if recHeader.type == 0:
-            self.readDirRecord(recHeader)
-            if header.count > 0:
-               self.readDirRecord(header)
-         
-        if recHeader.type == 1:  
-            self.filereader.seek(recHeader.pos, NOESEEK_ABS)
-            fileHeaders = []
-
-            for i in range(header.count):
-                fileRecHeader = self.readRecHeader()
-                fileHeaders.append(fileRecHeader)
-                
-            self.fileTable.update({header:fileHeaders})
+            return False        
             
-            self.readDirRecord()   
-                          
-        if recHeader.type == 2 and recHeader.dirExist == 1:
-            self.readDirRecord()       
+        return True        
     
-    def readFileTable(self):
-        self.fileTable = {}
-        
+    def readFileTable(self):       
         try:
-            self.readDirRecord()
-            noesis.logPopup()            
+            filetableReader = (pakPBFileTableReader(self.filereader) \
+                if self.format == PRIVATEERS_BOUNTY_FORMAT else pakFileTableReader(self.filereader))
+      
+            filetableReader.readRecords()
+            self.fileTable = filetableReader.fileTable
+            if self.format == PRIVATEERS_BOUNTY_FORMAT:
+                self.filereader.seek(30, NOESEEK_ABS) # back pos to files data 
         except:
             return None        
+            
+        return True
         
     def open(self, filename):
-        try:       
+        try:      
             with open(filename, "rb") as resFile:
                 self.filename = filename 
                 self.filereader = NoeBitStream(resFile.read())                 
                                
             if self.parseHeader():              
-                if self.readFileTable(): 
-                    return None                
+                self.readFileTable()  				
             else:
                 return None            
         except:
@@ -208,10 +285,10 @@ class resViewerDialogWindow():
             index = self.noeWnd.createTreeView(5, 25, 275, 440)
             self.resourceFileView = self.noeWnd.getControlByIndex(index) 
 
-            self.noeWnd.createButton("Open", 290, 25, 80, 30, \
-                 self.viewerToolButtonOpen)                       
-            self.noeWnd.createButton("Unpack", 290, 400, 80, 30, \
-                 self.viewerToolButtonUnpack)
+            #self.noeWnd.createButton("Open", 290, 25, 80, 30, \
+            #     self.viewerToolButtonOpen)                       
+            #self.noeWnd.createButton("Unpack", 290, 400, 80, 30, \
+            #     self.viewerToolButtonUnpack)
             self.noeWnd.createButton("Close", 290, 435, 80, 30, \
                  self.viewerToolButtonClose)            
 
@@ -243,12 +320,20 @@ def aosResViewerToolMethod(toolIndex):
     return 1   
 
 
-#def aosExtractResources(fileName, fileLen, justChecking):
-#    resourceFile = aosResorceFile()
-#    resourceFile.open(fileName)
-#    saveDialog = noewinext.NoeUserDialog("Choose path to export", "", "", "")  
-#    path = saveDialog.getSaveFileName()    
-#    if path != None:
-#       self.actionFile.unpack(path.rstrip('\n\0'))    
+def aosExtractResources(fileName, fileLen, justChecking):
+    if justChecking: #it's valid
+        return 1 
+    
+    resourceFile = aosResorceFile()
+    resourceFile.open(fileName)
+	   
+    for directory, files in resourceFile.fileTable.items():
+        for file in files:
+            try:                 
+                outfilename = "{}\{}".format(directory.name, file.name)
+                resourceFile.filereader.seek(file.offset, NOESEEK_ABS)                               
+                rapi.exportArchiveFile(outfilename, resourceFile.filereader.readBytes(file.size))                       
+            except:
+                return 0
        
-#    return 1      
+    return 1      
