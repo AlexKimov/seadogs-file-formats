@@ -15,14 +15,18 @@ UINT Count;
 
 struct {
   UINT Index;
-  UINT Unknown;
+  UINT Type;
   UINT Unknown;
   char FileName[256];
-  FLOAT Unknown;
-  FLOAT Unknown;
-  FLOAT Unknown;
-  FLOAT Unknown;
-  FLOAT Unknown;
-  FLOAT Unknown;
-  UINT Unknown;
-} ARRAY[Count];
+  struct {
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+  } POSITION;
+  struct {
+    FLOAT X;
+    FLOAT Y;
+    FLOAT Z;
+  } ROTATION;
+  INT Link;
+} ITEM[Count];
