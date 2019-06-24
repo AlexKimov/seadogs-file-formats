@@ -5,6 +5,7 @@
 filein "max.ms"
 filein "system.ms"
 filein "utils.ms"
+filein "math.ms"
 
 struct cycloneViewerSettings
 (
@@ -19,7 +20,7 @@ struct cycloneViewerSettings
   startFrame = 0  
 )
 
-struct cyclonSceneViewer
+struct cycloneSceneViewer
 (
   materials = #(),
   objects = #()
@@ -102,15 +103,10 @@ struct cycloneAnimationViewer
   fn create msh frame startframe:0 transfCoordinates:true =
   (
     -- rads to degrees
-    local angles = eulerAngles (frame.rotation.x * (180/pi)) \
-      (frame.rotation.y * (180/pi)) (frame.rotation.z * (180/pi))
+    local angles = radToEuler frame.rotation
         
-    local transformMatrix = matrix3 1
-    transformMatrix.row4 = frame.position 
-    transformMatrix = preRotateY transformMatrix angles.y     
-    transformMatrix = preRotateX transformMatrix angles.x            
-    transformMatrix = preRotateZ transformMatrix angles.z           
-     
+	transformMatrix = rotateMatByAngles	frame.rotation
+          
     if transfCoordinates then
     (
       transMatrix = (matrix3 [1, 0, 0] [0, 0, 1] [0, -1, 0] [0, 0, 0]) 
@@ -131,7 +127,7 @@ struct cycloneAnimationViewer
 struct modelViewer
 (
   model,
-  scene = cyclonSceneViewer(),
+  scene = cycloneSceneViewer(),
   settings = cycloneViewerSettings(),
   meshViewer = cycloneMeshViewer(),  
   animationViewer = cycloneAnimationViewer(),  
@@ -171,7 +167,7 @@ struct modelViewer
     animationViewer.create msh frame startFrame:settings.startFrame \
       transfCoordinates:settings.to3dsMaxSystem
   ),  
-  fn createScene redraw:true =
+  fn createScene redraw:true showProgress:true position: rotation: =
   (
     -- textures
     if settings.isTextured then 
@@ -187,7 +183,7 @@ struct modelViewer
       max.sme.close()   
     ) 
     
-    progressStart "creating meshes"
+    if showProgress then progressStart "creating meshes"
     
     if settings.lodIndex == 0 then
     ( 
@@ -226,17 +222,25 @@ struct modelViewer
         else
           msh = addMesh modelMesh
         
-        progressUpdate (progress*meshIndex) 
+        if showProgress then progressUpdate (progress*meshIndex) 
         meshIndex += 1   
         
-        if getProgressCancel() then 
+        if showProgress and getProgressCancel() then 
         (
           setProgressCancel true  
           exit        
         )  
                              
         if msh != undefined then
-        (          
+        (      			
+          if position == unsupplied and rotation == unsupplied then
+		  (
+            rotAngles = mathFunction.radToEuler(rotation)
+			mat = mathFunction.rotateMatByAngles rotAngles
+			mat.row4 = position
+			msh.transform = msh.transform*mat
+          )		  
+		
           append scene.objects msh       
           -- mesh animations
           if modelMesh.header.frameCount > 0 then
@@ -259,8 +263,8 @@ struct modelViewer
             ) 
           )
           else
-          (
-            --convert coordinates to 3dsMax ones        
+          (	  
+            --convert coordinates to 3dsMax ones  			
             if settings.to3dsMaxSystem then
             (
               transMatrix = (matrix3 [-1, 0, 0] [0, 0, 1] [0, -1, 0] [0, 0, 0]) 
@@ -270,7 +274,7 @@ struct modelViewer
         )      
       )
       
-      progressEnd()       
+      if showProgress then progressEnd()       
     ) 
     
     -- group model meshes

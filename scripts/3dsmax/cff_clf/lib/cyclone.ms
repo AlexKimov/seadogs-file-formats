@@ -172,7 +172,7 @@ struct clfFile
   fn writeMesh msh =
   (
     -- header
-    fwriter.writeString str:msh.header.name length:32
+    fwriter.writeString msh.header.name length:32
     WriteLong fstream msh.header.frameCount #unsigned  
     WriteLong fstream msh.header.textureIndex #unsigned
     WriteLong fstream msh.header.vertexCount #unsigned

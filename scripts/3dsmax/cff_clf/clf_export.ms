@@ -6,6 +6,7 @@
 
 filein "lib/ms.ms"
 filein "lib/utils.ms"
+filein "lib/dialogs.ms"
 filein "lib/cyclone.ms"
 
 struct settingsExportUI
@@ -14,14 +15,15 @@ struct settingsExportUI
   exportAnimations = true,
   extension = "",
   selectionType = 1,
-  modelName = ""
+  modelName = "",
+  spinnerFrameNumber = 1000  
 )
 
 struct stringsExportUI
 (
   buttonExportCaption = "Export model",
   rolloutExportTitle = "Export",
-  rolloutTitle = "Export",
+  rolloutTitle = "Export .clf model",
   rolloutSettingsTitle = "Settings",
   groupLodCaption = "LOD",
   radioSelectItems  = #("by selection", "by group", "by prefix"),
@@ -30,7 +32,11 @@ struct stringsExportUI
   dropdownlistExtensionItems = #("", "bmp", "tga", "png", "tf"),
   labelTextureType = "Texture type",
   checkboxExportMaterials = "Export materials",
-  checkboxexportAnimations = "Export animations"  
+  checkboxexportAnimations = "Export animations",
+  meshNotSelected = "Meshes aren't selected.",
+  editFrameNumberTitle = "Frames",
+  exportDialogCaption = "Save Cyclon Model file",
+  exportDialogTypes = "Cyclone final format (*.clf)|*.clf"
 )
 
 struct cycloneExportUI
@@ -41,25 +47,41 @@ struct cycloneExportUI
   ( 
     if settings.selectionType == 1 then
     (
-      objs = for obj in selection where isproperty node #verts collect obj
-      model = cycloneModel()
-      model.addLod objs      
+      if selection.count == 0 then 
+	    dialogs.showMessage strings.meshNotSelected 
+	  else
+      (	  
+        local objs = for obj in selection where isproperty obj #verts collect obj
+        local model = cycloneModel()
+        model.addLod objs
+		dialogs.caption = strings.exportDialogCaption
+        dialogs.types = strings.exportDialogTypes  
+        local filestream = dialogs.openFileDialog &fname "wb"
+		if filestream != undefined then
+		(
+		  local file = clfFile()
+          file.openStream filestream fname	
+		  file.writeFile()
+          file.closeFile()		
+		)	
+      )		
     )
     else if settings.selectionType == 2 then
     (
-      model = cycloneModel() 
+      local model = cycloneModel() 
       for modelGroup in objects where isGroupHead obj do 
 	  (
-        objs = for obj in modelGroup.children where isproperty node #verts collect obj
-        model.addLod objs
+        local objs = for obj in modelGroup.children where isproperty obj #verts collect obj
+        --model.addLod objs
       )      
     )
     else
     (
-      objs = for obj in objects \
-        where isproperty node #verts and findString obj.name exportSettings.modelName collect obj
-      model = cycloneModel()
-      model.addLod objs    
+      local objs = for obj in objects \
+        where isproperty obj #verts and findString obj.name exportSettings.modelName collect obj
+      local model = cycloneModel()
+      --model.addLod objs 
+    )	  
   ), 
   settingsRollout =
   (
@@ -68,13 +90,13 @@ struct cycloneExportUI
       local owner = if owner != undefined do owner 
       
       groupBox group_lod owner.strings.groupLodCaption pos:[5, 0] width:175 \
-        height:115 
+        height:115
       radiobuttons radio_selectObject owner.strings.radioSelectCaption \
         labels:owner.strings.radioSelectItems pos:[20, 20]
       edittext edit_modelName "" fieldWidth:145 pos:[15, 87] 
 
       groupBox group_mesh owner.strings.groupMeshCaption pos:[5, 120] width:175 \
-        height:90
+        height:110
       dropdownlist dropdownlist_extension items:owner.strings.dropdownlistExtensionItems \
         pos:[100, 140] width:50
       label label_texType owner.strings.labelTextureType pos:[30, 143]   
@@ -82,7 +104,12 @@ struct cycloneExportUI
       checkbox checkbox_exportMaterials owner.strings.checkboxExportMaterials \
         checked:owner.settings.exportMaterials pos:[30, 165] 
       checkbox checkbox_exportAnimations owner.strings.checkboxexportAnimations \
-        checked:owner.settings.exportAnimations pos:[30, 185]        
+        checked:owner.settings.exportAnimations pos:[30, 185] 
+		
+	  spinner spinner_frameNumber owner.strings.editFrameNumberTitle \
+        fieldWidth:40 type:#integer align:#right pos:[30, 205] \
+        range:[1, 2000, owner.settings.spinnerFrameNumber] 
+        		
     )
   ),  
   exportRollout =
@@ -97,7 +124,7 @@ struct cycloneExportUI
         setRollout = owner.dialog.subroll_container.settingsRollout
         exportSettings = owner.settings
         
-        exportSettings.selectionType = setRollout.dropdownlist_extension.state
+        exportSettings.selectionType = setRollout.dropdownlist_extension.selection
         exportSettings.exportAnimations = setRollout.checkbox_exportAnimations.checked 
         exportSettings.exportMaterials = setRollout.checkbox_exportMaterials.checked 
         exportSettings.modelName = setRollout.edit_modelName.text
@@ -113,7 +140,7 @@ struct cycloneExportUI
     (     
       local owner = if owner != undefined do owner   
       
-      subrollout subroll_container "container" height:295 width:196 pos:[2, 2]
+      subrollout subroll_container "container" height:315 width:196 pos:[2, 2]
       on dialog resized point do
       (
         subroll_container.height = dialog.height

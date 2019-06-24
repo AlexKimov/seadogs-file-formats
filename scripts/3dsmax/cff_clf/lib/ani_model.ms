@@ -18,7 +18,7 @@ struct aniSceneObject
 struct aniAnimationFrame
 (
   position = (point3 0 0 0),
-  rotation = (point3 0 0 0),
+  rotation = (point4 0 0 0 0),
   time = 0
 )
 

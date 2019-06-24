@@ -57,11 +57,7 @@ struct dialogs
       )  
 	if filename != undefined then
       filestream = fopen filename mode 
-  ), 
-  fn saveFile =
-  (
-  
-  ),   
+  ),  
   fn openFolder caption =
   (
     getSavePath caption: caption

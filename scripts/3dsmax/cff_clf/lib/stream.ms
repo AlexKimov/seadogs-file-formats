@@ -49,7 +49,7 @@ struct streamReader
     local y = (ReadFloat fstream)
     local z = (ReadFloat fstream) 
     local w = (ReadFloat fstream)     
-    result = (point2 x y z w)    
+    result = (point4 x y z w)    
   ),  
   fn readVector3B =
   (
@@ -96,7 +96,11 @@ struct streamReader
   ), 
   fn readQuatValues =
   (
-    result = readVector4F() as quat
+    local x = (ReadFloat fstream)
+    local y = (ReadFloat fstream)
+    local z = (ReadFloat fstream) 
+    local w = (ReadFloat fstream)    
+    result = (quat x y z w)
   ),
   fn readMatrix = 
   (
@@ -139,6 +143,20 @@ struct streamWriter
     else 
       WriteByte fstream 0    
   ),  
+  fn writeString str length: =
+  (
+    if length != unsupplied then
+	(
+	  WriteString fstream str
+	  length = length - str.count
+	  for i = 1 to length do
+	  (
+	    WriteByte fstream 0
+	  )
+	)
+	else
+	  WriteString fstream str
+  ),
   fn writeName name =  
   (
     WriteLong fstream (name.count + 1)
@@ -152,12 +170,23 @@ struct streamWriter
     ReadFloat fstream colorValues.g*normalCoeff
     ReadFloat fstream colorValues.b*normalCoeff       
   ),
-  fn writePoint3Values point =
+  fn writeVector3F val =
   (
-    WriteFloat fstream point.x
-    WriteFloat fstream point.y
-    WriteFloat fstream point.z
+    WriteFloat fstream val.x
+    WriteFloat fstream val.y
+    WriteFloat fstream val.z
   ), 
+  fn writeVector3UI16 val sign:#unsigned =
+  (
+    WriteShort fstream val.x sign
+    WriteShort fstream val.y sign
+    WriteShort fstream val.z sign 
+  ),
+  fn writeVector2F val sign:#unsigned =
+  (
+    WriteFloat fstream val.x
+    WriteFloat fstream val.y    
+  ),  
   fn writeQuatValues quatVar =
   (
     WriteFloat fstream quatVar.x

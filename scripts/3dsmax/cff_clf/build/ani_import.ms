@@ -176,11 +176,7 @@ struct dialogs
       )  
 	if filename != undefined then
       filestream = fopen filename mode 
-  ), 
-  fn saveFile =
-  (
-  
-  ),   
+  ),  
   fn openFolder caption =
   (
     getSavePath caption: caption
@@ -825,7 +821,7 @@ struct streamReader
     local y = (ReadFloat fstream)
     local z = (ReadFloat fstream) 
     local w = (ReadFloat fstream)     
-    result = (point2 x y z w)    
+    result = (point4 x y z w)    
   ),  
   fn readVector3B =
   (
@@ -872,7 +868,11 @@ struct streamReader
   ), 
   fn readQuatValues =
   (
-    result = readVector4F() as quat
+    local x = (ReadFloat fstream)
+    local y = (ReadFloat fstream)
+    local z = (ReadFloat fstream) 
+    local w = (ReadFloat fstream)    
+    result = (quat x y z w)
   ),
   fn readMatrix = 
   (
@@ -915,6 +915,20 @@ struct streamWriter
     else 
       WriteByte fstream 0    
   ),  
+  fn writeString str length: =
+  (
+    if length != unsupplied then
+	(
+	  WriteString fstream str
+	  length = length - str.count
+	  for i = 1 to length do
+	  (
+	    WriteByte fstream 0
+	  )
+	)
+	else
+	  WriteString fstream str
+  ),
   fn writeName name =  
   (
     WriteLong fstream (name.count + 1)
@@ -928,12 +942,23 @@ struct streamWriter
     ReadFloat fstream colorValues.g*normalCoeff
     ReadFloat fstream colorValues.b*normalCoeff       
   ),
-  fn writePoint3Values point =
+  fn writeVector3F val =
   (
-    WriteFloat fstream point.x
-    WriteFloat fstream point.y
-    WriteFloat fstream point.z
+    WriteFloat fstream val.x
+    WriteFloat fstream val.y
+    WriteFloat fstream val.z
   ), 
+  fn writeVector3UI16 val sign:#unsigned =
+  (
+    WriteShort fstream val.x sign
+    WriteShort fstream val.y sign
+    WriteShort fstream val.z sign 
+  ),
+  fn writeVector2F val sign:#unsigned =
+  (
+    WriteFloat fstream val.x
+    WriteFloat fstream val.y    
+  ),  
   fn writeQuatValues quatVar =
   (
     WriteFloat fstream quatVar.x
@@ -976,7 +1001,7 @@ struct aniSceneObject
 struct aniAnimationFrame
 (
   position = (point3 0 0 0),
-  rotation = (point3 0 0 0),
+  rotation = (point4 0 0 0 0),
   time = 0
 )
 
@@ -1181,9 +1206,33 @@ struct cycloneModel
     lod = cycloneModelLod()
     for obj in objs do
     (
-      msh = cycloneModelLodMesh()
-      
-      append meshes.lod msh    
+      lodMesh = cycloneModelLodMesh()
+	  for i = 1 to obj.numverts do
+	  (
+	    vertex = cycloneModelLodMeshVertex()
+		vertex.coordinates = getVert obj i
+		append lodMesh.vertexes vertex
+	  )
+	  
+	  for i = 1 to obj.numfaces do
+	  (	  
+	    face = cycloneModelLodMeshFace()
+		indexes = getFace obj i
+	    append lodMesh.faces (indexes - 1)
+	  )
+	  	  
+	  for i = 1 to obj.position.controller.keys.count do
+	  (
+	    frame = cycloneModelLodAnimationFrame()	
+		posKey = getKey obj.position.controller (i)
+		rotKey = getKey obj.rotation.controller (i)
+        frame.position = posKey.value
+		frame.rotation = rotKey.value
+		frame.time = i - 1
+		append lodMesh.animationFrames frame
+	  )
+	  
+      append lod.meshes lodMesh    
     )
     append modelLods lod
   )
@@ -1357,7 +1406,7 @@ struct clfFile
   fn writeMesh msh =
   (
     -- header
-    fwriter.writeString str:msh.header.name length:32
+    fwriter.writeString msh.header.name length:32
     WriteLong fstream msh.header.frameCount #unsigned  
     WriteLong fstream msh.header.textureIndex #unsigned
     WriteLong fstream msh.header.vertexCount #unsigned

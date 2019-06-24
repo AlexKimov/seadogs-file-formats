@@ -1,21 +1,21 @@
 /*
   Author: AlexKimov
-  Description: .ani files (Sea Dogs 2000) import script
+  Description: .def files (Sea Dogs 2000) import script
   Version: 0.1
 */
 
 filein "lib/ms.ms"
 filein "lib/utils.ms"
-filein "lib/ani.ms"
-filein "lib/ani_viewer.ms"
+filein "lib/def.ms"
+filein "lib/def_viewer.ms"
 filein "lib/ini.ms"
 filein "lib/system.ms"
 filein "lib/settings.ms"
 
-struct settingsImportAni
+struct settingsImportDef
 (
-  pathToModelsFolder = "",
-  pathToTexturesFolder = "",
+  pathToModelsFolder = "D:\Program Files\1C\Корсары\RESOURCE\MODELS",
+  pathToTexturesFolder = "D:\Program Files\1C\Корсары\RESOURCE\MODELS\CHARACTERS",
   allLods = false,
   allFrames = true,
   isTextured = true,
@@ -33,18 +33,18 @@ struct settingsImportAni
   )   
 )
 
-struct stringsImportAni
+struct stringsImportDef
 (
-  rolloutTitle = "Import .ani scene",
+  rolloutTitle = "Import .def scene",
   rolloutImportTitle = "Import",
-  buttonImportCaption = "Open .ani file",
+  buttonImportCaption = "Open .def file",
   groupModelsCaption = "Folder",
   buttonSetPathCaption = "Get path",
   buttonClearPathCaption = "Clear",
   rolloutSettingsTitle = "Paths",
   rolloutImportSettingsTitle = "Models",
-  importDialogCaption = "Import .ani file",
-  importDialogTypes  = "Sea Dogs 1 animated scenes file (*.ani)|*.ani",
+  importDialogCaption = "Import .def file",
+  importDialogTypes  = "Sea Dogs 1 defmated scenes file (*.def)|*.def",
   openFolder = "Open \"Models\" folder",
   editChooseLodModelTitle = "LOD",
   groupModelCaption = "Model",
@@ -75,13 +75,14 @@ struct stringsImportAni
   )   
 )
 
-struct aniSceneImportUI
+struct defSceneImportUI
 (
   settings,
   strings,
-  iniFilename = "ani.ini",
+  iniFilename = "def.ini",
   fn importModel filename: =
   (
+
     if filename == unsupplied then
     (
       dialogs.caption = strings.importDialogCaption
@@ -92,11 +93,11 @@ struct aniSceneImportUI
     
     if filestream != undefined then 
     (  
-      file = aniFile()
+      file = defFile()
       file.openStream filestream filename      
       if file.readFile() then
       (
-        sceneViewer = aniSceneViewer file.scene
+        sceneViewer = defSceneViewer file.scene
         viewerSettings = sceneViewer.settings  
         
         viewerSettings.modelsFolderPath = settings.pathToModelsFolder     
@@ -227,9 +228,9 @@ struct aniSceneImportUI
     (
       local owner = if owner != undefined do owner       
              
-      button button_importAniScene owner.strings.buttonImportCaption width:120 
+      button button_importDefScene owner.strings.buttonImportCaption width:120 
       
-      on button_importAniScene pressed do
+      on button_importDefScene pressed do
       (
         setRollout = owner.dialog.subroll_container.importSettingsRollout
         importSetRollout = owner.dialog.subroll_container.settingsRollout
@@ -269,13 +270,13 @@ struct aniSceneImportUI
   (
     if settings == undefined then
 	(
-	  settings = settingsImportAni()
+	  settings = settingsImportDef()
       settings.loadFromIni (sys.currentPath + iniFilename)
 	)
 	
     if strings == undefined then 
     (
-      strings = stringsImportAni()  
+      strings = stringsImportDef()  
       strings.loadFromIni (sys.currentPath + iniFilename)  
     )	
 
@@ -300,8 +301,8 @@ struct aniSceneImportUI
 fn main = 
 (
   sys.currentPath = fileUtils.getCurrentPath(getThisScriptFilename())
-  aniSceneImport = aniSceneImportUI()
-  aniSceneImport.show() 
+  defSceneImport = defSceneImportUI()
+  defSceneImport.show() 
 )
 
 main()

@@ -1,0 +1,9 @@
+name "Storm 1 Engine tools"
+version 0.2
+copy raw_export.ms to $scripts\storm_tools
+copy raw_import.ms to $scripts\storm_tools
+copy icons\*.* to $max\UI_ln\Icons
+copy icons\*.* to $max\UI_ln\IconsDark
+run storm_panel.mcr
+drop storm_panel.mcr
+clear temp

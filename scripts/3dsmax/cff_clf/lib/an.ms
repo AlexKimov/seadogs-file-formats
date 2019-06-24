@@ -41,11 +41,11 @@ struct anFile
   ),  
   fn readAnimations =
   (
-    -- read positions
+    -- read root bone positions
     for i = 1 to object.header.frameCount do  
       append object.animations.positions (freader.readVector3F()) 
 	  
-    -- read rotations	  
+    -- read bones rotations	  
     for i = 1 to object.header.boneCount do 
 	(
 	  boneRotations = #()

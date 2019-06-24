@@ -6,6 +6,7 @@
 
 filein "lib/ms.ms"
 filein "lib/utils.ms"
+filein "lib/settings.ms"
 filein "lib/cyclone.ms"
 filein "lib/cyclone_viewer.ms"
 

@@ -106,9 +106,33 @@ struct cycloneModel
     lod = cycloneModelLod()
     for obj in objs do
     (
-      msh = cycloneModelLodMesh()
-      
-      append meshes.lod msh    
+      lodMesh = cycloneModelLodMesh()
+	  for i = 1 to obj.numverts do
+	  (
+	    vertex = cycloneModelLodMeshVertex()
+		vertex.coordinates = getVert obj i
+		append lodMesh.vertexes vertex
+	  )
+	  
+	  for i = 1 to obj.numfaces do
+	  (	  
+	    face = cycloneModelLodMeshFace()
+		indexes = getFace obj i
+	    append lodMesh.faces (indexes - 1)
+	  )
+	  	  
+	  for i = 1 to obj.position.controller.keys.count do
+	  (
+	    frame = cycloneModelLodAnimationFrame()	
+		posKey = getKey obj.position.controller (i)
+		rotKey = getKey obj.rotation.controller (i)
+        frame.position = posKey.value
+		frame.rotation = rotKey.value
+		frame.time = i - 1
+		append lodMesh.animationFrames frame
+	  )
+	  
+      append lod.meshes lodMesh    
     )
     append modelLods lod
   )
