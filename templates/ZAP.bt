@@ -20,11 +20,15 @@ struct {
   UINT BlockCount;
 } HEADER;
 
+// the image splits into blocks of 8×8
+// if BlockNumber = 0xFF80 - it means it (all 8x8 block) must be replaced with array of 255 values (black pixels), 
+// any other value - take data from IMAGE_BLOCKS table by BlockNumber index
 struct {
   UINT16 BlockNumber;
-} TABLE[HEADER.S*HEADER.BlockInRowCount/HEADER.BlockSize] <bgcolor=0x000000>;
+} IMAGE_TABLE[HEADER.S*HEADER.BlockInRowCount/HEADER.BlockSize] <bgcolor=0x000000>;
 
+// 
 struct {
-  UBYTE Block8x8[HEADER.BlockSize*HEADER.BlockSize];
-} BLOCKS[HEADER.BlockCount];
+  UBYTE ImageBlock8x8[HEADER.BlockSize*HEADER.BlockSize];
+} IMAGE_BLOCKS[HEADER.BlockCount];
 
