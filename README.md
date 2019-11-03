@@ -1,16 +1,23 @@
 # Описание
 
-Разбор форматов файлов игр на движке **Strorm 1**: **Корсары Проклятье дальних морей** (2000) , **Век парусников 2** (2001) и **Рыцари Морей** (2002), **Storm 2**: **Корсары 2 Пираты Карибского моря** (2003),  **Корсары 3** (2006).
+Разбор форматов файлов игр на движке **Strorm 1**: **Корсары Проклятье дальних морей** (2000) , **Век парусников 2** (2001) и **Рыцари Морей** (2002), а также **Storm 2**: **Корсары 2 Пираты Карибского моря** (2003),  **Корсары 3** (2006).
 
-Описание форматов [см. WIKI](https://github.com/AlexKimov/seadogs-file-formats/wiki). Текущий прогресс см. [Issues](https://github.com/AlexKimov/seadogs-file-formats/issues).
+* Документация с описание форматов ведется на [WIKI](https://github.com/AlexKimov/seadogs-file-formats/wiki). 
+* Следить за общим прогрессом по форматам можно здесь [Форматы](https://github.com/AlexKimov/seadogs-file-formats/projects/1).
 
-#### Текущие планы
+##### Текущие планы
 
 1. Программы для импорта/экспорта из исходных форматов в промежуточные и обратно.
 
 2. Доработка шаблонов и документации на форматы.
 
+##### Дополнительные ссылки
+
+1. Группа ВК [Моддинг Корсары, Век Парсуников 2, Рыцари Морей](https://vk.com/seadogsrevisited).
+
 ## Игры
+
+Список всех игр и форматов используемых файлов.
 
 | №   | Название | Год | Форматы | 
 | :-- | :-------- | :------ | :------ |
@@ -21,6 +28,10 @@
 | 5 | Корсары 3 | 2006  | .gm, .an, .zap, .tx   |
 
 ## Шаблоны, описание форматов
+
+Таблицы с описанием формата файла по играм.
+
+    .bt - файл шаблона программы 010editor, содержит описание структур формата в стиле языка C.
 
 ### 1. Корсары Проклятье Дальних морей
 
@@ -76,8 +87,9 @@
 
 ## Скрипты / Плагины / Программы
 
-### 010Editor
+Для запуска скрипта требуется программа 010Editor.
 
+### 010Editor
 | №   | Название | Описание | 
 | :-- | :-------- | :------ |
 | 1 | [DecodeDAT.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/decodeDAT.1sc)  | Скрипт для шифрования/расшифровки **.dat** файлов игры Век Парсуников 2 |
@@ -90,6 +102,9 @@
 | 8 | [TFtoTGA.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/TFtoTGA.1sc) | конвертирование файлов .tf в .bmp |
 
 ### Noesis
+
+Для запуска скрита требуется программа Noesis.
+
 * [fmt_sd_tf.py](https://github.com/AlexKimov/seadogs-file-formats/blob/master/plugins/noesis/fmt_sd_tf.py) - скрипт для просмотра и сохранения файлов в формат **TF** (Корсары ПДМ)
 * [fmt_sd_dlt.py](https://github.com/AlexKimov/seadogs-file-formats/blob/master/plugins/noesis/fmt_sd_dlt.py) - скрипт для просмотра и сохранения файлов в формат **DLT** (Корсары ПДМ)
 * [fmt_sd_cff_clf.py](https://github.com/AlexKimov/seadogs-file-formats/blob/master/plugins/noesis/fmt_sd_cff_clf.py) - скрипт для просмотра **CFF** файлов (Корсары ПДМ)
@@ -98,6 +113,9 @@
 * [fmt_sd2_zap.py](https://github.com/AlexKimov/seadogs-file-formats/blob/master/plugins/noesis/fmt_sd2_zap.py) - скрипт для просмотра **ZAP** файлов (Корсары 2, 3)
 
 ### 3dsMax
+
+Для запуска скрипта требуется программа 3dsMax версии 2010 и выше.
+    
 * [cff_clf_import.zip](https://github.com/AlexKimov/seadogs-file-formats/blob/master/plugins/3dsmax/cff_clf/build/cff_clf_import.zip) - импорт моделей с анимациями (Корсары, Век Парсуников 2, Рыцари Морей)
 * [ani_import.zip](https://github.com/AlexKimov/seadogs-file-formats/blob/master/plugins/3dsmax/cff_clf/build/ani_import.zip) - импорт анимированных сцен .ani (только модели и анимации)
 
