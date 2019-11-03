@@ -13,8 +13,8 @@
 
 while (!FEof()) {
   struct {
-    UINT Type;
-    UINT Unknown;
+    UINT Index;
+    UINT SomeA;
     struct {
       FLOAT X;
       FLOAT Y;
@@ -31,53 +31,41 @@ while (!FEof()) {
       FLOAT X;
       FLOAT Y;
       FLOAT Z;
-      FLOAT W;
     } MATRIX;
+    FLOAT Y;
     UINT Count;
     struct {
-      char FileName[16];
-      UINT16 A;
-      UINT16 B;         
+      string FileName;
+      UINT16 Some;
+      if (Some == 2) UBYTE A;
+      if (Some != 0) UINT D;
       UINT D;
+      if (D == 1) UINT D;
       UINT Unknown;
       UINT Unknown;
-      UINT VertexCount;
-      UINT FaceCount;
+      UINT CountA;
+      UINT CountB;
       struct {
-        struct {
-          FLOAT X;
-          FLOAT Y; 
-          FLOAT Z;
-        } POS;   
-        // vertex color ?
-        UINT16 Unknown;
-        UINT16 Unknown;
-        UINT16 Unknown;
-        UINT16 Unknown;
-        UINT16 Unknown;
-        UINT16 Unknown;
-        INT Unknown;
-      } VERTEXES[VertexCount];
+        FLOAT Unknown;
+        FLOAT Unknown; 
+        FLOAT Unknown;  
+        UINT Unknown;
+        FLOAT Unknown;
+        UINT Unknown;
+        UINT Unknown;
+      } MN1[CountA];
 
       struct {
-        UINT16 I1;
-        UINT16 I2; 
-        UINT16 I3;
-        UINT16 Unknown; 
-        struct {
-          FLOAT U;
-          FLOAT V;
-        } UV1; 
-        struct {
-          FLOAT U;
-          FLOAT V;
-        } UV2; 
-        struct {
-          FLOAT U;
-          FLOAT V;
-        } UV3;   
-      } FACES[FaceCount];
-    } YARD[Count] <optimize=false>;
-  } MAST <optimize=false>;
+        FLOAT Unknown;
+        FLOAT Unknown; 
+        FLOAT Unknown;  
+        UINT Unknown;
+        FLOAT Unknown;
+        FLOAT Unknown; 
+        FLOAT Unknown;  
+        UINT Unknown;
+      } MN2[CountB];
+    } Array[Count] <optimize=false>;
+  } Arr;
 };
 

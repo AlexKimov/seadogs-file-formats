@@ -11,83 +11,31 @@
 //   History: 
 //------------------------------------------------
 
+struct {
+  uchar Magic[8];
+  UINT A;
+  UINT B;
+  UINT C;
+  UINT D;
+} Header;
+
+uchar Name[128];
+
 typedef struct {
   UINT Length;
   uchar Name[Length];
-} CSTRING;
+} NAME;
 
-struct {
-  uchar Magic[8];
-  UINT EmitterCount;
-  UINT EmitterType;
-  UINT FieldCount;
-} Header;
+NAME Name;
 
-typedef struct {
-  FLOAT Time;
-  FLOAT Value;
-} GRAPH_ITEM;
+UINT A[4];
 
-typedef struct {
-  FLOAT Time;
-  FLOAT R;
-  FLOAT G;
-  FLOAT B;
-} COLOR;
+NAME Name;
 
-typedef struct {
-  UINT FieldType;
-  if (FieldType == 7)
-  {
-    UINT ColorCount;
-    struct {
-      COLOR Color;
-      COLOR Color;
-    } COLORS[ColorCount];
-    CSTRING Name;
-  };
-  if (FieldType == 5)
-  {
-    uchar Name1[128];
-    CSTRING Name;
-  };
-  if (FieldType == 2)
-  {
-    FLOAT Value;
-    CSTRING Name;
-  };
-  if (FieldType == 4)
-  {
-    FLOAT PosX;
-    FLOAT PosY;
-    FLOAT PosZ;
-    CSTRING Name;
-  };
-  if (FieldType == 3)
-  {
-    UINT negative;
-    UINT relative;
-    UINT maxgraphsize;
-    UINT mingraphsize;
-    GRAPH_ITEM Item1[maxgraphsize];
-    GRAPH_ITEM Item2[maxgraphsize];
-    CSTRING Name;
-  };
-  if (FieldType == 1)
-  {
-    UINT Unknown;
-    CSTRING Name;
-    UINT Unknown;
-    UINT Unknown;
-    UINT Unknown;
-  };
-} FIELD <name=getName>;
+UINT B[2];
 
-string getName(FIELD &field)
-{
-  return field.Name.Name;
-};
+NAME Name;
 
-struct {
-  FIELD Field[80] <optimize=false>;
-} FIELDS;
+UINT C[2];
+
+NAME Name;
