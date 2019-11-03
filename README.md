@@ -29,13 +29,10 @@
 
 ## Шаблоны, описание форматов
 
-Таблицы с описанием формата файла по играм.
-
-    .bt - файл шаблона программы 010editor, содержит описание структур формата в стиле языка C.
+Таблицы с описанием формата файла по играм. **.bt** - файл шаблона программы 010editor, содержит описание структур формата в стиле языка C.
 
 ### 1. Корсары Проклятье Дальних морей
 
-#### 010Editor templates
 | №   | Format/Ext | Progress | Template (010 Editor) | WIKI | Description |
 | :-- | :-------- | :------ | :------- | :--   | :--   |
 | 1   | ANI/.ani  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/6)   |  [ANI.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/ANI.bt)  | [Формат файла ANI](https://github.com/AlexKimov/seadogs-file-formats/wiki/ANI-File-Format-Rus)   | Анимация сцены |
@@ -92,14 +89,14 @@
 ### 010Editor
 | №   | Название | Описание | 
 | :-- | :-------- | :------ |
-| 1 | [DecodeDAT.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/decodeDAT.1sc)  | Скрипт для шифрования/расшифровки **.dat** файлов игры Век Парсуников 2 |
-| 2 | [UnpackPAK.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/UnpackPAK.1sc) | Скрипт (010 Editor) для распаковки архивов **.pak** игры Век Парсуников 2 |
-| 3 | [UnpackPAK(PB).1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/UnpackPAK(PB).1sc) | Скрипт (010 Editor) для распаковки архивов **.pak** игры Рыцари морей |
-| 4 | [DecodeActionFile.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/decodeActionFile.1sc) | Скрипт (010 Editor) для расшифровки **.a** файлов игры Корсары ПДМ |
-| 5 | [EncodeActionFile.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/encodeActionFile.1sc)  | Скрипт для шифрования **.a** файлов игры Корсары ПДМ |
-| 6 | [PackPAK.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/PackPAK.1sc) | Скрипт (010 Editor) для запаковки файлов в архив **.pak** игры Век Парсуников 2 |
-| 7 | [PackPAK(PB).1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/PackPAK(PB).1sc) | Скрипт (010 Editor) для запаковки файлов в архив **.pak** игры Рыцари морей |
-| 8 | [TFtoTGA.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/TFtoTGA.1sc) | конвертирование файлов .tf в .bmp |
+| 1 | [DecodeDAT.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/010editor/decodeDAT.1sc)  | Скрипт для шифрования/расшифровки **.dat** файлов игры Век Парсуников 2 |
+| 2 | [UnpackPAK.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/010editor/UnpackPAK.1sc) | Скрипт (010 Editor) для распаковки архивов **.pak** игры Век Парсуников 2 |
+| 3 | [UnpackPAK(PB).1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/010editor/UnpackPAK(PB).1sc) | Скрипт (010 Editor) для распаковки архивов **.pak** игры Рыцари морей |
+| 4 | [DecodeActionFile.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/010editor/decodeActionFile.1sc) | Скрипт (010 Editor) для расшифровки **.a** файлов игры Корсары ПДМ |
+| 5 | [EncodeActionFile.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/010editor/encodeActionFile.1sc)  | Скрипт для шифрования **.a** файлов игры Корсары ПДМ |
+| 6 | [PackPAK.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/010editor/PackPAK.1sc) | Скрипт (010 Editor) для запаковки файлов в архив **.pak** игры Век Парсуников 2 |
+| 7 | [PackPAK(PB).1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/010editor/PackPAK(PB).1sc) | Скрипт (010 Editor) для запаковки файлов в архив **.pak** игры Рыцари морей |
+| 8 | [TFtoTGA.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/010editor/TFtoTGA.1sc) | конвертирование файлов **.tf** в .bmp |
 
 ### Noesis
 
@@ -142,51 +139,51 @@
 
 | №   | Format/Ext | Progress | Template (010 Editor) | WIKI | Description |
 | :-- | :-------- | :------ | :------- | :--   | :--   |
-| 1  | ANI/.ani  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/6)   |  [ANI.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/ANI.bt)  |    | Animated scene |
-| 2  | CFF/.ccf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/4)   |  [CFF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CFF.bt)  | | 3D Model   | 
-| 3  | CLF/.clf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/5)   |  [CLF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CLF.bt) |   | 3D Model |
-| 4  | DEF/.def  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/18)   |  [DEF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/DEF.bt) |   |  |
+| 1  | ANI/.ani  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/6)   |  [ANI.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/ANI.bt)  |  | Animated scene |
+| 2  | CFF/.ccf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/4)   |  [CFF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CFF.bt)  |  | 3D Model   | 
+| 3  | CLF/.clf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/5)   |  [CLF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CLF.bt) |  | 3D Model |
+| 4  | DEF/.def  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/18)   |  [DEF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/DEF.bt) |  | Object definition |
 | 5  | IDF/.idf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/3)  |  [IDF.bt](htps://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/IDF.bt)  |  | Game object properties table |
 | 6  | DLM/.dlm  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/15)   |   |  | Island Mask |
-| 7  | DLT/.dlt  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/9)   |  [DLT.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/DLT.bt) |   | ? |
-| 8  | TF/.tf    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [TF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/TF.bt)   | | Texture file  |
+| 7  | DLT/.dlt  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/9)   |  [DLT.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/DLT.bt) |  | ? |
+| 8  | TF/.tf    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [TF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/TF.bt)   |  | Texture file  |
 | 9  | SLS/.sls    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/11)   |  [SLS.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/SLS.bt)   |   | Yard |
 
 ### 2. Age of Sale 2
 | №   | Format/Ext | Progress | Template (010 Editor) | WIKI | Description |
 | :-- | :-------- | :------ | :------- | :--   | :--   |
-| 1   | CFF/.ccf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/4)   |  [CFF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CFF.bt)  | | 3D Models   | 
+| 1   | CFF/.ccf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/4)   |  [CFF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CFF.bt)  |  | 3D Models   | 
 | 2   | CLF/.clf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/5)   |  [CLF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CLF.bt) |   | 3D Models |
 | 3   | CMP/.cmp  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/8)   |  [CMP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CMP.bt) |  | Age of Sale 2 campaign file |
-| 4  | PAK/.pak  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/2)   |  [PAK.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/PAK.bt)  | | Age of Sail 2 Game archive: 3d models, textures, executables, fonts   | 
+| 4  | PAK/.pak  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/2)   |  [PAK.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/PAK.bt)  |  | Age of Sail 2 Game archive: 3d models, textures, executables, fonts   | 
 | 5 | SC/.sc  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/7)   |  [SC.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/SC.bt)  |  |  Ship params  |
-| 6   | TF/.tf    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [TF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/TF.bt)   | | Texture file  |
+| 6   | TF/.tf    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [TF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/TF.bt)   |  | Texture file  |
 
 ### 3. Privateer’s Bounty: Age of Sail 2
 | №   | Format/Ext | Progress | Template (010 Editor) | WIKI | Description |
 | :-- | :-------- | :------ | :------- | :--   | :--   |
-| 1   | CFF/.ccf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/4)   |  [CFF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CFF.bt)  | | 3D Models   | 
+| 1   | CFF/.ccf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/4)   |  [CFF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CFF.bt)  |  | 3D Models   | 
 | 2   | CLF/.clf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/5)   |  [CLF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CLF.bt) |   | 3D Models |
 | 3   | CMP/.cmp  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/8)   |  [CMP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CMP.bt) |  | Privateer’s Bounty campaign file |
-| 4  | PAK/.pak  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/2)   |  [PAK(PB).bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/PAK(PB).bt) | | Privateer’s Bounty Game archive: 3d models,  textures, executables, fonts   | 
+| 4  | PAK/.pak  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/2)   |  [PAK(PB).bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/PAK(PB).bt) |  | Privateer’s Bounty Game archive: 3d models,  textures, executables, fonts   | 
 | 5 | SC/.sc  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/7)   |  [SC.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/SC.bt)  |  |  Ship params   |
-| 6   | TF/.tf    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [TF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/TF.bt)   | | Texture file  |
+| 6   | TF/.tf    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [TF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/TF.bt)   |  | Texture file  |
 
 ### 4. Pirates of the Caribbean
 | №   | Format/Ext | Progress | Template (010 Editor) | WIKI | Description |
 | :-- | :-------- | :------ | :------- | :--   | :--   |
 | 1   | AN/.an  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/12) |  [AN.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/AN.bt)  |   | Animation |
-| 2   | GM/.gm  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/13) |  [GM.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/GM.bt)  |  | 3D objects |
-| 3  | TX/.tx    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/14) |  [TX.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/TX.bt)   | | Texture file  |
-| 4  | ZAP/.zap    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/17)  |  [ZAP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/ZAP.bt)   | | Island mask file  |
+| 2   | GM/.gm  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/13) |  [GM.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/GM.bt)  |  | 3D object |
+| 3  | TX/.tx    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/14) |  [TX.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/TX.bt)   |  | Texture file  |
+| 4  | ZAP/.zap    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/17)  |  [ZAP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/ZAP.bt)   |  | Island mask file  |
 
 ### 5. Age of Pirates: Caribbean Tales
 | №   | Format/Ext | Progress | Template (010 Editor) | WIKI | Description |
 | :-- | :-------- | :------ | :------- | :--   | :--   |
 | 1   | AN/.an  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/12) |  [AN.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/AN.bt)  |   | Animation |
 | 2   | GM/.gm  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/13) |  [GM.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/GM.bt)  |  | 3D objects |
-| 3  | TX/.tx    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/14) |  [TX.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/TX.bt)   | | Texture file  |
-| 4  | ZAP/.zap    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/17)  |  [ZAP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/ZAP.bt)   | | Island mask file  |
+| 3  | TX/.tx    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/14) |  [TX.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/TX.bt)   |  | Texture file  |
+| 4  | ZAP/.zap    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/17)  |  [ZAP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/ZAP.bt)   |  | Island mask file  |
 
 ## Scripts
 | №   | File | Decription | 
@@ -194,11 +191,11 @@
 | 1 | [DecodeDAT.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/010editor/decodeDAT.1sc)  | Age of Sail 2 **.dat** file decode/encode script for 010 editor |
 | 2 | [UnpackPAK.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/010editor/UnpackPAK.1sc) | Age of Sail 2 **.pak** file  unpack script for 010 editor |
 | 3 | [UnpackPAK(PB).1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/010editor/UnpackPAK(PB).1sc) | Privateer’s Bounty **.pak** file unpack script for 010 editor |
-| 4 | [EncodeActionFile.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/010editor/encodeActionFile.1sc) | Encode action file .a (Sea Dogs) |
-| 5 | [DecodeActionFile.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/010editor/decodeActionFile.1sc) | Decode action file .a (Sea Dogs) |
-| 6 | [PackPAK.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/010editor/PackPAK.1sc) | Pack to .pak archive (Age of Sail 2) |
-| 7 | [PackPAK(PB).1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/010editor/PackPAK(PB).1sc) | Pack to .pak archive (Privateer’s Bounty) |
-| 8 | [TFtoTGA.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/010editor/TFtoTGA.1sc) | .tf file to .bmp |
+| 4 | [EncodeActionFile.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/010editor/encodeActionFile.1sc) | Encode action file **.a** (Sea Dogs) |
+| 5 | [DecodeActionFile.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/010editor/decodeActionFile.1sc) | Decode action file **.a** (Sea Dogs) |
+| 6 | [PackPAK.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/010editor/PackPAK.1sc) | Pack to **.pak** archive (Age of Sail 2) |
+| 7 | [PackPAK(PB).1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/010editor/PackPAK(PB).1sc) | Pack to **.pak** archive (Privateer’s Bounty) |
+| 8 | [TFtoTGA.1sc](https://github.com/AlexKimov/seadogs-file-formats/blob/master/scripts/010editor/TFtoTGA.1sc) | **.tf** file to .bmp |
 
 ### Noesis
 * [fmt_sd_tf.py](https://github.com/AlexKimov/seadogs-file-formats/blob/master/plugins/noesis/fmt_sd_tf.py) - script to view and save **TF** files (Sea Dogs 1)
