@@ -30,12 +30,12 @@
 | 1   | ANI/.ani  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/6)   |  [ANI.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/ANI.bt)  | [Формат файла ANI](https://github.com/AlexKimov/seadogs-file-formats/wiki/ANI-File-Format-Rus)   | Анимация сцены |
 | 2  | CFF/.ccf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/4)   |  [CFF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CFF.bt)  | [Формат файла CFF](https://github.com/AlexKimov/seadogs-file-formats/wiki/CFF-File-Format-Rus) | 3D   | 
 | 3  | CLF/.clf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/5)   |  [CLF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CLF.bt) | [Формат файла CLF](https://github.com/AlexKimov/seadogs-file-formats/wiki/CLF-File-Format-Rus)  | 3D |
-| 4  | DEF/.def  | [Issue]()   |  [DEF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/DEF.bt) |   |  |
-| 5  | IDF/.idf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/3)  |  [IDF.bt](htps://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/IDF.bt) | [WIKI](https://github.com/AlexKimov/seadogs-file-formats/wiki/IDF-File-Format-Rus)  | Свойства объектов |
+| 4  | DEF/.def  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/18)   |  [DEF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/DEF.bt) |   | Файл описания для составных объектов (корабли и др.) |
+| 5  | IDF/.idf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/3)  |  [IDF.bt](htps://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/IDF.bt) | [Формат файла IDF](https://github.com/AlexKimov/seadogs-file-formats/wiki/IDF-File-Format-Rus)  | Свойства объектов |
 | 6  | DLM/.dlm  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/15)   | [DLM.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/DLM.bt)  | [Формат файла DLM](https://github.com/AlexKimov/seadogs-file-formats/wiki/DLM-File-Format-Rus) | Маска острова |
-| 7  | DLT/.dlt  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/9)   | [DLT.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/DLT.bt)  | [DLT.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/DLT.bt)  | ? |
+| 7  | DLT/.dlt  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/9)   | [DLT.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/DLT.bt)  | [Формат файла DLT.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/DLT.bt)  | z-buffer ?  |
 | 8  | TF/.tf    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [TF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/TF.bt)   | [Формат файла TF](https://github.com/AlexKimov/seadogs-file-formats/wiki/TF-File-Format-Rus) | Текстуры  |
-| 9  | SLS/.sls    | []()   |  [SLS.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/SLS.bt)   |   | Реи |
+| 9  | SLS/.sls    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/11)   |  [SLS.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/SLS.bt)   |   | Реи |
 
 ### 2. Век парусников 2
 | №   | Format/Ext | Progress | Template (010 Editor) | WIKI | Description |
@@ -127,12 +127,12 @@
 | 1  | ANI/.ani  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/6)   |  [ANI.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/ANI.bt)  |    | Animated scene |
 | 2  | CFF/.ccf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/4)   |  [CFF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CFF.bt)  | | 3D Model   | 
 | 3  | CLF/.clf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/5)   |  [CLF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CLF.bt) |   | 3D Model |
-| 4  | DEF/.def  | []()   |  [DEF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/DEF.bt) |   |  |
+| 4  | DEF/.def  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/18)   |  [DEF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/DEF.bt) |   |  |
 | 5  | IDF/.idf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/3)  |  [IDF.bt](htps://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/IDF.bt)  |  | Game object properties table |
-| 6  | DLM/.dlm  | []()   |   |  | Island Mask |
-| 7  | DLT/.dlt  | []()   |  [DLT.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/DLT.bt) |   | ? |
+| 6  | DLM/.dlm  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/15)   |   |  | Island Mask |
+| 7  | DLT/.dlt  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/9)   |  [DLT.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/DLT.bt) |   | ? |
 | 8  | TF/.tf    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [TF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/TF.bt)   | | Texture file  |
-| 9  | SLS/.sls    | []()   |  [SLS.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/SLS.bt)   |   | Yard |
+| 9  | SLS/.sls    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/11)   |  [SLS.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/SLS.bt)   |   | Yard |
 
 ### 2. Age of Sale 2
 | №   | Format/Ext | Progress | Template (010 Editor) | WIKI | Description |
