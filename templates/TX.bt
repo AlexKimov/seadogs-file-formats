@@ -12,7 +12,7 @@
 //------------------------------------------------
 
 struct {
-  local int height, width;
+  local float height, width;
   local int DXT = 0;
   local int i; 
 } locals <hidden=true>;
@@ -80,14 +80,14 @@ typedef struct {
     {
       struct {
         if (HEADER.IMAGE_TYPE.DXT != "DXT5") {
-          for (i = 0; i < 16; ++i) {
+          for (locals.i = 0; locals.i < 16; ++locals.i) {
             ubyte AlphaIndex : 4 <name="Alpha Index">; 
           }
         }
         else {
            ubyte Alpha1;
            ubyte Alpha2; 
-           for (i = 0; i < 16; ++i) {
+           for (locals.i = 0; locals.i < 16; ++locals.i) {
             ubyte AlphaIndex : 3 <name="Alpha Index">; 
           } 
         }            
@@ -106,7 +106,7 @@ typedef struct {
         ubyte Blue : 5 <name="Blue">; 
       } Color2;  
       struct {
-        for (i = 0; i < 16; ++i)
+        for (locals.i = 0; locals.i < 16; ++locals.i)
           ubyte PixelIndex : 2 <name="Pixel Index">; 
       } INDEX_TABLE;
     } COLOR_DATA <name="Color Data">;
@@ -145,8 +145,8 @@ typedef struct {
   locals.height = HEADER.Height, locals.width = HEADER.Width;
   while (1)
   {
-    locals.height = locals.height/2; 
-    locals.width = locals.width/2;
+    locals.height = locals.height/2.0; 
+    locals.width = locals.width/2.0;
     if (HEADER.IMAGE_TYPE.D3DFormat == 21)
       PIXEL_ARRAY MipMaps(locals.height*locals.width) <name="MipMap">; 
     else
