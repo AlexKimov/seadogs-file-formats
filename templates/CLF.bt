@@ -18,11 +18,11 @@ struct {
   UINT Unknown; // 2494616
   UINT Unknown; // 0
   UINT Unknown; // 0
-  UINT ObjectCount; // 1
+  UINT LodCount; // 1
   UINT TextureCount;
   // long double
   UINT Unknown;
-  UINT MeshCount;;
+  UINT MeshCount;
   UINT Unknown; // 0
   //
   UINT AnimationCount; // 886
@@ -97,4 +97,6 @@ string getName(MESH &ms) {
   return ms.HEADER.Name;
 };
 
-MESHES Meshes(HEADER.MeshCount) <name="Meshes">;
+struct {
+  MESHES Meshes(HEADER.MeshCount) <name="Meshes">;
+} LODS[HEADER.LodCount] <name="Lods">;
