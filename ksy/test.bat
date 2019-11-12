@@ -1,0 +1,1 @@
+ksv C:\Program Files\1C\Корсары\RESOURCE\TEXTURES\Hubernator_Spa.clf cyclone.ksy
