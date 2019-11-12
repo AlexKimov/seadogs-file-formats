@@ -87,7 +87,7 @@ typedef struct {
     UINT Unknown; // always 1 
     UINT AnimationKeyCount;
     char Name[4];
-  } HEADER <name="Header">;
+  } HEADER <name="Mesh header">;
 
   VERTEX VERTEXES[HEADER.VertexCount];
 
@@ -136,10 +136,10 @@ struct {
     FLOAT Z;
   } OBJECT_SCALE <name="Scale">;
   UINT TextureCount <name="Number of textures">;
-  UINT TPCount <name="Number of texture properties">;
-  UINT ModelCount; // some kind of flag
+  UINT MaterialCount <name="Number of materials">;
+  UINT LOD <name="Number of objects (LOD)">; 
   UINT SectionOffset <name="Offset">; 
-  FLOAT radius <name="Object culling radius?">;
+  FLOAT LODSwitchDistance <name="Distance to switch LOD models">;
   P_X = OBJECT_ORIGIN.X;
   P_Y = OBJECT_ORIGIN.Y;
   P_Z = OBJECT_ORIGIN.Z; 
@@ -151,16 +151,16 @@ struct {
 FILE_LIST Textures(FILE_HEADER.TextureCount) <name="Textures List">;
 
 struct {  
-  MATERIALS TexProperties[FILE_HEADER.TPCount] <name="Materials">;
+  MATERIALS TexProperties[FILE_HEADER.MaterialCount] <name="Materials">;
 } MATS;
 
 typedef struct {    
     UINT MeshCount;
     UINT Zero; // not used
     MESH_ARRAY Meshes(MeshCount); 
-} MODEL;
+} LOD_MODEL;
 
-MODEL Models[FILE_HEADER.ModelCount] <optimize=false>;
+LOD_MODEL LODModels[FILE_HEADER.LOD] <optimize=false>;
 
 if (FILE_HEADER.SectionOffset > 0) {
   struct {
