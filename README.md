@@ -35,51 +35,51 @@
 
 | №   | Format/Ext | Progress | Template (010 Editor) | WIKI | Description |
 | :-- | :-------- | :------ | :------- | :--   | :--   |
-| 1   | ANI/.ani  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/6)   |  [ANI.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/ANI.bt)  | [Формат файла ANI](https://github.com/AlexKimov/seadogs-file-formats/wiki/ANI-File-Format-Rus)   | Анимация сцены |
-| 2  | CFF/.ccf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/4)   |  [CFF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CFF.bt)  | [Формат файла CFF](https://github.com/AlexKimov/seadogs-file-formats/wiki/CFF-File-Format-Rus) | 3D   | 
-| 3  | CLF/.clf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/5)   |  [CLF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CLF.bt) | [Формат файла CLF](https://github.com/AlexKimov/seadogs-file-formats/wiki/CLF-File-Format-Rus)  | 3D |
-| 4  | DEF/.def  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/18)   |  [DEF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/DEF.bt) |   | Файл описания для составных объектов (корабли и др.) |
-| 5  | IDF/.idf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/3)  |  [IDF.bt](htps://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/IDF.bt) | [Формат файла IDF](https://github.com/AlexKimov/seadogs-file-formats/wiki/IDF-File-Format-Rus)  | Свойства объектов |
-| 6  | DLM/.dlm  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/15)   | [DLM.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/DLM.bt)  | [Формат файла DLM](https://github.com/AlexKimov/seadogs-file-formats/wiki/DLM-File-Format-Rus) | Маска острова |
-| 7  | DLT/.dlt  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/9)   | [DLT.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/DLT.bt)  | [Формат файла DLT.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/DLT.bt)  | z-buffer ?  |
-| 8  | TF/.tf    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [TF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/TF.bt)   | [Формат файла TF](https://github.com/AlexKimov/seadogs-file-formats/wiki/TF-File-Format-Rus) | Текстуры  |
-| 9  | SLS/.sls    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/11)   |  [SLS.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/SLS.bt)   |   | Реи |
+| 1   | ANI/.ani  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/6)   |  [ANI.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/ANI.bt)  | [Формат файла ANI](https://github.com/AlexKimov/seadogs-file-formats/wiki/ANI-File-Format-Rus)   | Анимация сцены |
+| 2  | CFF/.ccf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/4)   |  [CFF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/CFF.bt)  | [Формат файла CFF](https://github.com/AlexKimov/seadogs-file-formats/wiki/CFF-File-Format-Rus) | 3D   | 
+| 3  | CLF/.clf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/5)   |  [CLF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/CLF.bt) | [Формат файла CLF](https://github.com/AlexKimov/seadogs-file-formats/wiki/CLF-File-Format-Rus)  | 3D |
+| 4  | DEF/.def  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/18)   |  [DEF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/DEF.bt) |   | Файл описания для составных объектов (корабли и др.) |
+| 5  | IDF/.idf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/3)  |  [IDF.bt](htps://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/IDF.bt) | [Формат файла IDF](https://github.com/AlexKimov/seadogs-file-formats/wiki/IDF-File-Format-Rus)  | Свойства объектов |
+| 6  | DLM/.dlm  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/15)   | [DLM.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/DLM.bt)  | [Формат файла DLM](https://github.com/AlexKimov/seadogs-file-formats/wiki/DLM-File-Format-Rus) | Маска острова |
+| 7  | DLT/.dlt  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/9)   | [DLT.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/DLT.bt)  | [Формат файла DLT.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/DLT.bt)  | z-buffer ?  |
+| 8  | TF/.tf    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [TF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/TF.bt)   | [Формат файла TF](https://github.com/AlexKimov/seadogs-file-formats/wiki/TF-File-Format-Rus) | Текстуры  |
+| 9  | SLS/.sls    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/11)   |  [SLS.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/SLS.bt)   |   | Реи |
 
 ### 2. Век парусников 2
 | №   | Format/Ext | Progress | Template (010 Editor) | WIKI | Description |
 | :-- | :-------- | :------ | :------- | :--   | :--   |
-| 1  | CFF/.ccf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/4)   |  [CFF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CFF.bt)  | [Формат файла CFF](https://github.com/AlexKimov/seadogs-file-formats/wiki/CFF-File-Format-Rus) | 3D   | 
-| 2  | CLF/.clf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/5)   |  [CLF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CLF.bt) | [Формат файла CLF](https://github.com/AlexKimov/seadogs-file-formats/wiki/CLF-File-Format-Rus)  | 3D |
-| 3   | CMP/.cmp  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/8)   |  [CMP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CMP.bt) |  [Формат файла CMP](https://github.com/AlexKimov/seadogs-file-formats/wiki/CMP-File-Format-Rus) | Параметры кампании  |
-| 4  | PAK/.pak  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/2)   |  [PAK.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/PAK.bt)  | [Формат файла PAK](https://github.com/AlexKimov/seadogs-file-formats/wiki/PAK-File-Format-Rus) | Файл архива игры Век парусников 2: 3d модели, текстуры, программы(!), шрифты  | 
-| 5  | TF/.tf    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [TF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/TF.bt)   | [Формат файла TF](https://github.com/AlexKimov/seadogs-file-formats/wiki/TF-File-Format-Rus) | Текстуры  |
-| 6 | SC/.sc  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/7)   |  [SC.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/SC.bt)  |  |  Параметры корабля  |
+| 1  | CFF/.ccf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/4)   |  [CFF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/CFF.bt)  | [Формат файла CFF](https://github.com/AlexKimov/seadogs-file-formats/wiki/CFF-File-Format-Rus) | 3D   | 
+| 2  | CLF/.clf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/5)   |  [CLF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/CLF.bt) | [Формат файла CLF](https://github.com/AlexKimov/seadogs-file-formats/wiki/CLF-File-Format-Rus)  | 3D |
+| 3   | CMP/.cmp  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/8)   |  [CMP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/CMP.bt) |  [Формат файла CMP](https://github.com/AlexKimov/seadogs-file-formats/wiki/CMP-File-Format-Rus) | Параметры кампании  |
+| 4  | PAK/.pak  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/2)   |  [PAK.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/PAK.bt)  | [Формат файла PAK](https://github.com/AlexKimov/seadogs-file-formats/wiki/PAK-File-Format-Rus) | Файл архива игры Век парусников 2: 3d модели, текстуры, программы(!), шрифты  | 
+| 5  | TF/.tf    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [TF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/TF.bt)   | [Формат файла TF](https://github.com/AlexKimov/seadogs-file-formats/wiki/TF-File-Format-Rus) | Текстуры  |
+| 6 | SC/.sc  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/7)   |  [SC.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/SC.bt)  |  |  Параметры корабля  |
 
 ### 3. Рыцари морей
 | №   | Format/Ext | Progress | Template (010 Editor) | WIKI | Description |
 | :-- | :-------- | :------ | :------- | :--   | :--   |
-| 1  | CFF/.ccf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/4)   |  [CFF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CFF.bt)  | [Формат файла CFF](https://github.com/AlexKimov/seadogs-file-formats/wiki/CFF-File-Format-Rus) | 3D   | 
-| 2  | CLF/.clf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/5)   |  [CLF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CLF.bt) | [Формат файла CLF](https://github.com/AlexKimov/seadogs-file-formats/wiki/CLF-File-Format-Rus)  | 3D |
-| 3   | CMP/.cmp  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/8)   |  [CMP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CMP.bt) |  [Формат файла CMP](https://github.com/AlexKimov/seadogs-file-formats/wiki/CMP-File-Format-Rus) | Параметры кампании  |
-| 4 | PAK/.pak  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/2)   |  [PAK(PB).bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/PAK(PB).bt)| [Формат файла PAK](https://github.com/AlexKimov/seadogs-file-formats/wiki/PAK-File-Format-Rus)  | Файл архива игры Рыцари морей: 3d модели, текстуры, программы(!), шрифты | 
-| 5  | TF/.tf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [TF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/TF.bt)   | [Формат файла TF](https://github.com/AlexKimov/seadogs-file-formats/wiki/TF-File-Format-Rus) | Текстуры  |
-| 6 | SC/.sc  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/7)   |  [SC.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/SC.bt)  |  |  Параметры корабля   |
+| 1  | CFF/.ccf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/4)   |  [CFF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/CFF.bt)  | [Формат файла CFF](https://github.com/AlexKimov/seadogs-file-formats/wiki/CFF-File-Format-Rus) | 3D   | 
+| 2  | CLF/.clf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/5)   |  [CLF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/CLF.bt) | [Формат файла CLF](https://github.com/AlexKimov/seadogs-file-formats/wiki/CLF-File-Format-Rus)  | 3D |
+| 3   | CMP/.cmp  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/8)   |  [CMP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/CMP.bt) |  [Формат файла CMP](https://github.com/AlexKimov/seadogs-file-formats/wiki/CMP-File-Format-Rus) | Параметры кампании  |
+| 4 | PAK/.pak  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/2)   |  [PAK(PB).bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/PAK(PB).bt)| [Формат файла PAK](https://github.com/AlexKimov/seadogs-file-formats/wiki/PAK-File-Format-Rus)  | Файл архива игры Рыцари морей: 3d модели, текстуры, программы(!), шрифты | 
+| 5  | TF/.tf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [TF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/TF.bt)   | [Формат файла TF](https://github.com/AlexKimov/seadogs-file-formats/wiki/TF-File-Format-Rus) | Текстуры  |
+| 6 | SC/.sc  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/7)   |  [SC.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/SC.bt)  |  |  Параметры корабля   |
 
 ### 4. Корсары 2 Пираты Карибского Моря
 | №   | Format/Ext | Progress | Template (010 Editor) | WIKI | Description |
 | :-- | :-------- | :------ | :------- | :--   | :--   |
-| 1   | AN/.an  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/12) |  [AN.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/AN.bt)  |   | Анимация персонажа |
-| 2   | GM/.gm  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/13) |  [GM.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/GM.bt)  |  | 3D объекты: Персонажи, уровни. |
-| 3  | TX/.tx    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/14) |  [TX.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/TX.bt)   | [Формат файла TX](https://github.com/AlexKimov/seadogs-file-formats/wiki/TX-File-Format-Rus) | Текстуры  |
-| 4  | ZAP/.zap    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/17)  |  [ZAP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/ZAP.bt)   | [Формат файла ZAP](https://github.com/AlexKimov/seadogs-file-formats/wiki/ZAP-File-Format-Rus) | Маска острова  |
+| 1   | AN/.an  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/12) |  [AN.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/AN.bt)  |   | Анимация персонажа |
+| 2   | GM/.gm  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/13) |  [GM.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/GM.bt)  |  | 3D объекты: Персонажи, уровни. |
+| 3  | TX/.tx    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/14) |  [TX.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/TX.bt)   | [Формат файла TX](https://github.com/AlexKimov/seadogs-file-formats/wiki/TX-File-Format-Rus) | Текстуры  |
+| 4  | ZAP/.zap    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/17)  |  [ZAP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/ZAP.bt)   | [Формат файла ZAP](https://github.com/AlexKimov/seadogs-file-formats/wiki/ZAP-File-Format-Rus) | Маска острова  |
 
 ### 5. Корсары 3
 | №   | Format/Ext | Progress | Template (010 Editor) | WIKI | Description |
 | :-- | :-------- | :------ | :------- | :--   | :--   |
-| 1   | AN/.an  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/12) |  [AN.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/AN.bt)  |   | Анимация персонажа |
-| 2   | GM/.gm  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/13) |  [GM.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/GM.bt)  |  | 3D объекты: Персонажи, уровни. |
-| 3  | TX/.tx    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/14) |  [TX.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/TX.bt)   | [Формат файла TX](https://github.com/AlexKimov/seadogs-file-formats/wiki/TX-File-Format-Rus) | Текстуры  |
-| 4  | ZAP/.zap    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/17)  |  [ZAP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/ZAP.bt)   | [Формат файла ZAP](https://github.com/AlexKimov/seadogs-file-formats/wiki/ZAP-File-Format-Rus) | Маска острова  |
+| 1   | AN/.an  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/12) |  [AN.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/AN.bt)  |   | Анимация персонажа |
+| 2   | GM/.gm  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/13) |  [GM.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/GM.bt)  |  | 3D объекты: Персонажи, уровни. |
+| 3  | TX/.tx    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/14) |  [TX.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/TX.bt)   | [Формат файла TX](https://github.com/AlexKimov/seadogs-file-formats/wiki/TX-File-Format-Rus) | Текстуры  |
+| 4  | ZAP/.zap    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/17)  |  [ZAP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/ZAP.bt)   | [Формат файла ZAP](https://github.com/AlexKimov/seadogs-file-formats/wiki/ZAP-File-Format-Rus) | Маска острова  |
 
 
 ## Скрипты / Плагины / Программы
@@ -139,51 +139,51 @@
 
 | №   | Format/Ext | Progress | Template (010 Editor) | WIKI | Description |
 | :-- | :-------- | :------ | :------- | :--   | :--   |
-| 1  | ANI/.ani  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/6)   |  [ANI.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/ANI.bt)  |  | Animated scene |
-| 2  | CFF/.ccf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/4)   |  [CFF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CFF.bt)  |  | 3D Model   | 
-| 3  | CLF/.clf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/5)   |  [CLF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CLF.bt) |  | 3D Model |
-| 4  | DEF/.def  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/18)   |  [DEF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/DEF.bt) |  | Object definition |
-| 5  | IDF/.idf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/3)  |  [IDF.bt](htps://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/IDF.bt)  |  | Game object properties table |
+| 1  | ANI/.ani  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/6)   |  [ANI.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/ANI.bt)  |  | Animated scene |
+| 2  | CFF/.ccf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/4)   |  [CFF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/CFF.bt)  |  | 3D Model   | 
+| 3  | CLF/.clf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/5)   |  [CLF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/CLF.bt) |  | 3D Model |
+| 4  | DEF/.def  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/18)   |  [DEF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/DEF.bt) |  | Object definition |
+| 5  | IDF/.idf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/3)  |  [IDF.bt](htps://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/IDF.bt)  |  | Game object properties table |
 | 6  | DLM/.dlm  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/15)   |   |  | Island Mask |
-| 7  | DLT/.dlt  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/9)   |  [DLT.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/DLT.bt) |  | ? |
-| 8  | TF/.tf    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [TF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/TF.bt)   |  | Texture file  |
-| 9  | SLS/.sls    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/11)   |  [SLS.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/SLS.bt)   |   | Yard |
+| 7  | DLT/.dlt  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/9)   |  [DLT.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/DLT.bt) |  | ? |
+| 8  | TF/.tf    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [TF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/TF.bt)   |  | Texture file  |
+| 9  | SLS/.sls    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/11)   |  [SLS.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/SLS.bt)   |   | Yard |
 
 ### 2. Age of Sale 2
 | №   | Format/Ext | Progress | Template (010 Editor) | WIKI | Description |
 | :-- | :-------- | :------ | :------- | :--   | :--   |
-| 1   | CFF/.ccf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/4)   |  [CFF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CFF.bt)  |  | 3D Models   | 
-| 2   | CLF/.clf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/5)   |  [CLF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CLF.bt) |   | 3D Models |
-| 3   | CMP/.cmp  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/8)   |  [CMP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CMP.bt) |  | Age of Sale 2 campaign file |
-| 4  | PAK/.pak  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/2)   |  [PAK.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/PAK.bt)  |  | Age of Sail 2 Game archive: 3d models, textures, executables, fonts   | 
-| 5 | SC/.sc  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/7)   |  [SC.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/SC.bt)  |  |  Ship params  |
-| 6   | TF/.tf    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [TF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/TF.bt)   |  | Texture file  |
+| 1   | CFF/.ccf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/4)   |  [CFF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/CFF.bt)  |  | 3D Models   | 
+| 2   | CLF/.clf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/5)   |  [CLF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/CLF.bt) |   | 3D Models |
+| 3   | CMP/.cmp  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/8)   |  [CMP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/CMP.bt) |  | Age of Sale 2 campaign file |
+| 4  | PAK/.pak  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/2)   |  [PAK.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/PAK.bt)  |  | Age of Sail 2 Game archive: 3d models, textures, executables, fonts   | 
+| 5 | SC/.sc  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/7)   |  [SC.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/SC.bt)  |  |  Ship params  |
+| 6   | TF/.tf    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [TF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/TF.bt)   |  | Texture file  |
 
 ### 3. Privateer’s Bounty: Age of Sail 2
 | №   | Format/Ext | Progress | Template (010 Editor) | WIKI | Description |
 | :-- | :-------- | :------ | :------- | :--   | :--   |
-| 1   | CFF/.ccf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/4)   |  [CFF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CFF.bt)  |  | 3D Models   | 
-| 2   | CLF/.clf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/5)   |  [CLF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CLF.bt) |   | 3D Models |
-| 3   | CMP/.cmp  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/8)   |  [CMP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/CMP.bt) |  | Privateer’s Bounty campaign file |
-| 4  | PAK/.pak  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/2)   |  [PAK(PB).bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/PAK(PB).bt) |  | Privateer’s Bounty Game archive: 3d models,  textures, executables, fonts   | 
-| 5 | SC/.sc  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/7)   |  [SC.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/SC.bt)  |  |  Ship params   |
-| 6   | TF/.tf    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [TF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/TF.bt)   |  | Texture file  |
+| 1   | CFF/.ccf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/4)   |  [CFF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/CFF.bt)  |  | 3D Models   | 
+| 2   | CLF/.clf  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/5)   |  [CLF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/CLF.bt) |   | 3D Models |
+| 3   | CMP/.cmp  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/8)   |  [CMP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/CMP.bt) |  | Privateer’s Bounty campaign file |
+| 4  | PAK/.pak  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/2)   |  [PAK(PB).bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/PAK(PB).bt) |  | Privateer’s Bounty Game archive: 3d models,  textures, executables, fonts   | 
+| 5 | SC/.sc  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/7)   |  [SC.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/SC.bt)  |  |  Ship params   |
+| 6   | TF/.tf    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/1)   |  [TF.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/TF.bt)   |  | Texture file  |
 
 ### 4. Pirates of the Caribbean
 | №   | Format/Ext | Progress | Template (010 Editor) | WIKI | Description |
 | :-- | :-------- | :------ | :------- | :--   | :--   |
-| 1   | AN/.an  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/12) |  [AN.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/AN.bt)  |   | Animation |
-| 2   | GM/.gm  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/13) |  [GM.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/GM.bt)  |  | 3D object |
-| 3  | TX/.tx    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/14) |  [TX.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/TX.bt)   |  | Texture file  |
-| 4  | ZAP/.zap    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/17)  |  [ZAP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/ZAP.bt)   |  | Island mask file  |
+| 1   | AN/.an  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/12) |  [AN.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/AN.bt)  |   | Animation |
+| 2   | GM/.gm  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/13) |  [GM.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/GM.bt)  |  | 3D object |
+| 3  | TX/.tx    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/14) |  [TX.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/TX.bt)   |  | Texture file  |
+| 4  | ZAP/.zap    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/17)  |  [ZAP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/ZAP.bt)   |  | Island mask file  |
 
 ### 5. Age of Pirates: Caribbean Tales
 | №   | Format/Ext | Progress | Template (010 Editor) | WIKI | Description |
 | :-- | :-------- | :------ | :------- | :--   | :--   |
-| 1   | AN/.an  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/12) |  [AN.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/AN.bt)  |   | Animation |
-| 2   | GM/.gm  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/13) |  [GM.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/GM.bt)  |  | 3D objects |
-| 3  | TX/.tx    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/14) |  [TX.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/TX.bt)   |  | Texture file  |
-| 4  | ZAP/.zap    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/17)  |  [ZAP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/ZAP.bt)   |  | Island mask file  |
+| 1   | AN/.an  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/12) |  [AN.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/AN.bt)  |   | Animation |
+| 2   | GM/.gm  | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/13) |  [GM.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/GM.bt)  |  | 3D objects |
+| 3  | TX/.tx    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/14) |  [TX.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/TX.bt)   |  | Texture file  |
+| 4  | ZAP/.zap    | [Issue](https://github.com/AlexKimov/seadogs-file-formats/issues/17)  |  [ZAP.bt](https://github.com/AlexKimov/seadogs-file-formats/blob/master/templates/010Editor/ZAP.bt)   |  | Island mask file  |
 
 ## Scripts
 | №   | File | Decription | 
