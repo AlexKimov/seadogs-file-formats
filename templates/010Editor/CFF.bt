@@ -34,16 +34,16 @@ typedef struct {
   UINT Unknown;
   UINT Unknown;
   UINT Unknown;
-  FLOAT Unknown;
+  UINT Unknown;
   UINT Unknown;
   UINT Count;
   struct {
-    UINT Unknown;
+    UINT TextureIndex;
     FLOAT Unknown;
     UINT Unknown;
     UINT Unknown;
     UINT Unknown;
-  } A[Count];
+  } TEXTURE[Count];
 } MATERIALS <optimize=false>;
 
 typedef struct {   
@@ -138,7 +138,7 @@ struct {
   UINT TextureCount <name="Number of textures">;
   UINT MaterialCount <name="Number of materials">;
   UINT LOD <name="Number of objects (LOD)">; 
-  UINT SectionOffset <name="Offset">; 
+  UINT SectionOffset <name="BSP section Offset">; 
   FLOAT LODSwitchDistance <name="Distance to switch LOD models">;
   P_X = OBJECT_ORIGIN.X;
   P_Y = OBJECT_ORIGIN.Y;

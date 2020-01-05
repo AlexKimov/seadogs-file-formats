@@ -11,61 +11,78 @@
 //   History: 
 //------------------------------------------------
 
+typedef enum <uint> {
+  Square = 0,
+  Unknown1 = 1,
+  Unknown2 = 2,
+  ForeAndAft = 3
+} SAIL_TYPE;
+
 while (!FEof()) {
   struct {
     UINT Index;
-    UINT SomeA;
+    SAIL_TYPE Type; 
     struct {
-      FLOAT X;
-      FLOAT Y;
-      FLOAT Z;
+      struct {
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
+      } VERTEX1 <name="top point 1">;
+      struct {
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
+      } VERTEX2 <name="top point 2">;
 
-      FLOAT X;
-      FLOAT Y;
-      FLOAT Z;
+      FLOAT Unknonwn;
 
-      FLOAT X;
-      FLOAT Y;
-      FLOAT Z;
+      struct {
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
+      } VERTEX3 <name="bottom point 1">;
+      struct {
+        FLOAT X;
+        FLOAT Y;
+        FLOAT Z;
+      } VERTEX4 <name="bottom point 2">;
+    } SAIL_VERTEX_POSITION;
 
-      FLOAT X;
-      FLOAT Y;
-      FLOAT Z;
-    } MATRIX;
-    FLOAT Y;
-    UINT Count;
+
+    UINT Count <name="Number of yards">;
+
     struct {
-      string FileName;
-      UINT16 Some;
-      if (Some == 2) UBYTE A;
-      if (Some != 0) UINT D;
-      UINT D;
-      if (D == 1) UINT D;
+      string FileName <name="Texture file">;
+      BYTE Data[20 - sizeof(FileName)];
       UINT Unknown;
       UINT Unknown;
-      UINT CountA;
+      UINT Unknown;
+
+      UINT VertexCount;
       UINT CountB;
       struct {
+        FLOAT X;
+        FLOAT Y; 
+        FLOAT Z;  
         FLOAT Unknown;
-        FLOAT Unknown; 
-        FLOAT Unknown;  
-        UINT Unknown;
         FLOAT Unknown;
-        UINT Unknown;
-        UINT Unknown;
-      } MN1[CountA];
+        FLOAT Unknown;
+        FLOAT Unknown;
+      } VERTEXES[VertexCount];
 
       struct {
         FLOAT Unknown;
         FLOAT Unknown; 
         FLOAT Unknown;  
-        UINT Unknown;
+        FLOAT Unknown;
+
         FLOAT Unknown;
         FLOAT Unknown; 
         FLOAT Unknown;  
-        UINT Unknown;
+        FLOAT Unknown;
       } MN2[CountB];
-    } Array[Count] <optimize=false>;
-  } Arr;
+    } YARDS[Count] <optimize=false>;
+
+  } SAIL;
 };
 
