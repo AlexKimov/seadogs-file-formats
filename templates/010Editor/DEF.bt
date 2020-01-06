@@ -13,10 +13,27 @@
 
 UINT Count;
 
-struct {
+typedef enum <uint> {
+  Model = 200,
+  Rey = 201,
+  Sail = 202,
+  Cannon = 203,
+  Flag = 204,
+  Waterline = 205,
+  Patch = 206,
+  CannonSet = 207,
+  AllCannons = 208,
+  ShipTrace = 209,
+  U1 = 210,
+  U2 = 211,
+  U3 = 212,
+} CLASS;
+
+
+typedef struct {
   UINT Index;
-  UINT Type;
-  UINT Unknown;
+  CLASS Class;
+  UINT Index;
   char FileName[256];
   struct {
     FLOAT X;
@@ -29,4 +46,11 @@ struct {
     FLOAT Z;
   } ROTATION;
   INT Link;
-} ITEM[Count];
+} ITEM <name=getPartName>;
+
+ITEM Items[Count];
+
+string getPartName(ITEM &part)
+{
+  return EnumToString(part.Class) + ": " + part.FileName;
+}
