@@ -108,7 +108,7 @@
 
 ### Noesis
 
-Для запуска скрита требуется программа Noesis.
+Для запуска скрита требуется программа [Noesis](https://richwhitehouse.com/index.php?content=inc_projects.php&showproject=91).
 
 * [fmt_sd_tf.py](https://github.com/AlexKimov/seadogs-file-formats/blob/master/plugins/noesis/fmt_sd_tf.py) - скрипт для просмотра и сохранения файлов в формат **TF** (Корсары ПДМ)
 * [fmt_sd_dlt.py](https://github.com/AlexKimov/seadogs-file-formats/blob/master/plugins/noesis/fmt_sd_dlt.py) - скрипт для просмотра и сохранения файлов в формат **DLT** (Корсары ПДМ)
